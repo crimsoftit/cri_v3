@@ -11,9 +11,14 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CVersion2AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CVersion2AppBar({super.key, required this.autoImplyLeading});
+  const CVersion2AppBar({
+    super.key,
+    required this.autoImplyLeading,
+    this.displayMenuIcon = true,
+  });
 
   final bool autoImplyLeading;
+  final bool? displayMenuIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,9 @@ class CVersion2AppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(Iconsax.menu, size: 25.0, color: CColors.rBrown),
+            displayMenuIcon == true
+                ? Icon(Iconsax.menu, size: 25.0, color: CColors.rBrown)
+                : SizedBox.shrink(),
             Obx(() {
               final networkImg = userController.user.value.profPic;
 

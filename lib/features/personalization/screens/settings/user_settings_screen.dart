@@ -4,6 +4,7 @@ import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/screens/settings/widgets/payment_platforms.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -51,7 +52,7 @@ class CUserSettingsScreen extends StatelessWidget {
                     fontWeightDelta: -7,
                   ),
                 ),
-                CDivider(endIndent: 200.0, startIndent: 0),
+                CDivider(endIndent: 270.0, startIndent: 0),
                 // -- app settings
                 const SizedBox(height: CSizes.spaceBtnItems),
                 const CSectionHeading(
@@ -59,6 +60,22 @@ class CUserSettingsScreen extends StatelessWidget {
                   title: 'app settings',
                   btnTitle: '',
                   editFontSize: false,
+                ),
+
+                CMenuTile(
+                  icon: Iconsax.money_recive,
+                  title: 'payment platforms',
+                  subTitle:
+                      'set payment platforms and(or) accounts for transactions',
+                  trailing: IconButton(
+                    onPressed: () {
+                      Get.to(() => CPaymentPlatforms());
+                    },
+                    icon: const Icon(Iconsax.arrow_right),
+                  ),
+                  onTap: () {
+                    Get.to(() => CPaymentPlatforms());
+                  },
                 ),
 
                 CMenuTile(
@@ -71,6 +88,7 @@ class CUserSettingsScreen extends StatelessWidget {
                   ),
                   onTap: () {},
                 ),
+
                 CMenuTile(
                   icon: Iconsax.cloud,
                   title: 'auto-sync data',
