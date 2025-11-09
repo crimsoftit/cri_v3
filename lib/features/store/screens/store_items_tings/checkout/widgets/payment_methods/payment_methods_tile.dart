@@ -23,6 +23,10 @@ class CPaymentMethodsTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
+
+        if (paymentMethod.platformName == "mPesa online(stk push)") {
+          checkoutController.initializeMpesaTxn();
+        }
         // if (paymentMethod.platformName != 'cash') {
         //   checkoutController.amtIssuedFieldController.text = '';
         //   checkoutController.amtIssuedFieldController.dispose();

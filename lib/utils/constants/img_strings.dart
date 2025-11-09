@@ -127,6 +127,8 @@ class CImages {
   static const String masterCardLogo =
       "assets/icons/payment_methods/master-card.png";
   static const String mPesaLogo = "assets/icons/payment_methods/mpesa.png";
+  static const String mpesaExpressLogo =
+      "assets/icons/payment_methods/mpesa_xpress.png";
   static const String paypalLogo = "assets/icons/payment_methods/paypal.png";
   static const String visaLogo = "assets/icons/payment_methods/visa.png";
 }

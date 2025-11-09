@@ -227,6 +227,7 @@ flutter:
     - assets/icons/payment_methods/deferred1.webp
     - assets/icons/payment_methods/mpesa_2.png
     - assets/icons/payment_methods/mpesa.png
+    - assets/icons/payment_methods/mpesa_xpress.png
     - assets/icons/switch_camera.png
     - assets/images/
     - assets/images/animations/  

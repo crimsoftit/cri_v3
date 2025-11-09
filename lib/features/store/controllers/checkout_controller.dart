@@ -39,6 +39,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:mpesa_flutter_plugin/initializer.dart';
+import 'package:mpesa_flutter_plugin/payment_enums.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -365,8 +367,15 @@ class CCheckoutController extends GetxController {
                 const SizedBox(height: CSizes.spaceBtnSections / 4),
                 CPaymentMethodsTile(
                   paymentMethod: CPaymentMethodModel(
+                    platformLogo: CImages.mpesaExpressLogo,
+                    platformName: 'mPesa online(stk push)',
+                  ),
+                ),
+                const SizedBox(height: CSizes.spaceBtnSections / 4),
+                CPaymentMethodsTile(
+                  paymentMethod: CPaymentMethodModel(
                     platformLogo: CImages.mPesaLogo,
-                    platformName: 'mPesa',
+                    platformName: 'mPesa (offline)',
                   ),
                 ),
                 const SizedBox(height: CSizes.spaceBtnSections / 4),
@@ -911,6 +920,43 @@ class CCheckoutController extends GetxController {
 
       throw e.toString();
     }
+  }
+
+  /// -- lipa na mpesa (daraja) api integration --
+  Future<dynamic> initializeMpesaTxn() async {
+    dynamic txnInit;
+    try {
+      txnInit = await MpesaFlutterPlugin.initializeMpesaSTKPush(
+        businessShortCode: "174379",
+        // transactionType: "CustomerPayBillOnline",
+        transactionType: TransactionType.CustomerPayBillOnline,
+        amount: 1.0,
+        //partyA: "254708374149",
+        partyA: "254746683785",
+        partyB: "174379",
+        callBackURL: Uri.parse("https://mydomain.com/path"),
+        accountReference: "payment test",
+        //phoneNumber: "254708374149",
+        phoneNumber: "254746683785",
+        baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
+        transactionDesc: "Test Payment",
+        passKey:
+            "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
+      );
+
+      //HashMap response = txnInit as HashMap;
+      if (kDebugMode) {
+        print("Response: $txnInit");
+      }
+    } catch (e) {
+      /// -- you can implement your exception handling here --
+      /// -- network unreachability is a sure exception --
+      if (kDebugMode) {
+        print("Exception Caught: $e");
+      }
+      rethrow;
+    }
+    return txnInit;
   }
 
   @override

@@ -554,7 +554,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                       .selectedPaymentMethod
                                                       .value
                                                       .platformName ==
-                                                  'mPesa' ||
+                                                  'mPesa (offline)' ||
                                               checkoutController
                                                       .selectedPaymentMethod
                                                       .value
@@ -612,7 +612,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                         .selectedPaymentMethod
                                                                         .value
                                                                         .platformName ==
-                                                                    'mPesa' ||
+                                                                    'mPesa (offline)' ||
                                                                 checkoutController
                                                                         .selectedPaymentMethod
                                                                         .value
@@ -627,13 +627,19 @@ class CCheckoutScreen extends StatelessWidget {
                                                       const SizedBox(
                                                         height: 4.0,
                                                       ),
-                                                      // -- phone number field --
+                                                      // -- contacts field --
                                                       CCustomTxtField(
                                                         txtFieldController:
                                                             checkoutController
                                                                 .customerContactsFieldController,
                                                         labelTxt:
-                                                            'customer contacts',
+                                                            checkoutController
+                                                                    .selectedPaymentMethod
+                                                                    .value
+                                                                    .platformName ==
+                                                                'mPesa (offline)'
+                                                            ? 'contacts (optional)'
+                                                            : 'contacts',
                                                       ),
                                                     ],
                                                   ),
