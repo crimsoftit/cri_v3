@@ -43,31 +43,36 @@ class CPaymentMethodSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CRoundedContainer(
-              width: 60.0,
-              height: 45.0,
-              bgColor: isDarkTheme ? CColors.light : CColors.white,
-              padding: const EdgeInsets.all(CSizes.sm / 4),
-              child: Image(
-                image: AssetImage(
-                  platformLogo,
-                  //checkoutController.selectedPaymentMethod.value.platformLogo,
-                ),
-                fit: BoxFit.contain,
-              ),
-            ),
+            platformName != 'mPesa online'
+                ? SizedBox.shrink()
+                : CRoundedContainer(
+                    width: 45.0,
+                    height: 45.0,
+                    //bgColor: isDarkTheme ? CColors.light : CColors.white,
+                    bgColor: CColors.transparent,
+                    padding: const EdgeInsets.all(CSizes.sm / 4),
+                    child: Image(
+                      image: AssetImage(
+                        platformLogo,
+                        //checkoutController.selectedPaymentMethod.value.platformLogo,
+                      ),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
             // const SizedBox(
             //   width: CSizes.spaceBtnItems / 4,
             // ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                //checkoutController.selectedPaymentMethod.value.platformName,
-                platformName,
-                style: Theme.of(context).textTheme.bodyLarge,
+            if (platformName != '')
+              Expanded(
+                flex: 3,
+                child: Text(
+                  //checkoutController.selectedPaymentMethod.value.platformName,
+                  platformName,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
-            ),
             txtFieldSpace,
+            //Expanded(flex: 4, child: txtFieldSpace),
           ],
         ),
       ],

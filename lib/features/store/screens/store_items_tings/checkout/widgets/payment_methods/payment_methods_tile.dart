@@ -16,6 +16,7 @@ class CPaymentMethodsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
@@ -24,9 +25,11 @@ class CPaymentMethodsTile extends StatelessWidget {
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
 
-        if (paymentMethod.platformName == "mPesa online(stk push)") {
-          checkoutController.initializeMpesaTxn();
-        }
+        // if (paymentMethod.platformName == "mPesa online") {
+        //   checkoutController.initializeMpesaTxn(
+        //     cartController.totalCartPrice.value,
+        //   );
+        // }
         // if (paymentMethod.platformName != 'cash') {
         //   checkoutController.amtIssuedFieldController.text = '';
         //   checkoutController.amtIssuedFieldController.dispose();

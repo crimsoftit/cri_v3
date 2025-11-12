@@ -30,8 +30,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CCheckoutScreen extends StatelessWidget {
-  const CCheckoutScreen({super.key});
+class CCheckoutScreenRaw extends StatelessWidget {
+  const CCheckoutScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -593,32 +593,17 @@ class CCheckoutScreen extends StatelessWidget {
                                             )
                                           : Row(
                                               children: [
-                                                checkoutController
-                                                            .selectedPaymentMethod
-                                                            .value
-                                                            .platformName ==
-                                                        "mPesa online"
-                                                    ? SizedBox.shrink()
-                                                    : const SizedBox(
-                                                        width:
-                                                            CSizes
-                                                                .spaceBtnItems *
-                                                            1.1,
-                                                        height: 38.0,
-                                                      ),
-                                                CRoundedContainer(
-                                                  bgColor: CColors.transparent,
+                                                const SizedBox(
                                                   width:
-                                                      checkoutController
-                                                              .selectedPaymentMethod
-                                                              .value
-                                                              .platformName ==
-                                                          "mPesa online"
-                                                      ? CHelperFunctions.screenWidth() *
-                                                            .75
-                                                      : CHelperFunctions.screenWidth() *
-                                                            0.5,
-
+                                                      CSizes.spaceBtnItems *
+                                                      1.1,
+                                                  height: 38.0,
+                                                ),
+                                                CRoundedContainer(
+                                                  width:
+                                                      CHelperFunctions.screenWidth() *
+                                                      0.5,
+                                                  bgColor: CColors.transparent,
                                                   child:
                                                       checkoutController
                                                               .selectedPaymentMethod

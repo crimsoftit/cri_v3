@@ -55,8 +55,8 @@ class CTopSellers extends StatelessWidget {
                         Text(
                           invController.topSellers[index].name.toUpperCase(),
                           style: Theme.of(context).textTheme.labelMedium!.apply(
-                            fontWeightDelta: -2,
-                            color: isDarkTheme ? CColors.grey : CColors.rBrown,
+                            fontWeightDelta: 1,
+                            color: isDarkTheme ? CColors.white : CColors.rBrown,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

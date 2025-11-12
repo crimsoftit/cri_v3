@@ -368,7 +368,7 @@ class CCheckoutController extends GetxController {
                 CPaymentMethodsTile(
                   paymentMethod: CPaymentMethodModel(
                     platformLogo: CImages.mpesaExpressLogo,
-                    platformName: 'mPesa online(stk push)',
+                    platformName: 'mPesa online',
                   ),
                 ),
                 const SizedBox(height: CSizes.spaceBtnSections / 4),
@@ -923,14 +923,14 @@ class CCheckoutController extends GetxController {
   }
 
   /// -- lipa na mpesa (daraja) api integration --
-  Future<dynamic> initializeMpesaTxn() async {
+  Future<dynamic> initializeMpesaTxn(double txnAmount) async {
     dynamic txnInit;
     try {
       txnInit = await MpesaFlutterPlugin.initializeMpesaSTKPush(
         businessShortCode: "174379",
         // transactionType: "CustomerPayBillOnline",
         transactionType: TransactionType.CustomerPayBillOnline,
-        amount: 1.0,
+        amount: txnAmount,
         //partyA: "254708374149",
         partyA: "254746683785",
         partyB: "174379",
