@@ -3,7 +3,6 @@ import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
-import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +21,7 @@ class CPaymentMethodSection extends StatelessWidget {
   Widget build(BuildContext context) {
     //final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Column(
       children: [
@@ -42,23 +41,34 @@ class CPaymentMethodSection extends StatelessWidget {
         SizedBox(height: CSizes.spaceBtnItems / 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            platformName != 'mPesa online'
-                ? SizedBox.shrink()
-                : CRoundedContainer(
-                    width: 45.0,
-                    height: 45.0,
-                    //bgColor: isDarkTheme ? CColors.light : CColors.white,
-                    bgColor: CColors.transparent,
-                    padding: const EdgeInsets.all(CSizes.sm / 4),
-                    child: Image(
-                      image: AssetImage(
-                        platformLogo,
-                        //checkoutController.selectedPaymentMethod.value.platformLogo,
-                      ),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+            Align(
+              alignment: Alignment.center,
+              child: Obx(() {
+                return CRoundedContainer(
+                  width: 50.0,
+                  height: 50.0,
+                  //bgColor: isDarkTheme ? CColors.light : CColors.white,
+                  bgColor: CColors.transparent,
+                  padding: const EdgeInsets.all(CSizes.sm / 4),
+                  child:
+                      checkoutController
+                              .selectedPaymentMethod
+                              .value
+                              .platformName ==
+                          'mPesa online'
+                      ? SizedBox.shrink()
+                      : Image(
+                          image: AssetImage(
+                            platformLogo,
+                            //checkoutController.selectedPaymentMethod.value.platformLogo,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
+                );
+              }),
+            ),
             // const SizedBox(
             //   width: CSizes.spaceBtnItems / 4,
             // ),

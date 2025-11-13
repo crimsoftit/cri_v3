@@ -25,6 +25,7 @@ import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -625,11 +626,40 @@ class CCheckoutScreen extends StatelessWidget {
                                                               .value
                                                               .platformName ==
                                                           'mPesa online'
-                                                      ? CCustomIntlPhoneField(
+                                                      ? CCustomIntlPhoneFieldForm(
+                                                          btnTxt:
+                                                              'request payment',
+                                                          // formTitle:
+                                                          //     'please enter customer phone no. below to send payment request',
                                                           fieldWidth: 100.0,
+                                                          formTitle:
+                                                              'lipa na mpesa express (online)',
                                                           intlPhoneFieldController:
                                                               checkoutController
                                                                   .customerContactsFieldController,
+                                                          onFormBtnPressed: () async {
+                                                            final internetIsConnected =
+                                                                await CNetworkManager
+                                                                    .instance
+                                                                    .isConnected();
+                                                            if (internetIsConnected) {
+                                                              checkoutController.initializeMpesaTxn(
+                                                                cartController
+                                                                    .totalCartPrice
+                                                                    .value,
+                                                                checkoutController
+                                                                    .customerMpesaNumber
+                                                                    .value,
+                                                              );
+                                                            } else {
+                                                              CPopupSnackBar.warningSnackBar(
+                                                                title:
+                                                                    'internet connection required',
+                                                                message:
+                                                                    'internet connection is required to use lipa na mPesa express!',
+                                                              );
+                                                            }
+                                                          },
                                                         )
                                                       : Column(
                                                           children: [

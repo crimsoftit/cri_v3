@@ -105,17 +105,18 @@ class CCheckoutController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool itemExists = false.obs;
 
+  final RxDouble customerBal = 0.0.obs;
+  final RxDouble totalAmount = 0.0.obs;
+
   final RxInt itemStockCount = 0.obs;
   final RxInt checkoutItemId = 0.obs;
   final RxInt checkoutItemSales = 0.obs;
   final RxInt txnId = 0.obs;
 
-  final RxDouble customerBal = 0.0.obs;
-  final RxDouble totalAmount = 0.0.obs;
-
   final RxString checkoutItemCode = ''.obs;
   final RxString checkoutItemLastModified = ''.obs;
   final RxString checkoutItemName = ''.obs;
+  final RxString customerMpesaNumber = ''.obs;
 
   final Rx<FocusNode> customerNameFocusNode = FocusNode().obs;
 
@@ -923,7 +924,10 @@ class CCheckoutController extends GetxController {
   }
 
   /// -- lipa na mpesa (daraja) api integration --
-  Future<dynamic> initializeMpesaTxn(double txnAmount) async {
+  Future<dynamic> initializeMpesaTxn(
+    double txnAmount,
+    String customerPhoneNumber,
+  ) async {
     dynamic txnInit;
     try {
       txnInit = await MpesaFlutterPlugin.initializeMpesaSTKPush(
@@ -932,12 +936,12 @@ class CCheckoutController extends GetxController {
         transactionType: TransactionType.CustomerPayBillOnline,
         amount: txnAmount,
         //partyA: "254708374149",
-        partyA: "254746683785",
+        partyA: customerPhoneNumber,
         partyB: "174379",
         callBackURL: Uri.parse("https://mydomain.com/path"),
         accountReference: "payment test",
         //phoneNumber: "254708374149",
-        phoneNumber: "254746683785",
+        phoneNumber: customerPhoneNumber,
         baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
         transactionDesc: "Test Payment",
         passKey:

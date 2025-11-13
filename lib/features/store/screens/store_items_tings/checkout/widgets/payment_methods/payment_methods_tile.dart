@@ -25,27 +25,6 @@ class CPaymentMethodsTile extends StatelessWidget {
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
 
-        // if (paymentMethod.platformName == "mPesa online") {
-        //   checkoutController.initializeMpesaTxn(
-        //     cartController.totalCartPrice.value,
-        //   );
-        // }
-        // if (paymentMethod.platformName != 'cash') {
-        //   checkoutController.amtIssuedFieldController.text = '';
-        //   checkoutController.amtIssuedFieldController.dispose();
-
-        //   checkoutController.customerNameFieldController =
-        //       TextEditingController(
-        //     text: '',
-        //   );
-        // } else {
-        //   checkoutController.amtIssuedFieldController = TextEditingController(
-        //     text: '',
-        //   );
-        //   checkoutController.customerNameFieldController.text = '';
-        //   checkoutController.customerNameFieldController.dispose();
-        // }
-
         Navigator.pop(context);
       },
       leading: CRoundedContainer(
