@@ -3,6 +3,7 @@ import 'package:cri_v3/common/widgets/divider/c_divider.dart';
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
+import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/settings/widgets/payment_platforms.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -18,6 +19,7 @@ class CUserSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appSettingsController = Get.put(CAppSettingsController());
     //final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     //final navController = Get.put(CNavMenuController());
@@ -94,11 +96,15 @@ class CUserSettingsScreen extends StatelessWidget {
                   title: 'auto-sync data',
                   subTitle:
                       'set automatic cloud sync for your inventory and sales data',
-                  trailing: Switch(
-                    value: true,
-                    activeThumbColor: CColors.rBrown,
-                    onChanged: (value) {},
-                  ),
+                  trailing: Obx(() {
+                    return Switch(
+                      value: appSettingsController.dataSyncIsOn.value,
+                      activeThumbColor: CColors.rBrown,
+                      onChanged: (value) {
+                        appSettingsController.toggleSyncSettings(value);
+                      },
+                    );
+                  }),
                 ),
                 CMenuTile(
                   icon: Iconsax.location,

@@ -67,6 +67,7 @@ dependencies:
   get_storage: any
   #get_storage: ^2.1.1
   shimmer: any
+  shared_preferences: ^2.5.3
   
   # -- sqflite database storage
   sqflite: any
@@ -74,7 +75,6 @@ dependencies:
 
   # google fonts
   google_fonts: any
-
   loading_btn: any
   iconly: any
   cached_network_image: any

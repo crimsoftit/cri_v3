@@ -3,6 +3,7 @@ import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/success_screen/txn_success.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
@@ -84,6 +85,7 @@ class CCheckoutController extends GetxController {
 
   final RxBool setFocusOnAmtIssuedField = false.obs;
 
+  final appSettingsController = Get.put(CAppSettingsController());
   final cartController = Get.put(CCartController());
   final invController = Get.put(CInventoryController());
   final navController = Get.put(CNavMenuController());
@@ -281,7 +283,8 @@ class CCheckoutController extends GetxController {
               final internetIsConnected = await CNetworkManager.instance
                   .isConnected();
 
-              if (internetIsConnected) {
+              if (internetIsConnected &&
+                  appSettingsController.dataSyncIsOn.value) {
                 //await syncController.processSync();
                 if (await syncController.processSync()) {
                   await txnsController.fetchSoldItems();
@@ -303,11 +306,16 @@ class CCheckoutController extends GetxController {
                 //   }
                 // }
               } else {
-                if (kDebugMode) {
-                  print('internet connection required for cloud sync!');
+                if (!internetIsConnected) {
                   CPopupSnackBar.customToast(
                     message: 'internet connection required for cloud sync!',
                     forInternetConnectivityStatus: true,
+                  );
+                } else {
+                  CPopupSnackBar.warningSnackBar(
+                    title: 'auto-sync is off',
+                    message:
+                        'data auto-synchronization is turned off in you account settings!',
                   );
                 }
               }
