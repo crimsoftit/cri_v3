@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cri_v3/utils/constants/enums.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 
 class CUserModel {
   String id;
@@ -11,6 +13,9 @@ class CUserModel {
   String profPic;
   String locationCoordinates;
   String userAddress;
+  CAppRole role;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   CUserModel({
     required this.id,
@@ -23,24 +28,31 @@ class CUserModel {
     required this.profPic,
     required this.locationCoordinates,
     required this.userAddress,
+    this.role = CAppRole.user,
+    this.createdAt,
+    this.updatedAt,
   });
+
+  /// -- helper functions --
+  String get formattedDate => CFormatter.formatDate(createdAt);
+  String get formattedUpdatedAtDate => CFormatter.formatDate(updatedAt);
 
   // === static function to split fullName into 1st & last names ===
   static List<String> nameParts(fullName) => fullName.split(" ");
 
   // === static function to create an empty user model ===
   static CUserModel empty() => CUserModel(
-        id: '',
-        fullName: '',
-        businessName: '',
-        email: '',
-        countryCode: '',
-        phoneNo: '',
-        currencyCode: '',
-        profPic: '',
-        locationCoordinates: '',
-        userAddress: '',
-      );
+    id: '',
+    fullName: '',
+    businessName: '',
+    email: '',
+    countryCode: '',
+    phoneNo: '',
+    currencyCode: '',
+    profPic: '',
+    locationCoordinates: '',
+    userAddress: '',
+  );
 
   // to make it readable to firebase
   Map<String, dynamic> toJson() {
@@ -54,12 +66,16 @@ class CUserModel {
       "ProfPic": profPic,
       "LocationCoordinates": locationCoordinates,
       "UserAddress": userAddress,
+      "Role": role.name.toString(),
+      "CreatedAt": createdAt,
+      "UpdatedAt": updatedAt,
     };
   }
 
   // === factory method to create a UserModel from a Firebase document snapshot ===
   factory CUserModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     if (document.data() != null) {
       final data = document.data()!;
       return CUserModel(
@@ -73,6 +89,17 @@ class CUserModel {
         profPic: data["ProfPic"] ?? '',
         locationCoordinates: data['LocationCoordinates'] ?? '',
         userAddress: data['UserAddress'] ?? '',
+        role: data.containsKey('Role')
+            ? (data['Role'] ?? CAppRole.user) == CAppRole.admin.name.toString()
+                  ? CAppRole.admin
+                  : CAppRole.user
+            : CAppRole.user,
+        createdAt: data.containsKey('CreatedAt')
+            ? data['CreatedAt']?.toDate() ?? DateTime.now()
+            : DateTime.now(),
+        updatedAt: data.containsKey('UpdatedAt')
+            ? data['UpdatedAt']?.toDate() ?? DateTime.now()
+            : DateTime.now(),
       );
     } else {
       return CUserModel.empty();

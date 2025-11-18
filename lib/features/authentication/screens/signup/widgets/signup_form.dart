@@ -77,17 +77,18 @@ class CSignupForm extends StatelessWidget {
               height: 0.8,
             ),
             decoration: const InputDecoration(
-              counterText: '',
-              label: Text('Phone number'),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0, color: CColors.rBrown),
-              ),
+              counterStyle: TextStyle(fontSize: 8.0),
+              //counterText: '',
+              label: Text('phone number'),
+              // focusedBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(width: 1.0, color: CColors.darkGrey),
+              // ),
             ),
-            style: const TextStyle(
-              fontSize: 10,
-              fontFamily: 'Poppins',
-              height: 0.8,
-            ),
+            // style: const TextStyle(
+            //   fontSize: 10,
+            //   fontFamily: 'Poppins',
+            //   height: 0.8,
+            // ),
             keyboardType: TextInputType.phone,
             languageCode: "en",
             onChanged: (phone) {
@@ -96,7 +97,9 @@ class CSignupForm extends StatelessWidget {
             onCountryChanged: (country) {
               signupController.countryCode.value = country.code;
 
-              if (kDebugMode) print('country changed to: ${country.dialCode}');
+              if (kDebugMode) {
+                print('country changed to: ${country.dialCode}');
+              }
 
               signupController.onPhoneInputChanged(country);
             },
@@ -183,7 +186,7 @@ class CSignupForm extends StatelessWidget {
                 //   message: 'message',
                 //   forInternetConnectivityStatus: false,
                 // );
-                signupController.signup();
+                signupController.signUpAsAdmin();
               },
               child: Text(
                 CTexts.createAccount.toUpperCase(),

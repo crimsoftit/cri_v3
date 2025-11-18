@@ -52,8 +52,11 @@ Future<void> main() async {
     debug: true,
   );
 
-  /// -- todo: init local storage (GetX Local Storage) --
+  /// -- init local storage (GetX Local Storage) --
   await GetStorage.init();
+
+  /// -- remove # sign from url --
+  //setPathUrlStrategy();
 
   tz.initializeTimeZones();
 

@@ -48,15 +48,17 @@ class CCustomIntlPhoneFieldForm extends StatelessWidget {
             ),
             const SizedBox(height: 15.0),
             IntlPhoneField(
-              initialCountryCode: 'KE',
-              initialValue: "0",
-              focusNode: focusNode,
+              controller: intlPhoneFieldController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(borderSide: BorderSide()),
                 labelText: 'customer phone no.',
                 counterStyle: TextStyle(fontSize: 8.0),
                 //fillColor: isDarkTheme ? CColors.darkBg :
               ),
+              focusNode: focusNode,
+              initialCountryCode: 'KE',
+              initialValue: "0",
+
               languageCode: "en",
               onChanged: (phone) {
                 var mpesaNumber = phone.completeNumber.substring(

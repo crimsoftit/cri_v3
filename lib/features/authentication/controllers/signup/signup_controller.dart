@@ -4,6 +4,7 @@ import 'package:cri_v3/data/repos/user/user_repo.dart';
 import 'package:cri_v3/features/authentication/screens/signup/verify_email.dart';
 import 'package:cri_v3/features/personalization/models/currency_model.dart';
 import 'package:cri_v3/features/personalization/models/user_model.dart';
+import 'package:cri_v3/utils/constants/enums.dart';
 import 'package:cri_v3/utils/constants/file_strings.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
@@ -86,7 +87,7 @@ class SignupController extends GetxController {
   }
 
   // -- firebase signup function --
-  void signup() async {
+  void signUpAsAdmin() async {
     try {
       // -- start loader
       CFullScreenLoader.openLoadingDialog(
@@ -144,14 +145,14 @@ class SignupController extends GetxController {
             password.text.trim(),
           );
 
-      // -- save user data in the Firestore database
+      // -- save admin user data in the Firestore database
 
-      final newUser = CUserModel(
+      final newAdminUser = CUserModel(
         id: userCredentials.user!.uid,
         fullName: fullName.text,
         businessName: txtBusinessName.text,
-        // email: txtEmail.text.trim(),
-        email: userCredentials.user!.email.toString(),
+        email: txtEmail.text.trim(),
+        //email: userCredentials.user!.email.toString(),
         countryCode: countryCode.value,
         // phoneNo: phoneNumber.text.trim(),
         phoneNo: completePhoneNo.value,
@@ -159,9 +160,12 @@ class SignupController extends GetxController {
         profPic: '',
         locationCoordinates: '',
         userAddress: '',
+        role: CAppRole.admin,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      await userRepo.saveUserDetails(newUser);
+      await userRepo.saveUserDetails(newAdminUser);
 
       // -- remove loader
       CFullScreenLoader.stopLoading();

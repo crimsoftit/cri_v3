@@ -5,8 +5,8 @@ import 'package:cri_v3/features/authentication/screens/login/login.dart';
 import 'package:cri_v3/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:cri_v3/features/authentication/screens/signup/verify_email.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
-import 'package:cri_v3/features/personalization/screens/location_tings/device_settings_screen.dart';
 import 'package:cri_v3/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
+import 'package:cri_v3/features/personalization/screens/settings/app_settings_screen.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
@@ -37,9 +37,15 @@ class AuthRepo extends GetxController {
   // -- get authenticated user data --
   User? get authUser => _auth.currentUser;
 
+  // -- get IsAuthenticated User --
+  bool get isAuthenticated => _auth.currentUser != null;
+
   // -- called from main.dart on app launch --
   @override
   void onReady() {
+    // set persistence of authentication data to work offline --
+    //_auth.setPersistence(Persistence.LOCAL); // -- only for web apps --
+
     // remove the native splash screen
     FlutterNativeSplash.remove();
 
@@ -65,7 +71,7 @@ class AuthRepo extends GetxController {
         if (userDets.currencyCode == '' ||
             userDets.locationCoordinates == '' ||
             userDets.userAddress == '') {
-          Get.offAll(() => const CDeviceSettingsScreen());
+          Get.offAll(() => const CAppSettingsScreen());
         } else if (userDets.businessName == '') {
           Get.offAll(() => const CUpdateBusinessName());
         } else {

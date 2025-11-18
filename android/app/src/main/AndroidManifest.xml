@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!-- permissions for device's camera -->
+    <uses-permission android:name="android.permission.CAMERA" />   
     
 
     <!-- permissions for geolocation services -->

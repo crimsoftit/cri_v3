@@ -50,7 +50,7 @@ class CLocationController extends GetxController {
         id: userController.user.value.id,
         fullName: userController.user.value.fullName,
         businessName: userController.user.value.businessName,
-        email: signupController.txtEmail.text.trim(),
+        email: userController.user.value.email,
         countryCode: userController.user.value.countryCode,
         phoneNo: userController.user.value.phoneNo,
         currencyCode: uCurCode.value,
@@ -58,6 +58,9 @@ class CLocationController extends GetxController {
         locationCoordinates:
             'lat: ${userLocation.value!.latitude}, long: ${userLocation.value!.longitude}',
         userAddress: uAddress.value,
+        role: userController.user.value.role,
+        createdAt: userController.user.value.createdAt,
+        updatedAt: DateTime.now(),
       );
 
       // Map<String, dynamic> updates = {

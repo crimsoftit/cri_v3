@@ -68,6 +68,11 @@ dependencies:
   #get_storage: ^2.1.1
   shimmer: any
   shared_preferences: ^2.5.3
+
+  # -- camera packages --
+  camera: any
+  camera_platform_interface: any
+  gal: ^2.3.2
   
   # -- sqflite database storage
   sqflite: any

@@ -19,14 +19,15 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CDeviceSettingsScreen extends StatefulWidget {
-  const CDeviceSettingsScreen({super.key});
+class CDeviceSettingsScreenRaw extends StatefulWidget {
+  const CDeviceSettingsScreenRaw({super.key});
 
   @override
-  State<CDeviceSettingsScreen> createState() => _CLocationSettingsScreenState();
+  State<CDeviceSettingsScreenRaw> createState() =>
+      _CLocationSettingsScreenState();
 }
 
-class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
+class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
   /// -- variables --
 
   late StreamController<PermissionStatus> _permissionStatusStream;
@@ -241,7 +242,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                                   locationController.uAddress.value == '' ||
                               locationController.uCurCode.value == '') {
                             if (!geoSwitchIsOn) {
-                              return const DeviceSettingsBtn();
+                              return DeviceSettingsBtn(onPressed: () {});
                             } else {
                               return const DefaultLoaderScreen();
                             }
@@ -285,7 +286,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                                     ],
                                   ),
                                 ),
-                                const DeviceSettingsBtn(),
+                                DeviceSettingsBtn(onPressed: () {}),
                                 // const SizedBox(
                                 //   height: CSizes.defaultSpace,
                                 // ),

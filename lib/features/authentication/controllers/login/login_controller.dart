@@ -10,11 +10,12 @@ import 'package:get_storage/get_storage.dart';
 
 class CLoginController extends GetxController {
   /// -- variables --
-  final rememberMe = false.obs;
+  final email = TextEditingController();
   final hidePswdTxt = true.obs;
   final localStorage = GetStorage();
-  final email = TextEditingController();
+
   final password = TextEditingController();
+  final rememberMe = false.obs;
 
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
@@ -79,6 +80,9 @@ class CLoginController extends GetxController {
       CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
     }
   }
+
+  /// -- handles registration of an admin user --
+  Future<void> registerAdmin() async {}
 
   /// -- Google signIn Authentication --
   // Future<void> googleSignIn() async {
