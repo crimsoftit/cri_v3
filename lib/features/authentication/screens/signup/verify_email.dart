@@ -66,6 +66,14 @@ class VerifyEmailScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: CSizes.spaceBtnSections),
+              Text(
+                CTexts.emailNotReceived,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium!.apply(color: CColors.darkGrey),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: CSizes.spaceBtnSections),
 
               // -- buttons --
               SizedBox(

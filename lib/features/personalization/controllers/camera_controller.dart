@@ -69,6 +69,7 @@ class CCameraController extends GetxController {
       // We can only guide them to app settings.
       //await openAppSettings();
       cameraIsAccessible.value = false;
+      await Permission.camera.request();
     }
   }
 }

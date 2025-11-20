@@ -5,7 +5,7 @@ import 'package:cri_v3/features/authentication/screens/login/login.dart';
 import 'package:cri_v3/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:cri_v3/features/authentication/screens/signup/verify_email.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
-import 'package:cri_v3/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
+import 'package:cri_v3/features/personalization/screens/profile/widgets/update_business_name.dart';
 import 'package:cri_v3/features/personalization/screens/settings/app_settings_screen.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
@@ -73,7 +73,9 @@ class AuthRepo extends GetxController {
             userDets.userAddress == '') {
           Get.offAll(() => const CAppSettingsScreen());
         } else if (userDets.businessName == '') {
-          Get.offAll(() => const CUpdateBusinessName());
+          Get.offAll(
+            () => const CUpdateBusinessNameScreen(autoImplyLeading: false),
+          );
         } else {
           /// -- initialize spreadsheets --
           StoreSheetsApi.initSpreadSheets();

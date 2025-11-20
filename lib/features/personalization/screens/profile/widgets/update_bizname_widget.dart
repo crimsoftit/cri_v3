@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CUpdateBusinessName extends StatelessWidget {
-  const CUpdateBusinessName({super.key});
+class CUpdateBusinessNameRaw extends StatelessWidget {
+  const CUpdateBusinessNameRaw({super.key});
 
   @override
   Widget build(BuildContext context) {

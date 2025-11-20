@@ -59,7 +59,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
       checkPermissionAndListenLocation();
     });
 
-    if (PermissionProvider.locationServiceIsOn) {
+    if (CPermissionProvider.locationServiceIsOn) {
       setState(() {
         geoSwitchIsOn = true;
       });
@@ -76,17 +76,17 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
 
   void _onResume() {
     log('onResume');
-    if (PermissionProvider.permissionDialogRoute != null &&
-        PermissionProvider.permissionDialogRoute!.isActive) {
+    if (CPermissionProvider.permissionDialogRoute != null &&
+        CPermissionProvider.permissionDialogRoute!.isActive) {
       Navigator.of(
         globalNavigatorKey.currentContext!,
-      ).removeRoute(PermissionProvider.permissionDialogRoute!);
+      ).removeRoute(CPermissionProvider.permissionDialogRoute!);
     }
     Future.delayed(const Duration(milliseconds: 250), () async {
       checkPermissionAndListenLocation();
     });
 
-    if (PermissionProvider.locationServiceIsOn) {
+    if (CPermissionProvider.locationServiceIsOn) {
       setState(() {
         geoSwitchIsOn = true;
       });
@@ -119,8 +119,8 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
   }
 
   void checkPermissionAndListenLocation() {
-    PermissionProvider.handleLocationPermission().then((_) {
-      _permissionStatusStream.sink.add(PermissionProvider.locationPermission);
+    CPermissionProvider.handleLocationPermission().then((_) {
+      _permissionStatusStream.sink.add(CPermissionProvider.locationPermission);
     });
   }
 
@@ -180,7 +180,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
                             Visibility(
                               visible: false,
                               child: Text(
-                                'location service: ${PermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
+                                'location service: ${CPermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
                                 // style: const TextStyle(fontSize: 24),
                                 style: Theme.of(
                                   context,
@@ -194,11 +194,11 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreenRaw> {
                               subTitle:
                                   'rIntel requires location info to protect buyers & sellers',
                               trailing: Switch(
-                                value: PermissionProvider.locationServiceIsOn,
+                                value: CPermissionProvider.locationServiceIsOn,
                                 activeThumbColor: CColors.rBrown,
                                 onChanged: (value) {
                                   setState(() {
-                                    PermissionProvider.locationServiceIsOn =
+                                    CPermissionProvider.locationServiceIsOn =
                                         value;
                                   });
 

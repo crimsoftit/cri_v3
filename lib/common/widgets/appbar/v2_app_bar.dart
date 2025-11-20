@@ -15,10 +15,12 @@ class CVersion2AppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.autoImplyLeading,
     this.displayMenuIcon = true,
+    this.menuIconReplacementWidget = const SizedBox.shrink(),
   });
 
   final bool autoImplyLeading;
   final bool? displayMenuIcon;
+  final Widget menuIconReplacementWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class CVersion2AppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             displayMenuIcon == true
                 ? Icon(Iconsax.menu, size: 25.0, color: CColors.rBrown)
-                : SizedBox.shrink(),
+                : menuIconReplacementWidget,
             Obx(() {
               final networkImg = userController.user.value.profPic;
 

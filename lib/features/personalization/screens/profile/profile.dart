@@ -4,7 +4,7 @@ import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/profile/widgets/c_profile_menu.dart';
-import 'package:cri_v3/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
+import 'package:cri_v3/features/personalization/screens/profile/widgets/update_business_name.dart';
 import 'package:cri_v3/features/personalization/screens/profile/widgets/update_name.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
@@ -144,7 +144,11 @@ class CProfileScreen extends StatelessWidget {
                   secondRowWidgetFlex: 5,
                   verticalPadding: 1.0,
                   onTap: () {
-                    Get.to(() => const CUpdateBusinessName());
+                    Get.to(
+                      () => const CUpdateBusinessNameScreen(
+                        autoImplyLeading: true,
+                      ),
+                    );
                   },
                 ),
 

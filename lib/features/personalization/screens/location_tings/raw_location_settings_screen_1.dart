@@ -61,11 +61,11 @@ class _CLocationSettingsScreenState extends State<CLocationSettingsScreen1> {
 
   void _onResume() {
     log('onResume' as num);
-    if (PermissionProvider.permissionDialogRoute != null &&
-        PermissionProvider.permissionDialogRoute!.isActive) {
+    if (CPermissionProvider.permissionDialogRoute != null &&
+        CPermissionProvider.permissionDialogRoute!.isActive) {
       Navigator.of(
         globalNavigatorKey.currentContext!,
-      ).removeRoute(PermissionProvider.permissionDialogRoute!);
+      ).removeRoute(CPermissionProvider.permissionDialogRoute!);
     }
     Future.delayed(const Duration(milliseconds: 250), () async {
       checkPermissionAndListenLocation();
@@ -94,9 +94,9 @@ class _CLocationSettingsScreenState extends State<CLocationSettingsScreen1> {
   }
 
   void checkPermissionAndListenLocation() {
-    PermissionProvider.handleLocationPermission().then((_) {
+    CPermissionProvider.handleLocationPermission().then((_) {
       _permissionStatusStream.sink.add(
-        PermissionProvider.locationPermission as PermissionStatus,
+        CPermissionProvider.locationPermission as PermissionStatus,
       );
     });
   }

@@ -6,6 +6,7 @@ import 'package:cri_v3/data/repos/auth/auth_repo.dart';
 import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/camera_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/screens/location_tings/widgets/device_settings_btn.dart';
 import 'package:cri_v3/main.dart';
 import 'package:cri_v3/services/location_services.dart';
@@ -41,6 +42,9 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
   final CLocationController locationController = Get.put<CLocationController>(
     CLocationController(),
   );
+  final notificationsController = Get.put<CNotificationsController>(
+    CNotificationsController(),
+  );
 
   @override
   void initState() {
@@ -62,7 +66,7 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
       checkPermissionAndListenLocation();
     });
 
-    if (PermissionProvider.locationServiceIsOn) {
+    if (CPermissionProvider.locationServiceIsOn) {
       setState(() {
         geoSwitchIsOn = true;
       });
@@ -79,17 +83,17 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
 
   void _onResume() {
     log('onResume');
-    if (PermissionProvider.permissionDialogRoute != null &&
-        PermissionProvider.permissionDialogRoute!.isActive) {
+    if (CPermissionProvider.permissionDialogRoute != null &&
+        CPermissionProvider.permissionDialogRoute!.isActive) {
       Navigator.of(
         globalNavigatorKey.currentContext!,
-      ).removeRoute(PermissionProvider.permissionDialogRoute!);
+      ).removeRoute(CPermissionProvider.permissionDialogRoute!);
     }
     Future.delayed(const Duration(milliseconds: 250), () async {
       checkPermissionAndListenLocation();
     });
 
-    if (PermissionProvider.locationServiceIsOn) {
+    if (CPermissionProvider.locationServiceIsOn) {
       setState(() {
         geoSwitchIsOn = true;
       });
@@ -122,8 +126,8 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
   }
 
   void checkPermissionAndListenLocation() {
-    PermissionProvider.handleLocationPermission().then((_) {
-      _permissionStatusStream.sink.add(PermissionProvider.locationPermission);
+    CPermissionProvider.handleLocationPermission().then((_) {
+      _permissionStatusStream.sink.add(CPermissionProvider.locationPermission);
     });
   }
 
@@ -198,7 +202,7 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
                                 Visibility(
                                   visible: false,
                                   child: Text(
-                                    'location service: ${PermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
+                                    'location service: ${CPermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
                                     // style: const TextStyle(fontSize: 24),
                                     style: Theme.of(
                                       context,
@@ -213,11 +217,12 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
                                       'rIntel requires location info to function properly and to protect buyers & sellers',
                                   trailing: Switch(
                                     value:
-                                        PermissionProvider.locationServiceIsOn,
+                                        CPermissionProvider.locationServiceIsOn,
                                     activeThumbColor: CColors.rBrown,
                                     onChanged: (value) {
                                       setState(() {
-                                        PermissionProvider.locationServiceIsOn =
+                                        CPermissionProvider
+                                                .locationServiceIsOn =
                                             value;
                                       });
 
@@ -251,15 +256,24 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
                                   ),
                                 ),
 
-                                CMenuTile(
-                                  icon: Iconsax.notification,
-                                  title: 'notifications',
-                                  subTitle:
-                                      'get notified about stock/inventory updates',
-                                  trailing: Switch(
-                                    value: true,
-                                    activeThumbColor: CColors.rBrown,
-                                    onChanged: (value) {},
+                                Obx(
+                                  () => CMenuTile(
+                                    icon: Iconsax.notification,
+                                    title: 'notifications',
+                                    subTitle:
+                                        'get notified about stock/inventory updates etc.',
+                                    trailing: Switch(
+                                      value: notificationsController
+                                          .notificationsEnabled
+                                          .value,
+                                      activeThumbColor: CColors.rBrown,
+                                      onChanged: (value) {
+                                        notificationsController
+                                            .requestNotificationPermissions(
+                                              value,
+                                            );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
@@ -343,7 +357,7 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
                                     ),
                                     DeviceSettingsBtn(
                                       onPressed: () {
-                                        PermissionProvider.locationServiceIsOn
+                                        CPermissionProvider.locationServiceIsOn
                                             ? appSettingsController
                                                   .onContinueButtonPressed()
                                             : CPopupSnackBar.customToast(

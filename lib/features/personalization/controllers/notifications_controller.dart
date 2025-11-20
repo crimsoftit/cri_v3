@@ -15,6 +15,7 @@ class CNotificationsController extends GetxController {
   /// -- variables --
   DbHelper dbHelper = DbHelper.instance;
   final isLoading = false.obs;
+  final RxBool notificationsEnabled = false.obs;
   final RxList<CNotificationsModel> allNotifications =
       <CNotificationsModel>[].obs;
   final RxList<CNotificationsModel> pendingAlerts = <CNotificationsModel>[].obs;
@@ -44,10 +45,13 @@ class CNotificationsController extends GetxController {
 
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
+        notificationsEnabled.value = false;
         // This is just a basic example. For real apps, you must show some
         // friendly dialog box before call the request method.
         // This is very important to not harm the user experience
         AwesomeNotifications().requestPermissionToSendNotifications();
+      } else {
+        notificationsEnabled.value = true;
       }
     });
 
@@ -247,5 +251,26 @@ class CNotificationsController extends GetxController {
 
       rethrow;
     }
+  }
+
+  /// -- request notification permissions --
+  Future<void> requestNotificationPermissions(bool value) async {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (value) {
+        if (!isAllowed) {
+          notificationsEnabled.value = false;
+          // This is just a basic example. For real apps, you must show some
+          // friendly dialog box before call the request method.
+          // This is very important to not harm the user experience
+          AwesomeNotifications().requestPermissionToSendNotifications();
+        } else {
+          notificationsEnabled.value = true;
+          return;
+        }
+      } else {
+        notificationsEnabled.value = false;
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
   }
 }

@@ -178,6 +178,7 @@ class SignupController extends GetxController {
       );
 
       // -- move to verify email screen
+
       Get.to(() => VerifyEmailScreen(email: txtEmail.text.trim()));
     } catch (e) {
       // -- remove loader --

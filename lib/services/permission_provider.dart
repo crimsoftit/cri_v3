@@ -6,7 +6,7 @@ import 'package:cri_v3/main.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class PermissionProvider {
+class CPermissionProvider {
   static PermissionStatus locationPermission = PermissionStatus.denied;
   static bool locationServiceIsOn = false;
   static DialogRoute? permissionDialogRoute;
