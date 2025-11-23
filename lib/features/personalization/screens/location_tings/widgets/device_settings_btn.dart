@@ -18,14 +18,19 @@ class DeviceSettingsBtn extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       child: SizedBox(
         width: double.infinity,
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: onPressed,
-
-          child: Text(
+          icon: Icon(
+            Icons.arrow_circle_right_outlined,
+            color: CColors.white,
+            size: 20,
+          ),
+          label: Text(
             locationController.updateLoading.value ? 'loading...' : 'CONTINUE',
-            style: Theme.of(
-              context,
-            ).textTheme.labelMedium!.apply(color: CColors.white),
+            style: Theme.of(context).textTheme.labelMedium!.apply(
+              color: CColors.white,
+              fontWeightDelta: 20,
+            ),
           ),
         ),
       ),

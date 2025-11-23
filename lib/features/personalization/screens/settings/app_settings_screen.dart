@@ -49,6 +49,7 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
   @override
   void initState() {
     super.initState();
+    Get.put<CNotificationsController>(CNotificationsController());
     _permissionStatusStream = StreamController<PermissionStatus>();
     _appCycleStateStream = StreamController<AppLifecycleState>();
     _listener = AppLifecycleListener(

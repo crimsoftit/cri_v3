@@ -23,8 +23,12 @@ class NavMenu extends StatelessWidget {
     final navController = Get.put(CNavMenuController());
     final notsController = Get.put(CNotificationsController());
 
-    Get.put(CInventoryController());
-    Get.put(CCartController());
+    Future.delayed(Duration.zero, () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.put(CInventoryController());
+        Get.put(CCartController());
+      });
+    });
 
     // invController.onInit();
     // cartController.fetchCartItems();

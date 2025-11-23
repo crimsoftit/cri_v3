@@ -76,16 +76,13 @@ class CInventoryController extends GetxController {
   @override
   void onInit() async {
     dbHelper.openDb();
-    fetchUserInventoryItems();
+
+    await fetchUserInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
     //fetchTopSellers();
 
-    await StoreSheetsApi.initSpreadSheets();
-
     await initInvSync();
-
-    //txtNameController.addListener(printLatestFieldValue);
 
     super.onInit();
   }

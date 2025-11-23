@@ -8,6 +8,7 @@ import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CNotificationsController extends GetxController {
   static CNotificationsController get instance => Get.find();
@@ -32,6 +33,15 @@ class CNotificationsController extends GetxController {
       fetchUserNotifications();
     }
 
+    PermissionStatus status = await Permission.notification.status;
+    if (status.isGranted) {
+      // Notifications permission is allowed
+      notificationsEnabled.value = true;
+    } else {
+      // Permission is denied or permanently denied
+      notificationsEnabled.value = false;
+    }
+
     // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
       onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
@@ -50,7 +60,7 @@ class CNotificationsController extends GetxController {
         // friendly dialog box before call the request method.
         // This is very important to not harm the user experience
         AwesomeNotifications().requestPermissionToSendNotifications();
-      } else {
+      } else if (isAllowed) {
         notificationsEnabled.value = true;
       }
     });
@@ -269,7 +279,7 @@ class CNotificationsController extends GetxController {
         }
       } else {
         notificationsEnabled.value = false;
-        AwesomeNotifications().requestPermissionToSendNotifications();
+        //AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
   }
