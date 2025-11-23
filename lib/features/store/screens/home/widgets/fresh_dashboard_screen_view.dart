@@ -1,4 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class CFreshDashboardScreenView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(CSizes.defaultSpace / 3),
             //leading: Icon(Icons.account_circle),
-            title: Icon(Icons.add),
+            title: Icon(Icons.add, color: CColors.rBrown),
             subtitle: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(

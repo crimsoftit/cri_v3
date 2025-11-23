@@ -2,6 +2,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/common/widgets/divider/c_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
+import 'package:cri_v3/common/widgets/sliders/carousel_slider.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
@@ -108,14 +109,13 @@ class HomeScreen extends StatelessWidget {
                             Get.to(() => const NavMenu());
                           },
                         ),
-                      invController.topSellers.isEmpty
+                      invController.topSellers.isEmpty ||
+                              invController.inventoryItems.isEmpty
                           ? Center(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
-                                    height: CSizes.defaultSpace * 2.0,
-                                  ),
+                                  const SizedBox(height: CSizes.defaultSpace),
                                   Text(
                                     'welcome aboard!!'.toUpperCase(),
                                     style: Theme.of(context)
@@ -130,12 +130,22 @@ class HomeScreen extends StatelessWidget {
                                     height: CSizes.defaultSpace / 2,
                                   ),
                                   Text(
-                                    'your perfect dashboard is just a few sales away.\n \nstart adding products/items to your inventory and make your first sale today!'
+                                    'your perfect dashboard is just a few sales away!'
                                         .toUpperCase(),
                                     style: Theme.of(
                                       context,
                                     ).textTheme.labelMedium!.apply(),
                                   ),
+                                  const SizedBox(height: CSizes.defaultSpace),
+                                  CCarouselSlider(),
+
+                                  // Text(
+                                  //   'your perfect dashboard is just a few sales away.\n \nstart adding products/items to your inventory and make your first sale today!'
+                                  //       .toUpperCase(),
+                                  //   style: Theme.of(
+                                  //     context,
+                                  //   ).textTheme.labelMedium!.apply(),
+                                  // ),
                                 ],
                               ),
                             )

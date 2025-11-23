@@ -757,8 +757,8 @@ class CInventoryController extends GetxController {
       isImportingInvCloudData.value = true;
 
       // -- check internet connectivity
-      final isConnectedToInternet = await CNetworkManager.instance
-          .isConnected();
+      final isConnectedToInternet =
+          CNetworkManager.instance.hasConnection.value;
 
       if (isConnectedToInternet) {
         await fetchUserInvSheetData();
@@ -800,9 +800,9 @@ class CInventoryController extends GetxController {
         }
       } else {
         if (kDebugMode) {
-          print('internet connection required for cloud sync');
+          print('internet connection required for inventory cloud sync');
           CPopupSnackBar.customToast(
-            message: 'internet connection required for cloud sync',
+            message: 'internet connection required for inventory cloud sync',
             forInternetConnectivityStatus: false,
           );
         }

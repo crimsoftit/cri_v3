@@ -238,6 +238,10 @@ flutter:
     - assets/images/
     - assets/images/animations/
     - assets/images/banners/
+    - assets/images/banners/banner_1.jpg
+    - assets/images/banners/banner_2.jpg
+    - assets/images/banners/banner_3.jpg
+    - assets/images/banners/banner_4.jpg
     - assets/images/logos/
     - assets/images/lottie_anime/
     - assets/images/lottie_anime/loader_2.gif

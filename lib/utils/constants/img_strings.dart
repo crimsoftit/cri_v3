@@ -131,4 +131,10 @@ class CImages {
       "assets/icons/payment_methods/mpesa_xpress.png";
   static const String paypalLogo = "assets/icons/payment_methods/paypal.png";
   static const String visaLogo = "assets/icons/payment_methods/visa.png";
+
+  /// -- banners/slider images --
+  static const String sliderImg1 = "assets/images/banners/banner_1.jpg";
+  static const String sliderImg2 = "assets/images/banners/banner_2.jpg";
+  static const String sliderImg3 = "assets/images/banners/banner_3.jpg";
+  static const String sliderImg4 = "assets/images/banners/banner_4.jpg";
 }

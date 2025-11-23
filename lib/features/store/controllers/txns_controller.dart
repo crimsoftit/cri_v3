@@ -1222,9 +1222,9 @@ class CTxnsController extends GetxController {
           // }
         } else {
           if (kDebugMode) {
-            print('internet connection required for cloud sync!');
+            print('internet connection required for txns cloud sync!');
             CPopupSnackBar.customToast(
-              message: 'internet connection required for cloud sync!',
+              message: 'internet connection required for txns cloud sync!',
               forInternetConnectivityStatus: true,
             );
           }
