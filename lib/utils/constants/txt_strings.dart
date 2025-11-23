@@ -51,17 +51,18 @@ class CTexts {
   static const String accAvailable = 'Already have an account? ';
 
   // -- onboarding screen text formats
-  static const String rOnbaordingTitle1 = "choose your product";
-  static const String rOnbaordingTitle2 = "select payment method";
+  static const String rOnbaordingTitle1 =
+      "speedy, reliable, & convenient transacting";
+  static const String rOnbaordingTitle2 = "keep abreast of your business";
   static const String rOnbaordingTitle3 = "save time & money";
   static const String rOnbaordingSubTitle1 =
-      "welcome to a world of limitless choices; your perfect product awaits!";
+      "take payment anywhere, any time! welcome to a world of limitless choices; your perfect brand awaits!";
   static const String rOnbaordingSubTitle2 =
-      "for seamless transactions, choose your payment path; your convenience, our priority!";
+      "manage your inventory, sales & customers on the go, anytime, anywhere, in real-time!";
   static const String rOnbaordingSubTitle3 =
-      "from our doorstep to yours; swift, secure, and contactless delivery!";
+      "take payment anywhere, any time! for seamless transactions, choose your payment path; your convenience, our priority!";
 
   // -- home(dashboard screen)
   static const String homeAppbarTitle = "good day for shopping";
-  static const String homeAppbarSubTitle = "crimsoftit@gmail.com";
+  // static const String homeAppbarSubTitle = "crimsoftit@gmail.com";
 }

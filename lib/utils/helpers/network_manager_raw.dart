@@ -9,27 +9,25 @@ class CNetworkManagerRaw extends GetxController {
   static CNetworkManagerRaw get instance => Get.find();
 
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  final Rx<ConnectivityResult> _connectionStatus = ConnectivityResult.none.obs;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  final RxList<ConnectivityResult> _connectionStatus =
+      <ConnectivityResult>[].obs;
 
   // -- initialize the network manager and set up a stream to continually check the connection status --
   @override
   void onInit() {
     super.onInit();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(
-              _updateConnectionStatus
-                  as void Function(List<ConnectivityResult> event)?,
-            )
-            as StreamSubscription<ConnectivityResult>;
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
   }
 
   // -- check internet connection status --
   Future<bool> isConnected() async {
     try {
       final result = await _connectivity.checkConnectivity();
-      // ignore: unrelated_type_equality_checks
-      if (result == ConnectivityResult.none) {
+
+      if (result.any((element) => element == ConnectivityResult.none)) {
         return false;
       } else {
         return true;
@@ -40,16 +38,13 @@ class CNetworkManagerRaw extends GetxController {
   }
 
   // -- update the connection status and show relevant popup --
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
     _connectionStatus.value = result;
-    if (result == ConnectivityResult.none) {
+    if (result.contains(ConnectivityResult.none)) {
       CPopupSnackBar.customToast(
-        message: 'please check your internet connection...',
+        message: 'no internet connection! offline cruise...',
         forInternetConnectivityStatus: true,
       );
-      // CPopupSnackBar.warningSnackBar(
-      //   title: 'check your internet connection',
-      // );
     }
   }
 

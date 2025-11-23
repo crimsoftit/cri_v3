@@ -27,6 +27,11 @@ Future<void> main() async {
   MpesaFlutterPlugin.setConsumerKey(CMpesaApiCreds.consumerKey);
   MpesaFlutterPlugin.setConsumerSecret(CMpesaApiCreds.consumerSecret);
 
+  /// -- initialize spreadsheets --
+  // if (CNetworkManager.instance.hasConnection.value) {
+  //   await StoreSheetsApi.initSpreadSheets();
+  // }
+
   AwesomeNotifications().initialize(
     // set the icon to null if you want to use the default app icon
     null,

@@ -104,6 +104,7 @@ dependencies:
 
   # -- internet connectivity --
   connectivity_plus: any
+  # connectivity_plus: ^6.0.3
   internet_connection_checker_plus: any
   # internet_connection_checker: ^3.0.1
   internet_connection_checker: any
@@ -235,7 +236,8 @@ flutter:
     - assets/icons/payment_methods/mpesa_xpress.png
     - assets/icons/switch_camera.png
     - assets/images/
-    - assets/images/animations/  
+    - assets/images/animations/
+    - assets/images/banners/
     - assets/images/logos/
     - assets/images/lottie_anime/
     - assets/images/lottie_anime/loader_2.gif

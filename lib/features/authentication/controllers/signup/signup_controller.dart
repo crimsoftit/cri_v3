@@ -149,8 +149,8 @@ class SignupController extends GetxController {
 
       final newAdminUser = CUserModel(
         id: userCredentials.user!.uid,
-        fullName: fullName.text,
-        businessName: txtBusinessName.text,
+        fullName: fullName.text.trim(),
+        businessName: txtBusinessName.text.trim(),
         email: txtEmail.text.trim(),
         //email: userCredentials.user!.email.toString(),
         countryCode: countryCode.value,

@@ -80,7 +80,6 @@ class CInventoryController extends GetxController {
     await fetchUserInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
-    //fetchTopSellers();
 
     await initInvSync();
 

@@ -7,7 +7,9 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/fresh_dashboard_screen_view.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -35,6 +37,7 @@ class HomeScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final navController = Get.put(CNavMenuController());
+    final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
     final userCurrency = CHelperFunctions.formatCurrency(
       userController.user.value.currencyCode,
@@ -91,33 +94,64 @@ class HomeScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CSectionHeading(
-                        showActionBtn: true,
-                        title: 'top sellers...',
-                        // txtColor: CColors.white,
-                        txtColor: CColors.rBrown,
-                        btnTitle: 'view all',
-                        btnTxtColor: CColors.grey,
-                        editFontSize: true,
-                        onPressed: () {
-                          navController.selectedIndex.value = 1;
-                          Get.to(() => const NavMenu());
-                        },
-                      ),
+                      if (invController.topSellers.isNotEmpty)
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'top sellers...',
+                          // txtColor: CColors.white,
+                          txtColor: CColors.rBrown,
+                          btnTitle: 'view all',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            navController.selectedIndex.value = 1;
+                            Get.to(() => const NavMenu());
+                          },
+                        ),
                       invController.topSellers.isEmpty
-                          ? Text('we are excited to have you!!')
+                          ? Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: CSizes.defaultSpace * 2.0,
+                                  ),
+                                  Text(
+                                    'welcome aboard!!'.toUpperCase(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .apply(
+                                          fontSizeFactor: 1.3,
+                                          fontWeightDelta: -2,
+                                        ),
+                                  ),
+                                  const SizedBox(
+                                    height: CSizes.defaultSpace / 2,
+                                  ),
+                                  Text(
+                                    'your perfect dashboard is just a few sales away.\n \nstart adding products/items to your inventory and make your first sale today!'
+                                        .toUpperCase(),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.labelMedium!.apply(),
+                                  ),
+                                ],
+                              ),
+                            )
                           : CTopSellers(),
 
-                      CSectionHeading(
-                        showActionBtn: true,
-                        title: 'weekly sales...',
-                        // txtColor: CColors.white,
-                        txtColor: CColors.rBrown,
-                        btnTitle: '',
-                        btnTxtColor: CColors.grey,
-                        editFontSize: true,
-                        onPressed: () {},
-                      ),
+                      if (invController.topSellers.isNotEmpty)
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'weekly sales...',
+                          // txtColor: CColors.white,
+                          txtColor: CColors.rBrown,
+                          btnTitle: '',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {},
+                        ),
 
                       /// -- weekly sales bar graph --
                       Obx(() {
@@ -128,6 +162,15 @@ class HomeScreen extends StatelessWidget {
                                     dashboardController.lastWeekSales.value) /
                                 dashboardController.lastWeekSales.value) *
                             100;
+                        if (invController.inventoryItems.isEmpty &&
+                            txnsController.sales.isEmpty) {
+                          return Column(
+                            children: [
+                              SizedBox(height: CSizes.defaultSpace),
+                              Center(child: CFreshDashboardScreenView()),
+                            ],
+                          );
+                        }
                         return CRoundedContainer(
                           // bgColor:
                           //     isDarkTheme ? CColors.darkGrey : CColors.grey,

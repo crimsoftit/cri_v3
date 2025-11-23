@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
+import 'package:location/location.dart' as location;
 
 class CLocationController extends GetxController {
   // -- variables --
@@ -26,10 +27,36 @@ class CLocationController extends GetxController {
 
   late StreamSubscription<ServiceStatus> serviceStatusStream;
 
+  final location.Location _location = location.Location();
+
+  final geocoding = Geolocator();
+
+  @override
+  void onInit() async {
+    checkForServiceAvailability();
+    super.onInit();
+  }
+
   // -- initialize the network manager and set up a stream to continually check the connection status --
 
   void updateLocationAccess(bool hasAccess) {
     processingLocationAccess.value = hasAccess;
+  }
+
+  Future<bool> checkForServiceAvailability() async {
+    bool locationIsEnabled = await _location.serviceEnabled();
+
+    if (locationIsEnabled) {
+      return Future.value(true);
+    }
+
+    locationIsEnabled = await _location.requestService();
+
+    if (locationIsEnabled) {
+      return Future.value(true);
+    }
+
+    return Future.value(false);
   }
 
   void updateUserLocation(LocationData locationData) {
