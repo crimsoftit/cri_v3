@@ -757,11 +757,8 @@ class CInventoryController extends GetxController {
       isImportingInvCloudData.value = true;
 
       // -- check internet connectivity
-      final isConnectedToInternet =
-          CNetworkManager.instance.hasConnection.value;
 
-      if (isConnectedToInternet) {
-        await fetchUserInvSheetData();
+      await fetchUserInvSheetData().then((_) async {
         if (userGSheetData.isNotEmpty) {
           for (var element in userGSheetData) {
             var dbData = CInventoryModel.withID(
@@ -789,24 +786,28 @@ class CInventoryController extends GetxController {
 
             // -- save imported data to local sqflite database --
             dbHelper.addInventoryItem(dbData);
-
-            // -- fetch inventory items --
-            await fetchUserInventoryItems();
           }
         }
+      });
+      // -- refresh inventory items' list --
+      Future.delayed(Duration.zero, () {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await fetchUserInventoryItems();
+        });
+      });
 
-        if (kDebugMode) {
-          print("----------\n\n $userGSheetData \n\n ----------");
-        }
-      } else {
-        if (kDebugMode) {
-          print('internet connection required for inventory cloud sync');
-          CPopupSnackBar.customToast(
-            message: 'internet connection required for inventory cloud sync',
-            forInternetConnectivityStatus: false,
-          );
-        }
+      if (kDebugMode) {
+        print("----------\n\n $userGSheetData \n\n ----------");
       }
+      // } else {
+      //   if (kDebugMode) {
+      //     print('internet connection required for inventory cloud sync');
+      //     CPopupSnackBar.customToast(
+      //       message: 'internet connection required for inventory cloud sync',
+      //       forInternetConnectivityStatus: false,
+      //     );
+      //   }
+      // }
       isImportingInvCloudData.value = false;
       return true;
     } catch (e) {
@@ -821,6 +822,73 @@ class CInventoryController extends GetxController {
       throw e.toString();
     }
   }
+  // Future<bool> importInvDataFromCloud() async {
+  //   try {
+  //     isImportingInvCloudData.value = true;
+
+  //     // -- check internet connectivity
+
+  //     if (await CNetworkManager.instance.isConnected()) {
+  //       await fetchUserInvSheetData();
+  //       if (userGSheetData.isNotEmpty) {
+  //         for (var element in userGSheetData) {
+  //           var dbData = CInventoryModel.withID(
+  //             element.productId,
+  //             element.userId,
+  //             element.userEmail,
+  //             element.userName,
+  //             element.pCode,
+  //             element.name,
+  //             element.markedAsFavorite,
+  //             element.quantity,
+  //             element.qtySold,
+  //             element.qtyRefunded,
+  //             element.buyingPrice,
+  //             element.unitBp,
+  //             element.unitSellingPrice,
+  //             element.lowStockNotifierLimit,
+  //             element.supplierName,
+  //             element.supplierContacts,
+  //             element.dateAdded,
+  //             element.lastModified,
+  //             element.isSynced,
+  //             element.syncAction,
+  //           );
+
+  //           // -- save imported data to local sqflite database --
+  //           dbHelper.addInventoryItem(dbData);
+
+  //           // -- fetch inventory items --
+  //           await fetchUserInventoryItems();
+  //         }
+  //       }
+
+  //       if (kDebugMode) {
+  //         print("----------\n\n $userGSheetData \n\n ----------");
+  //       }
+  //     } else {
+  //       if (kDebugMode) {
+  //         print('internet connection required for inventory cloud sync');
+  //         CPopupSnackBar.customToast(
+  //           message: 'internet connection required for inventory cloud sync',
+  //           forInternetConnectivityStatus: false,
+  //         );
+  //       }
+  //     }
+  //     isImportingInvCloudData.value = false;
+  //     return true;
+  //   } catch (e) {
+  //     isImportingInvCloudData.value = false;
+  //     if (kDebugMode) {
+  //       print('ERROR IMPORTING inventory DATA FROM CLOUD: $e');
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'ERROR IMPORTING inventory DATA FROM CLOUD!',
+  //         message: e.toString(),
+  //       );
+  //     }
+  //     throw e.toString();
+  //   }
+  // }
 
   Future<List<CInvDelsModel>> fetchInvDels() async {
     try {
