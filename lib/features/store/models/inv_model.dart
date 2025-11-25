@@ -25,6 +25,7 @@ class CInventoryModel {
   String _supplierContacts = "";
   String _dateAdded = "";
   String _lastModified = "";
+  String _expiryDate = "";
   int _isSynced = 0;
   String _syncAction = "";
 
@@ -47,6 +48,7 @@ class CInventoryModel {
     this._supplierContacts,
     this._dateAdded,
     this._lastModified,
+    this._expiryDate,
     this._isSynced,
     this._syncAction,
   );
@@ -70,6 +72,7 @@ class CInventoryModel {
     this._supplierContacts,
     this._dateAdded,
     this._lastModified,
+    this._expiryDate,
     this._isSynced,
     this._syncAction,
   );
@@ -89,6 +92,7 @@ class CInventoryModel {
       0.0,
       0.0,
       0,
+      '',
       '',
       '',
       '',
@@ -122,6 +126,7 @@ class CInventoryModel {
   String get supplierContacts => _supplierContacts;
   String get dateAdded => _dateAdded;
   String get lastModified => _lastModified;
+  String get expiryDate => _expiryDate;
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
 
@@ -199,6 +204,10 @@ class CInventoryModel {
     _lastModified = newLastModified;
   }
 
+  set expiryDate(String newExpiryDate) {
+    _expiryDate = newExpiryDate;
+  }
+
   set isSynced(int syncState) {
     _isSynced = syncState;
   }
@@ -235,6 +244,7 @@ class CInventoryModel {
 
     map['dateAdded'] = _dateAdded;
     map['lastModified'] = _lastModified;
+    map['expiryDate'] = _expiryDate;
 
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
@@ -265,6 +275,7 @@ class CInventoryModel {
 
     _dateAdded = map['dateAdded'];
     _lastModified = map['lastModified'];
+    _expiryDate = map['expiryDate'];
 
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
@@ -291,6 +302,7 @@ class CInventoryModel {
       json[InvSheetFields.supplierContacts],
       json[InvSheetFields.dateAdded],
       json[InvSheetFields.lastModified],
+      json[InvSheetFields.expiryDate],
       jsonDecode(json[InvSheetFields.isSynced]),
       json[InvSheetFields.syncAction],
     );

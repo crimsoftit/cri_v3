@@ -63,6 +63,7 @@ class CInvGridviewScreen extends StatelessWidget {
                   '',
                   '',
                   '',
+                  '',
                   0,
                   '',
                 ),
@@ -121,6 +122,12 @@ class CInvGridviewScreen extends StatelessWidget {
                       invController.foundInventoryItems.isNotEmpty
                   ? invController.foundInventoryItems[index].dateAdded
                   : invController.inventoryItems[index].dateAdded;
+
+              var expiryDate =
+                  searchController.showSearchField.value &&
+                      invController.foundInventoryItems.isNotEmpty
+                  ? invController.foundInventoryItems[index].expiryDate
+                  : invController.inventoryItems[index].expiryDate;
 
               var isFavorite =
                   searchController.showSearchField.value &&
@@ -216,7 +223,7 @@ class CInvGridviewScreen extends StatelessWidget {
 
               return CProductCardVertical(
                 bp: bp.toString(),
-                containerHeight: 176.0,
+                containerHeight: 174.0,
                 deleteAction: syncController.processingSync.value
                     ? null
                     : () {
@@ -229,6 +236,7 @@ class CInvGridviewScreen extends StatelessWidget {
                         }
                         invController.deleteInventoryWarningPopup(itemId);
                       },
+                expiryDate: expiryDate,
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
                 itemName: pName,
@@ -264,6 +272,7 @@ class CInvGridviewScreen extends StatelessWidget {
                                 supplierContacts,
                                 dateAdded,
                                 lastModified,
+                                expiryDate,
                                 isSynced,
                                 syncAction,
                               ),

@@ -337,6 +337,7 @@ class CInvDetails extends StatelessWidget {
                           invItem.supplierContacts,
                           invItem.dateAdded,
                           invItem.lastModified,
+                          invItem.expiryDate,
                           invItem.isSynced,
                           invItem.syncAction,
                         ),

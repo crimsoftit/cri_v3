@@ -107,9 +107,7 @@ class CStoreScreen extends StatelessWidget {
                   bottom: const CTabBar(
                     tabs: [
                       Tab(child: Text('inventory')),
-                      // Tab(
-                      //   child: Text('sales_raw'),
-                      // ),
+
                       Tab(child: Text('sales (all)')),
                       Tab(child: Text('receipts')),
                       Tab(child: Text('invoices')),
@@ -123,7 +121,7 @@ class CStoreScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: [
                 /// -- inventory list items --
-                CInvGridviewScreen(mainAxisExtent: 182.0),
+                CInvGridviewScreen(mainAxisExtent: 184.2),
 
                 // -- almost obsolete --
                 // CItemsListView(

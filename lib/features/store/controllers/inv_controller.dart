@@ -53,6 +53,7 @@ class CInventoryController extends GetxController {
 
   final RxDouble unitBP = 0.0.obs;
 
+  final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
   final txtNameController = TextEditingController();
   final txtCode = TextEditingController();
@@ -218,6 +219,7 @@ class CInventoryController extends GetxController {
           txtSupplierContacts.text.trim(),
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+          txtExpiryDatePicker.text.trim(),
           1,
           'none',
         );
@@ -283,6 +285,7 @@ class CInventoryController extends GetxController {
               'supplierContacts': e.supplierContacts,
               'dateAdded': e.dateAdded,
               'lastModified': e.lastModified,
+              'expiryDate': e.expiryDate,
               'isSynced': 1,
               'syncAction': 'none',
             },
@@ -337,6 +340,7 @@ class CInventoryController extends GetxController {
               element.supplierContacts,
               element.dateAdded,
               element.lastModified,
+              element.expiryDate,
               1,
               'none',
             );
@@ -390,6 +394,7 @@ class CInventoryController extends GetxController {
             .toString();
         txtSupplierName.text = fetchedItem.first.supplierName;
         txtSupplierContacts.text = fetchedItem.first.supplierContacts;
+        txtExpiryDatePicker.text = fetchedItem.first.expiryDate;
 
         if (fetchedItem.first.supplierName != '' ||
             fetchedItem.first.supplierContacts != '') {
@@ -402,6 +407,7 @@ class CInventoryController extends GetxController {
       } else {
         itemExists.value = false;
         supplierDetailsExist.value = false;
+        txtExpiryDatePicker.text = '';
         txtId.text = '';
         txtNameController.text = '';
         txtQty.text = '';
@@ -425,16 +431,18 @@ class CInventoryController extends GetxController {
   }
 
   void runInvScanner() {
-    txtId.text = "";
-    txtNameController.text = "";
-    txtCode.text = "";
-    txtQty.text = "";
     txtBP.text = "";
-    unitBP.value = 0.0;
-    txtUnitSP.text = "";
+    txtCode.text = "";
+    txtExpiryDatePicker.text = "";
+    txtId.text = "";
+    txtQty.text = "";
     txtStockNotifierLimit.text = "";
-    txtSupplierName.text = "";
     txtSupplierContacts.text = '';
+    txtSupplierName.text = "";
+    txtNameController.text = "";
+    txtUnitSP.text = "";
+    unitBP.value = 0.0;
+
     scanBarcodeNormal();
   }
 
@@ -451,7 +459,10 @@ class CInventoryController extends GetxController {
               ) ||
               element.pCode.toLowerCase().contains(value.toLowerCase()) ||
               element.dateAdded.toLowerCase().contains(value.toLowerCase()) ||
-              element.lastModified.toLowerCase().contains(value.toLowerCase()),
+              element.lastModified.toLowerCase().contains(
+                value.toLowerCase(),
+              ) ||
+              element.expiryDate.toLowerCase().contains(value.toLowerCase()),
         )
         .toList();
 
@@ -555,6 +566,7 @@ class CInventoryController extends GetxController {
         inventoryItem.lastModified = DateFormat(
           'yyyy-MM-dd @ kk:mm',
         ).format(clock.now());
+        inventoryItem.expiryDate = txtExpiryDatePicker.text.trim();
 
         inventoryItem.syncAction = txtSyncAction.text.trim();
 
@@ -780,6 +792,7 @@ class CInventoryController extends GetxController {
               element.supplierContacts,
               element.dateAdded,
               element.lastModified,
+              element.expiryDate,
               element.isSynced,
               element.syncAction,
             );
@@ -1010,6 +1023,7 @@ class CInventoryController extends GetxController {
             element.supplierContacts,
             element.dateAdded,
             element.lastModified,
+            element.expiryDate,
             1,
             'none',
           );
@@ -1023,12 +1037,6 @@ class CInventoryController extends GetxController {
               fetchUserInventoryItems();
             }
           });
-
-          // if (await StoreSheetsApi.updateInvDataNoDeletions(
-          //     invUpdateItem.productId!, invUpdateItem.toMap())) {
-          //   await dbHelper.updateInventoryItem(
-          //       invUpdateItem, element.productId!);
-          // }
         }
       } else {
         if (kDebugMode) {
@@ -1037,63 +1045,6 @@ class CInventoryController extends GetxController {
       }
     }
   }
-
-  // Future syncInvToCloudUpdates() async {
-  //   await fetchUserInventoryItems();
-
-  //   // -- check internet connectivity
-  //   final isConnectedToInternet = await CNetworkManager.instance.isConnected();
-
-  //   if (isConnectedToInternet) {
-  //     if (unSyncedUpdates.isNotEmpty) {
-  //       for (var element in unSyncedUpdates) {
-  //         if (element.isSynced == 1) {
-  //           await StoreSheetsApi.updateInvDataNoDeletions(
-  //               element.productId!, element.toMap());
-  //         }
-  //         final invUpdateItem = CInventoryModel.withID(
-  //           element.productId,
-  //           element.userId,
-  //           element.userEmail,
-  //           element.userName,
-  //           element.pCode,
-  //           element.name,
-  //           element.markedAsFavorite,
-  //           element.quantity,
-  //           element.qtySold,
-  //           element.qtyRefunded,
-  //           element.buyingPrice,
-  //           element.unitBp,
-  //           element.unitSellingPrice,
-  //           element.lowStockNotifierLimit,
-  //           element.supplierName,
-  //           element.supplierContacts,
-  //           element.dateAdded,
-  //           element.lastModified,
-  //           1,
-  //           'none',
-  //         );
-
-  //         await dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
-
-  //         // final delItem = CInvDelsModel(
-  //         //   element.productId,
-  //         //   element.name,
-  //         //   'inventory',
-  //         //   1,
-  //         //   'none',
-  //         // );
-  //         // await dbHelper.updateDel(delItem);
-
-  //         await fetchUserInventoryItems();
-  //       }
-  //     } else {
-  //       if (kDebugMode) {
-  //         print('/n/n ----- /n all updates rada safi \n -----');
-  //       }
-  //     }
-  //   }
-  // }
 
   Future<bool> cloudSyncInventory() async {
     try {
@@ -1229,5 +1180,23 @@ class CInventoryController extends GetxController {
         );
       },
     );
+  }
+
+  /// -- format & set item's expiry date --
+  Future<void> pickExpiryDate() async {
+    DateTime? expiryDate = await showDatePicker(
+      context: Get.overlayContext!,
+      firstDate: DateTime(2025),
+      initialDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+
+    if (expiryDate != null) {
+      String formattedDate = DateFormat(
+        "yyyy-MM-dd @ kk:mm",
+      ).format(expiryDate);
+
+      txtExpiryDatePicker.text = formattedDate;
+    }
   }
 }

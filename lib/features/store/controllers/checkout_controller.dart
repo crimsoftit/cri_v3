@@ -472,6 +472,7 @@ class CCheckoutController extends GetxController {
                 '',
                 '',
                 '',
+                '',
                 0,
                 '',
               ),
@@ -826,7 +827,7 @@ class CCheckoutController extends GetxController {
         return;
       }
     }
-    if ((selectedPaymentMethod.value.platformName == 'mPesa' ||
+    if ((selectedPaymentMethod.value.platformName == 'mPesa (offline)' ||
             selectedPaymentMethod.value.platformName == 'credit') &&
         customerNameFieldController.text == '') {
       customerNameFocusNode.value.requestFocus();

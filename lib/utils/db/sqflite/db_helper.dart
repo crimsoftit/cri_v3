@@ -73,6 +73,7 @@ class DbHelper extends GetxController {
             supplierContacts TEXT NOT NULL,
             dateAdded CHAR(30) NOT NULL,
             lastModified CHAR(30) NOT NULL,
+            expiryDate CHAR(30) NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL
             )
@@ -171,6 +172,7 @@ class DbHelper extends GetxController {
       '0114 567 890',
       'added: 03/03/2025',
       clock.now().toString(),
+      'expires: 13/12/2025',
       1,
       'none',
     );
@@ -262,6 +264,7 @@ class DbHelper extends GetxController {
         maps[i]['supplierContacts'],
         maps[i]['dateAdded'],
         maps[i]['lastModified'],
+        maps[i]['expiryDate'],
         maps[i]['isSynced'],
         maps[i]['syncAction'],
       );

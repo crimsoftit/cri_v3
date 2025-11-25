@@ -17,6 +17,7 @@ class InvSheetFields {
   static const String supplierContacts = 'supplierContacts';
   static const String dateAdded = 'dateAdded';
   static const String lastModified = 'lastModified';
+  static const String expiryDate = 'expiryDate';
   static const String isSynced = 'isSynced';
   static const String syncAction = 'syncAction';
 
@@ -40,6 +41,7 @@ class InvSheetFields {
       supplierContacts,
       dateAdded,
       lastModified,
+      expiryDate,
       isSynced,
       syncAction,
     ];

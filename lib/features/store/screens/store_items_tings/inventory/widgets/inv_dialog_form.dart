@@ -119,6 +119,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 },
               ),
               const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
+
+              // -- product name field --
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: invController.txtNameController,
@@ -144,6 +146,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // -- stock qty field --
                   SizedBox(
                     width: CHelperFunctions.screenWidth() * .38,
                     height: 60.0,
@@ -196,6 +199,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       },
                     ),
                   ),
+
+                  // -- unit selling price field --
                   SizedBox(
                     width: CHelperFunctions.screenWidth() * .45,
                     height: 60.0,
@@ -363,6 +368,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     final currency = CHelperFunctions.formatCurrency(
                       userController.user.value.currencyCode,
                     );
+
+                    // -- display unit buying price
                     return Visibility(
                       visible:
                           invController.txtBP.text.isEmpty &&
@@ -388,6 +395,33 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                     );
                   }),
+                  //const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
+
+                  // -- expiry date field --
+                  TextFormField(
+                    //autovalidateMode: AutovalidateMode.onUserInteraction,
+                    controller: invController.txtExpiryDatePicker,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: isDarkTheme
+                          ? CColors.transparent
+                          : CColors.lightGrey,
+                      labelText: 'pick expiry date',
+                      labelStyle: textStyle,
+                      prefixIcon: Icon(
+                        Iconsax.calendar,
+                        color: CColors.darkGrey,
+                        size: CSizes.iconXs,
+                      ),
+                    ),
+                    onTap: () async {
+                      invController.pickExpiryDate();
+                    },
+                    style: const TextStyle(fontWeight: FontWeight.normal),
+                    // validator: (value) {
+                    //   return CValidator.validateEmptyText('expiry date', value);
+                    // },
+                  ),
                 ],
               ),
 

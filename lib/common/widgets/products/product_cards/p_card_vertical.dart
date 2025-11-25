@@ -22,6 +22,7 @@ class CProductCardVertical extends StatelessWidget {
     required this.pId,
     this.bp,
     this.lastModified,
+    this.expiryDate,
     this.deleteAction,
     this.isSynced,
     this.itemAvatar,
@@ -41,6 +42,7 @@ class CProductCardVertical extends StatelessWidget {
   final int? lowStockNotifierLimit;
   final int pId;
   final String? bp,
+      expiryDate,
       lastModified,
       isSynced,
       itemAvatar,
@@ -264,15 +266,28 @@ class CProductCardVertical extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: true,
-                          child: Text(
-                            'isSynced: $isSynced, syncAction: $syncAction',
-                            style: Theme.of(context).textTheme.labelSmall!
-                                .apply(
-                                  color: isDarkTheme
-                                      ? CColors.white
-                                      : CColors.darkGrey,
-                                ),
+                          visible: false,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'isSynced: $isSynced, syncAction: $syncAction',
+                                style: Theme.of(context).textTheme.labelSmall!
+                                    .apply(
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.darkGrey,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          'expiry date: $expiryDate',
+                          style: Theme.of(context).textTheme.labelSmall!.apply(
+                            color: isDarkTheme
+                                ? CColors.white
+                                : CColors.darkGrey,
                           ),
                         ),
                         CProductPriceTxt(
@@ -291,7 +306,7 @@ class CProductCardVertical extends StatelessWidget {
                           // chora cart item usp * qtyInCart
                           // also catch socketexception when syncing data
                           width: CHelperFunctions.screenWidth(),
-                          height: 35.0,
+                          height: 33.0,
                           child: Obx(() {
                             return Stack(
                               children: [

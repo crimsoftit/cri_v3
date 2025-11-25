@@ -20,12 +20,12 @@ class CStoreScreenHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AddUpdateItemDialog dialog = AddUpdateItemDialog();
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
 
-    AddUpdateItemDialog dialog = AddUpdateItemDialog();
     return Obx(() {
       return Container(
         // padding: const EdgeInsets.only(left: 2.0),
@@ -70,6 +70,7 @@ class CStoreScreenHeader extends StatelessWidget {
                           0.0,
                           0.0,
                           0,
+                          '',
                           '',
                           '',
                           '',

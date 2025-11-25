@@ -17,14 +17,15 @@ class CDashboardController extends GetxController {
   static CDashboardController get instance => Get.find();
 
   /// -- variables --
+  final carouselSliderIndex = 0.obs;
+
   final invController = Get.put(CInventoryController());
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
-  final txnsController = Get.put(CTxnsController());
   final RxDouble currentWeekSales = 0.0.obs;
   final RxDouble lastWeekSales = 0.0.obs;
   final RxDouble weeklyPercentageChange = 0.0.obs;
-
   final RxList<double> weeklySales = <double>[].obs;
+  final txnsController = Get.put(CTxnsController());
 
   @override
   void onInit() async {
@@ -201,10 +202,8 @@ class CDashboardController extends GetxController {
     );
   }
 
-  /// -- compare last week's total sales to this week's --
-  // double computePercentageChange(double initialValue, double currentValue) {
-  //   var percentageChange = ((currentValue - initialValue) / initialValue) * 100;
-  //   //weeklyPercentageChange.value = percentageChange;
-  //   return percentageChange;
-  // }
+  /// -- update carousel slider index --
+  void updateCarouselSliderIndex(int index) {
+    carouselSliderIndex.value = index;
+  }
 }

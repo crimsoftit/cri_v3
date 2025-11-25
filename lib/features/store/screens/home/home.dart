@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                               invController.inventoryItems.isEmpty
                           ? Center(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: CSizes.defaultSpace),
                                   Text(
