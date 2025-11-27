@@ -1,5 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/common/widgets/loaders/animated_loader.dart';
 import 'package:cri_v3/common/widgets/products/store_item.dart';
@@ -127,7 +127,9 @@ class CCheckoutScreen extends StatelessWidget {
                     ],
                   );
                 }),
-                CDivider(endIndent: 200, startIndent: 0),
+                // CDivider(endIndent: 200, startIndent: 0),
+                /// -- custom divider --
+                CCustomDivider(),
                 Obx(() {
                   /// -- empty data widget --
                   final noDataWidget = CAnimatedLoaderWidget(

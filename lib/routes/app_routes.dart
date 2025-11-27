@@ -5,7 +5,6 @@ import 'package:cri_v3/features/authentication/screens/signup/signup.dart';
 import 'package:cri_v3/features/authentication/screens/signup/verify_email.dart';
 import 'package:cri_v3/features/personalization/screens/profile/profile.dart';
 import 'package:cri_v3/features/personalization/screens/settings/user_settings_screen.dart';
-import 'package:cri_v3/features/personalization/screens/settings/user_settings_screen_raw.dart';
 import 'package:cri_v3/features/store/screens/home/home.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/inventory_details/inv_details.dart';
@@ -49,11 +48,10 @@ class CAppRoutes {
 
     GetPage(name: CRoutes.settings, page: () => const CUserSettingsScreen()),
 
-    GetPage(
-      name: CRoutes.settingsScreenRaw,
-      page: () => const SettingsScreenRaw(),
-    ),
-
+    // GetPage(
+    //   name: CRoutes.settingsScreenRaw,
+    //   page: () => const SettingsScreenRaw(),
+    // ),
     GetPage(name: CRoutes.userProfile, page: () => const CProfileScreen()),
 
     GetPage(name: CRoutes.signup, page: () => const SignupScreen()),

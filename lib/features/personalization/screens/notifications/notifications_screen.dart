@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/store/models/notifications_model.dart';
@@ -87,7 +87,10 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                           fontWeightDelta: -7,
                         ),
                       ),
-                      CDivider(endIndent: 250.0, startIndent: 0),
+                      //CDivider(endIndent: 250.0, startIndent: 0),
+
+                      /// -- custom divider --
+                  CCustomDivider(leftPadding: 5.0,),
                     ],
                   );
                 }),

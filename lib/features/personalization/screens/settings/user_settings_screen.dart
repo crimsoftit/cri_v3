@@ -1,5 +1,4 @@
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
@@ -54,7 +53,7 @@ class CUserSettingsScreen extends StatelessWidget {
                     fontWeightDelta: -7,
                   ),
                 ),
-                CDivider(endIndent: 270.0, startIndent: 0),
+
                 // -- app settings
                 const SizedBox(height: CSizes.spaceBtnItems),
                 const CSectionHeading(

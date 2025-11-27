@@ -298,13 +298,30 @@ class DbHelper extends GetxController {
 
   /// -- delete inventory item --
   Future<int> deleteInventoryItem(CInventoryModel inventory) async {
-    int result = await _db!.delete(
+    try {
+      int result = await _db!.delete(
       'inventory',
       where: 'productId = ?',
       whereArgs: [inventory.productId],
     );
 
     return result;
+    } catch (e) {
+      if (kDebugMode) {
+        print(' error deleting inventory item: $e ');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting inventory item',
+          message: 'an error occurred while deleting item: $e',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting inventory item',
+          message: 'an error occurred while deleting item',
+        );
+      }
+      rethrow;
+    }
+    
   }
 
   /// -- update inventory upon sale --

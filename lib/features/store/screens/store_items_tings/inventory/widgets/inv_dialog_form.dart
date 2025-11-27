@@ -1,6 +1,8 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/nav_menu.dart' show NavMenu;
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -16,17 +18,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
     super.key,
     required this.invController,
     required this.textStyle,
-    required this.inventoryItem,
+    required this.inventoryItem, required this.fromHomeScreen,
   });
 
+  final bool fromHomeScreen;
+  final CInventoryModel inventoryItem;
   final CInventoryController invController;
   final TextStyle? textStyle;
-  final CInventoryModel inventoryItem;
+  
 
   @override
   Widget build(BuildContext context) {
     //AddUpdateItemDialog dialog = AddUpdateItemDialog();
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final navController = Get.put(CNavMenuController());
 
     return Column(
       children: <Widget>[
@@ -89,7 +94,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           icon: Icon(
                             Iconsax.flash,
                             size: CSizes.iconXs,
-                            color: CColors.rBrown,
+                            color: isDarkTheme
+                                ? CColors.darkGrey
+                                : CColors.rBrown,
                           ),
                           label: Text(
                             invController.txtCode.text.isEmpty
@@ -97,14 +104,16 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 : 'clear',
                             style: Theme.of(context).textTheme.labelSmall!
                                 .apply(
-                                  color: CColors.rBrown,
+                                  color: isDarkTheme
+                                      ? CColors.darkGrey
+                                      : CColors.rBrown,
                                   fontStyle: FontStyle.italic,
                                 ),
                           ),
                         ),
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.scan, size: CSizes.iconSm),
-                    color: CColors.rBrown,
+                    color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
                     onPressed: () {
                       invController.scanBarcodeNormal();
                     },
@@ -168,7 +177,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             ? CColors.transparent
                             : CColors.lightGrey,
                         labelStyle: textStyle,
-                        labelText: 'qty/no. of units',
+                        labelText: 'qty/units',
                         maintainHintSize: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 2.0),
@@ -180,7 +189,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         ),
                       ),
                       validator: (value) {
-                        return CValidator.validateNumber('qty', value);
+                        return CValidator.validateNumber(
+                          'qty/ no. of units',
+                          value,
+                        );
                       },
                       onChanged: (value) {
                         if (invController.txtBP.text.isNotEmpty &&
@@ -395,70 +407,103 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                     );
                   }),
-                  //const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
 
-                  // -- expiry date field --
-                  TextFormField(
-                    //autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: invController.txtExpiryDatePicker,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: isDarkTheme
-                          ? CColors.transparent
-                          : CColors.lightGrey,
-                      labelText: 'pick expiry date',
-                      labelStyle: textStyle,
-                      prefixIcon: Icon(
-                        Iconsax.calendar,
-                        color: CColors.darkGrey,
-                        size: CSizes.iconXs,
-                      ),
-                    ),
-                    onTap: () async {
-                      invController.pickExpiryDate();
-                    },
-                    style: const TextStyle(fontWeight: FontWeight.normal),
-                    // validator: (value) {
-                    //   return CValidator.validateEmptyText('expiry date', value);
-                    // },
-                  ),
+                  //const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
                 ],
               ),
 
               Obx(() {
-                return Visibility(
-                  visible: invController.includeSupplierDetails.value,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: CSizes.spaceBtnInputFields),
-                      TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        controller: invController.txtSupplierName,
+                return Column(
+                  children: [
+                    Visibility(
+                      visible: invController.includeSupplierDetails.value,
+                      replacement: SizedBox.shrink(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: CSizes.spaceBtnInputFields),
+                          TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            controller: invController.txtSupplierName,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: isDarkTheme
+                                  ? CColors.transparent
+                                  : CColors.lightGrey,
+                              labelStyle: Theme.of(
+                                context,
+                              ).textTheme.labelSmall,
+                              labelText: 'supplier name (optional)',
+                              prefixIcon: Icon(
+                                Iconsax.user_add,
+                                color: CColors.darkGrey,
+                                size: CSizes.iconXs,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields / 2,
+                          ),
+                          TextFormField(
+                            controller: invController.txtSupplierContacts,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: isDarkTheme
+                                  ? CColors.transparent
+                                  : CColors.lightGrey,
+                              labelStyle: textStyle,
+                              labelText: 'supplier contacts (optional)',
+
+                              prefixIcon: Icon(
+                                Icons.contact_mail,
+                                color: CColors.darkGrey,
+                                size: CSizes.iconXs,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields / 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // -- expiry date field --
+                    Visibility(
+                      replacement: const SizedBox.shrink(),
+                      visible: invController.includeExpiryDate.value,
+
+                      child: TextFormField(
+                        //autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: invController.txtExpiryDatePicker,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: isDarkTheme
                               ? CColors.transparent
                               : CColors.lightGrey,
-                          labelText: 'supplier name (optional)',
+                          labelText: 'pick expiry date',
                           labelStyle: textStyle,
+                          prefixIcon: Icon(
+                            Iconsax.calendar,
+                            color: CColors.darkGrey,
+                            size: CSizes.iconXs,
+                          ),
                         ),
+                        onTap: () async {
+                          invController.pickExpiryDate();
+                        },
                         style: const TextStyle(fontWeight: FontWeight.normal),
+                        // validator: (value) {
+                        //   return CValidator.validateEmptyText('expiry date', value);
+                        // },
                       ),
-                      const SizedBox(height: CSizes.spaceBtnInputFields / 2),
-                      TextFormField(
-                        controller: invController.txtSupplierContacts,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: isDarkTheme
-                              ? CColors.transparent
-                              : CColors.lightGrey,
-                          labelText: 'supplier contacts (optional)',
-                          labelStyle: textStyle,
-                        ),
-                        style: const TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               }),
               const SizedBox(height: CSizes.spaceBtnInputFields),
@@ -469,21 +514,23 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     flex: 4,
                     child: Obx(() {
                       return TextButton.icon(
-                        icon: const Icon(
+                        icon: Icon(
                           Iconsax.save_add,
                           size: CSizes.iconSm,
-                          color: CColors.white,
+                          color: isDarkTheme ? CColors.rBrown : CColors.white,
                         ),
                         label: Text(
                           invController.itemExists.value ? 'update' : 'add',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelMedium!.apply(color: CColors.white),
+                          style: Theme.of(context).textTheme.labelMedium!.apply(
+                            color: isDarkTheme ? CColors.rBrown : CColors.white,
+                          ),
                         ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor:
                               CColors.white, // foreground (text) color
-                          backgroundColor: CColors.rBrown, // background color
+                          backgroundColor: isDarkTheme
+                              ? CColors.white
+                              : CColors.rBrown, // background color
                         ),
                         onPressed: () async {
                           // -- form validation
@@ -509,7 +556,18 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           if (await invController.addOrUpdateInventoryItem(
                             inventoryItem,
                           )) {
-                            Navigator.pop(Get.overlayContext!, true);
+                            switch (fromHomeScreen) {
+                              case true:
+                                navController.selectedIndex.value = 1;
+                                Navigator.pop(Get.overlayContext!, true);
+                                
+                                Get.to(const NavMenu());
+                                break;
+                              default:
+                                Navigator.pop(Get.overlayContext!, true);
+                                break;
+                            }
+                            
                           } else {
                             CPopupSnackBar.errorSnackBar(
                               title: 'error adding/updating inventory item ',

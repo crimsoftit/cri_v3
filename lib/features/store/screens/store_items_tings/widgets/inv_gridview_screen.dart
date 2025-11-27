@@ -68,6 +68,7 @@ class CInvGridviewScreen extends StatelessWidget {
                   '',
                 ),
                 true,
+                false,
               ),
             );
           },
@@ -276,6 +277,7 @@ class CInvGridviewScreen extends StatelessWidget {
                                 isSynced,
                                 syncAction,
                               ),
+                              false,
                               false,
                             );
                           },

@@ -1,6 +1,7 @@
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
@@ -28,6 +29,7 @@ class CInventoryController extends GetxController {
   final localStorage = GetStorage();
 
   DbHelper dbHelper = DbHelper.instance;
+  final cartController = Get.put(CCartController());
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
@@ -45,6 +47,7 @@ class CInventoryController extends GetxController {
   final RxBool isImportingInvCloudData = false.obs;
   final RxBool itemExists = false.obs;
   final RxBool gSheetInvItemExists = false.obs;
+  final RxBool includeExpiryDate = false.obs;
   final RxBool includeSupplierDetails = false.obs;
   final RxBool supplierDetailsExist = false.obs;
   final RxBool syncingInvDeletions = false.obs;
@@ -79,6 +82,7 @@ class CInventoryController extends GetxController {
     dbHelper.openDb();
 
     await fetchUserInventoryItems();
+
     fetchInvDels();
     fetchInvUpdates();
 
@@ -171,10 +175,15 @@ class CInventoryController extends GetxController {
           )
           .toList();
 
-      // stop loader
-      isLoading.value = false;
-
-      return fetchedItems;
+      if (inventoryItems.isNotEmpty) {
+        // stop loader
+        isLoading.value = false;
+        return [];
+      } else {
+        // stop loader
+        isLoading.value = false;
+        return inventoryItems;
+      }
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
@@ -505,6 +514,24 @@ class CInventoryController extends GetxController {
       // -- start loader
       isLoading.value = true;
 
+      // -- check if item is in cart and remove it first --
+      int forDeleteCartItemIndex = cartController.cartItems.indexWhere(
+        (uCartItem) => uCartItem.productId == inventoryItem.productId,
+      );
+
+      if (kDebugMode) {
+        print(forDeleteCartItemIndex);
+        CPopupSnackBar.customToast(
+          message: '$forDeleteCartItemIndex',
+          forInternetConnectivityStatus: false,
+        );
+      }
+
+      if (forDeleteCartItemIndex >= 0) {
+        cartController.cartItems.removeAt(forDeleteCartItemIndex);
+        cartController.updateCart();
+      }
+
       // -- delete entry
       await dbHelper.deleteInventoryItem(inventoryItem);
 
@@ -541,6 +568,70 @@ class CInventoryController extends GetxController {
       rethrow;
     }
   }
+
+  // /// -- delete inventory item entry --
+  // Future<void> deleteInventoryItem(CInventoryModel inventoryItem) async {
+  //   try {
+  //     // -- start loader
+  //     isLoading.value = true;
+
+  //     // -- delete entry
+  //     await dbHelper.deleteInventoryItem(inventoryItem).then((result) async {
+  //       if (result == 1) {
+  //         var cartItemsToDelete = cartController.cartItems
+  //             .where(
+  //               (cartItem) =>
+  //                   cartItem.productId == inventoryItem.productId,
+  //             )
+  //             .toList();
+  //         if (cartItemsToDelete.isNotEmpty) {
+  //           cartController.cartItems.removeAt(inventoryItem[index]);
+  //       qtyFieldControllers.removeAt(itemIndex);
+  //           Future.delayed(Duration.zero, () {
+  //             WidgetsBinding.instance.addPostFrameCallback((_) {
+  //               cartController.updateCartTotals();
+  //               cartController.fetchCartItems();
+  //             });
+  //           });
+
+  //         }
+
+  //         // -- refresh inventory list
+  //     fetchUserInventoryItems();
+
+  //     searchController.txtSearchField.text = '';
+
+  //     // -- stop loader
+  //     isLoading.value = false;
+
+  //       }
+  //     });
+
+  //     // -- success message
+  //     CPopupSnackBar.successSnackBar(
+  //       title: 'delete success',
+  //       message: '${inventoryItem.name} deleted successfully...',
+  //     );
+  //   } catch (e) {
+  //     // -- stop loader
+  //     isLoading.value = false;
+
+  //     if (kDebugMode) {
+  //       print(e.toString());
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'error deleting data',
+  //         message: e.toString(),
+  //       );
+  //     } else {
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'error deleting data',
+  //         message: 'unable to delete this item... please try again later!',
+  //       );
+  //     }
+
+  //     rethrow;
+  //   }
+  // }
 
   /// -- add or update inventory item using sqflite
   Future<bool> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
@@ -1134,12 +1225,12 @@ class CInventoryController extends GetxController {
     unitBP.value = bp / qty;
   }
 
-  toggleSupplierDetsFieldsVisibility() {
-    if (includeSupplierDetails.value) {
-      includeSupplierDetails.value = false;
-    } else {
-      includeSupplierDetails.value = true;
-    }
+  toggleSupplierDetsFieldsVisibility(value) {
+    includeSupplierDetails.value = value;
+  }
+
+  toggleExpiryDateFieldVisibility(value) {
+    includeExpiryDate.value = value;
   }
 
   /// -- reset fields --

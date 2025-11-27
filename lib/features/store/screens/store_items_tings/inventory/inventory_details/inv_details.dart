@@ -1,4 +1,5 @@
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
+
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
@@ -103,14 +104,9 @@ class CInvDetails extends StatelessWidget {
                   //   ),
                   // ),
                 ),
-                CDivider(),
-                // Divider(
-                //   //color: isDarkTheme ? CColors.grey : CColors.rBrown,
-                //   color: CColors.rBrown,
-                //   endIndent: 5.0,
-                //   indent: 5.0,
-                //   thickness: 0.4,
-                // ),
+                
+                /// -- custom divider --
+                CCustomDivider(),
                 Padding(
                   padding: const EdgeInsets.all(CSizes.defaultSpace / 3),
                   child: Column(
@@ -341,6 +337,7 @@ class CInvDetails extends StatelessWidget {
                           invItem.isSynced,
                           invItem.syncAction,
                         ),
+                        false,
                         false,
                       );
                     },

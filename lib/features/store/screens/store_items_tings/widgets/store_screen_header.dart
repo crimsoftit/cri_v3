@@ -79,6 +79,7 @@ class CStoreScreenHeader extends StatelessWidget {
                           '',
                         ),
                         true,
+                        false,
                       ),
                     );
                   },

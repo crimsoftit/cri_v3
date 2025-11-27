@@ -1,7 +1,11 @@
+import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/common/widgets/switches/custom_switch.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog_form.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,10 +14,11 @@ class AddUpdateItemDialog {
     BuildContext context,
     CInventoryModel invModel,
     bool isNew,
+    bool fromHomeScreen,
   ) {
-    var textStyle = Theme.of(context).textTheme.bodySmall;
-
     final invController = Get.put(CInventoryController());
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    var textStyle = Theme.of(context).textTheme.bodySmall;
 
     if (!isNew) {
       invController.txtId.text = invModel.productId.toString();
@@ -38,59 +43,116 @@ class AddUpdateItemDialog {
           invController.txtStockNotifierLimit.text.isEmpty
           ? invModel.lowStockNotifierLimit.toString()
           : invController.txtStockNotifierLimit.text.trim();
+      invController.txtExpiryDatePicker.text =
+          invController.txtExpiryDatePicker.text.trim().isEmpty
+          ? invModel.expiryDate
+          : invController.txtExpiryDatePicker.text.trim();
     }
 
     return PopScope(
       canPop: false,
-      child: AlertDialog(
-        //backgroundColor: isDarkTheme ? CColors.rBrown.withValues(alpha: 0.4),
-        insetPadding: const EdgeInsets.all(2.0),
-        title: Obx(
-          () => Row(
-            children: [
-              Expanded(
-                child: Text(
+      child: CRoundedContainer(
+        bgColor: isDarkTheme
+            ? CColors.transparent
+            : CColors.white.withValues(alpha: 0.6),
+        child: AlertDialog(
+          backgroundColor: isDarkTheme
+              ? CColors.rBrown
+              : CColors.rBrown.withValues(alpha: 0.4),
+          insetPadding: const EdgeInsets.all(2.0),
+          title: Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
                   (invController.itemExists.value)
-                      ? 'update ${invController.txtNameController.text.trim()}'
-                      : 'add inventory...',
-                  style: Theme.of(context).textTheme.labelLarge,
-                  overflow: TextOverflow.ellipsis,
+                      ? Icons.update
+                      : Icons.add_circle,
+                  color: CColors.white,
+                  size: CSizes.iconLg * 1.5,
                 ),
-              ),
-              // const SizedBox(
-              //   width: CSizes.spaceBtnInputFields / 2,
-              // ),
-              Visibility(
-                visible: invController.supplierDetailsExist.value
-                    ? false
-                    : true,
-                child: Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      invController.toggleSupplierDetsFieldsVisibility();
-                    },
-                    child: Text(
-                      invController.includeSupplierDetails.value
-                          ? 'exclude supplier details?'
-                          : 'include supplier details?',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelMedium!.apply(color: CColors.rBrown),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                // const SizedBox(
+                //   width: CSizes.spaceBtnInputFields / 2,
+                // ),
+                Obx(() {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // -- toggle entry for supplier details --
+                      CCustomSwitch(
+                        label: 'supplier details',
+                        onValueChanged: (value) {
+                          invController.toggleSupplierDetsFieldsVisibility(
+                            value,
+                          );
+                        },
+                        switchValue: invController.includeSupplierDetails.value,
+                      ),
+
+                      // -- toggle entry for expiry date --
+                      CCustomSwitch(
+                        label: 'expiry date',
+                        onValueChanged: (value) {
+                          invController.toggleExpiryDateFieldVisibility(value);
+                        },
+                        switchValue: invController.includeExpiryDate.value,
+                      ),
+                    ],
+                  );
+                }),
+                // Visibility(
+                //   visible: invController.supplierDetailsExist.value
+                //       ? false
+                //       : true,
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       CMenuTile(
+                //         displayLeadingIcon: false,
+
+                //         title: 'supplier details',
+                //         trailing: Obx(() {
+                //           return Switch(
+                //             value: invController.includeSupplierDetails.value,
+                //             activeThumbColor: CColors.rBrown,
+                //             onChanged: (value) {
+                //               invController.toggleSupplierDetsFieldsVisibility();
+                //             },
+                //           );
+                //         }),
+                //       ),
+                //     ],
+                //   ),
+
+                //   // TextButton(
+                //   //   onPressed: () {
+                //   //     invController.toggleSupplierDetsFieldsVisibility();
+                //   //   },
+                //   //   child: Text(
+                //   //     invController.includeSupplierDetails.value
+                //   //         ? 'exclude supplier details?'
+                //   //         : 'include supplier details?',
+                //   //     style: Theme.of(
+                //   //       context,
+                //   //     ).textTheme.labelMedium!.apply(color: CColors.rBrown),
+                //   //   ),
+                //   // ),
+                // ),
+              ],
+            ),
           ),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        content: SingleChildScrollView(
-          child: AddUpdateInventoryForm(
-            invController: invController,
-            textStyle: textStyle,
-            inventoryItem: invModel,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          content: SingleChildScrollView(
+            child: AddUpdateInventoryForm(
+              invController: invController,
+              inventoryItem: invModel,
+              fromHomeScreen: fromHomeScreen,
+              textStyle: textStyle,
+              
+            ),
           ),
         ),
       ),

@@ -52,6 +52,7 @@ class CFreshDashboardScreenView extends StatelessWidget {
                     '',
                   ),
                   true,
+                  true,
                 ),
               );
             },
@@ -59,7 +60,9 @@ class CFreshDashboardScreenView extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'add your first item to get started!'.toUpperCase(),
-                style: Theme.of(context).textTheme.labelMedium,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium!.apply(color: CColors.rBrown),
                 textAlign: TextAlign.center,
               ),
             ),

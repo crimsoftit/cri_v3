@@ -1,5 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
+import 'package:cri_v3/common/widgets/dividers/c_divider.dart' show CDivider;
 import 'package:cri_v3/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/no_data/no_data_screen.dart';

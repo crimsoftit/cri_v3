@@ -2,6 +2,7 @@ import 'package:cri_v3/common/widgets/appbar/app_bar.dart';
 import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class DashboardHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final currentUser = FirebaseAuth.instance.currentUser;
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final userController = Get.put(CUserController());
 
     return CAppBar(
@@ -59,8 +61,10 @@ class DashboardHeaderWidget extends StatelessWidget {
                         : userController.user.value.businessName,
                     style: Theme.of(context).textTheme.labelLarge!.apply(
                       color: CNetworkManager.instance.hasConnection.value
-                          ? CColors.rBrown
-                          : CColors.darkGrey,
+                          ? isDarkTheme
+                                ? CColors.darkGrey
+                                : CColors.rBrown
+                          : CColors.rBrown,
                       fontSizeFactor: 2.5,
                       fontWeightDelta: -7,
                     ),

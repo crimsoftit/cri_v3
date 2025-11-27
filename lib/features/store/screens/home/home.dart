@@ -1,5 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/divider/c_divider.dart';
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
 import 'package:cri_v3/common/widgets/sliders/carousel_slider.dart';
@@ -77,7 +77,9 @@ class HomeScreen extends StatelessWidget {
                 screenTitle: '',
                 showAppBarTitle: false,
               ),
-              CDivider(endIndent: 250.0),
+
+              /// -- custom divider --
+              CCustomDivider(),
 
               Padding(
                 padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 0),
@@ -113,8 +115,10 @@ class HomeScreen extends StatelessWidget {
                               invController.inventoryItems.isEmpty
                           ? Center(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  const SizedBox(height: CSizes.defaultSpace),
+
+                                  CCarouselSlider(),
                                   const SizedBox(height: CSizes.defaultSpace),
                                   Text(
                                     'welcome aboard!!'.toUpperCase(),
@@ -122,6 +126,9 @@ class HomeScreen extends StatelessWidget {
                                         .textTheme
                                         .bodyLarge!
                                         .apply(
+                                          color: isDarkTheme
+                                              ? CColors.darkGrey
+                                              : CColors.rBrown,
                                           fontSizeFactor: 1.3,
                                           fontWeightDelta: -2,
                                         ),
@@ -132,12 +139,15 @@ class HomeScreen extends StatelessWidget {
                                   Text(
                                     'your perfect dashboard is just a few sales away!'
                                         .toUpperCase(),
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.labelMedium!.apply(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .apply(
+                                          color: isDarkTheme
+                                              ? CColors.darkGrey
+                                              : CColors.rBrown,
+                                        ),
                                   ),
-                                  const SizedBox(height: CSizes.defaultSpace),
-                                  CCarouselSlider(),
 
                                   // Text(
                                   //   'your perfect dashboard is just a few sales away.\n \nstart adding products/items to your inventory and make your first sale today!'
@@ -416,3 +426,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
