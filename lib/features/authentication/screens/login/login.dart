@@ -6,6 +6,7 @@ import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
+import 'package:cri_v3/utils/helpers/network_manager.dart' show CNetworkManager;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,10 +40,16 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // -- logo, title, and subtitle --
-                const AppScreenHeader(
+                AppScreenHeader(
                   includeAfterSpace: false,
                   subTitle: CTexts.loginSubTitle,
+
                   title: 'sign in...',
+                  txtColor: isDarkTheme
+                      ? CColors.darkGrey
+                      : CNetworkManager.instance.hasConnection.value
+                      ? CColors.rBrown
+                      : CColors.darkGrey,
                 ),
 
                 // -- login form --

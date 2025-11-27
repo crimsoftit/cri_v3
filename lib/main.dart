@@ -15,6 +15,7 @@ import 'package:timezone/data/latest.dart' as tz;
 final globalNavigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
+  /// TODO: prompt for location permissions
   /// -- todo: add widgets binding --
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();

@@ -247,11 +247,20 @@ class CInvGridviewScreen extends StatelessWidget {
                     ? null
                     : () {
                         invController.itemExists.value = true;
+                        invController.txtSupplierName.text = supplierName;
+                        invController.txtSupplierContacts.text =
+                            supplierContacts;
+
+                        invController.includeSupplierDetails.value =
+                            supplierName != '' || supplierContacts != '';
+                        invController.includeExpiryDate.value =
+                            expiryDate != '';
                         showDialog(
                           context: context,
                           useRootNavigator: true,
                           builder: (BuildContext context) {
                             invController.currentItemId.value = productId!;
+
                             return dialog.buildDialog(
                               context,
                               CInventoryModel.withID(

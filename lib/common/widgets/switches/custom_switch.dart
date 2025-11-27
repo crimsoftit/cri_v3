@@ -8,9 +8,11 @@ class CCustomSwitch extends StatelessWidget {
     required this.label,
     required this.onValueChanged,
     required this.switchValue,
+    this.labelColor,
   });
 
   final bool switchValue;
+  final Color? labelColor;
   final String label;
   final void Function(bool) onValueChanged;
 
@@ -28,7 +30,7 @@ class CCustomSwitch extends StatelessWidget {
             label,
             style: Theme.of(
               context,
-            ).textTheme.labelMedium!.apply(color: CColors.white),
+            ).textTheme.labelMedium!.apply(color: labelColor),
           ),
           Transform.scale(
             scale: .8,

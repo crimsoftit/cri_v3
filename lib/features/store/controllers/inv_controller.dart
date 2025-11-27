@@ -25,6 +25,8 @@ class CInventoryController extends GetxController {
     return Get.find();
   }
 
+  /// -- TODO: avoid cloud sync if dialog's update btn is pressed yet there aer no changes
+
   /// -- variables --
   final localStorage = GetStorage();
 
@@ -411,6 +413,11 @@ class CInventoryController extends GetxController {
         } else {
           supplierDetailsExist.value = false;
         }
+        if (fetchedItem.first.expiryDate != '') {
+          includeExpiryDate.value = true;
+        } else {
+          includeExpiryDate.value = false;
+        }
 
         txtSyncAction.text = 'update';
       } else {
@@ -426,6 +433,7 @@ class CInventoryController extends GetxController {
         txtStockNotifierLimit.text = '';
         txtSupplierName.text = '';
         txtSupplierContacts.text = '';
+        txtExpiryDatePicker.text = '';
         txtSyncAction.text = 'append';
       }
       isLoading.value = false;
@@ -449,6 +457,7 @@ class CInventoryController extends GetxController {
     txtSupplierContacts.text = '';
     txtSupplierName.text = "";
     txtNameController.text = "";
+    txtExpiryDatePicker.text = "";
     txtUnitSP.text = "";
     unitBP.value = 0.0;
 

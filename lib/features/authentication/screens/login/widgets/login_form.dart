@@ -4,6 +4,7 @@ import 'package:cri_v3/features/authentication/screens/signup/signup.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
+import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final loginController = Get.put(CLoginController());
 
     return Form(
@@ -27,9 +29,15 @@ class LoginForm extends StatelessWidget {
             TextFormField(
               controller: loginController.email,
               style: const TextStyle(height: 0.7),
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Iconsax.direct_right),
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: .6,
+                    color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                  ),
+                ),
                 labelText: CTexts.email,
+                prefixIcon: Icon(Iconsax.direct_right),
               ),
               validator: (value) {
                 return CValidator.validateEmail(value);
@@ -45,6 +53,12 @@ class LoginForm extends StatelessWidget {
                 obscureText: loginController.hidePswdTxt.value,
                 style: const TextStyle(height: 0.8),
                 decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: .6,
+                      color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                    ),
+                  ),
                   labelText: CTexts.password,
                   prefixIcon: const Icon(Iconsax.password_check),
                   suffixIcon: IconButton(

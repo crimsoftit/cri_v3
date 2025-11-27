@@ -1,4 +1,6 @@
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart'
+    show CCustomDivider;
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
@@ -38,7 +40,9 @@ class CUserSettingsScreen extends StatelessWidget {
                 Text(
                   userController.user.value.email,
                   style: Theme.of(context).textTheme.labelSmall!.apply(
-                    color: CNetworkManager.instance.hasConnection.value
+                    color: isDarkTheme
+                        ? CColors.darkGrey
+                        : CNetworkManager.instance.hasConnection.value
                         ? CColors.rBrown
                         : CColors.darkGrey,
                   ),
@@ -46,13 +50,18 @@ class CUserSettingsScreen extends StatelessWidget {
                 Text(
                   userController.user.value.fullName.split(" ").elementAt(0),
                   style: Theme.of(context).textTheme.labelLarge!.apply(
-                    color: CNetworkManager.instance.hasConnection.value
+                    color: isDarkTheme
+                        ? CColors.darkGrey
+                        : CNetworkManager.instance.hasConnection.value
                         ? CColors.rBrown
                         : CColors.darkGrey,
                     fontSizeFactor: 2.5,
                     fontWeightDelta: -7,
                   ),
                 ),
+
+                /// -- custom divider --
+                CCustomDivider(leftPadding: 5.0),
 
                 // -- app settings
                 const SizedBox(height: CSizes.spaceBtnItems),

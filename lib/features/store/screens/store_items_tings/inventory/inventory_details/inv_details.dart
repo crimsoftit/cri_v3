@@ -1,4 +1,3 @@
-
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
@@ -104,7 +103,7 @@ class CInvDetails extends StatelessWidget {
                   //   ),
                   // ),
                 ),
-                
+
                 /// -- custom divider --
                 CCustomDivider(),
                 Padding(
@@ -210,12 +209,13 @@ class CInvDetails extends StatelessWidget {
                         subTitle: 'total units sold',
                         onTap: () {},
                       ),
-                      // CMenuTile(
-                      //   icon: Iconsax.user,
-                      //   title: invItem.supplierName,
-                      //   subTitle: 'supplier name',
-                      //   onTap: () {},
-                      // ),
+                      // TODO: ability to update expiry date
+                      CMenuTile(
+                        icon: Iconsax.calendar,
+                        title: invItem.expiryDate,
+                        subTitle: 'expiry date',
+                        onTap: () {},
+                      ),
                       CMenuTile(
                         icon: Icons.contact_mail,
                         onTap: () {

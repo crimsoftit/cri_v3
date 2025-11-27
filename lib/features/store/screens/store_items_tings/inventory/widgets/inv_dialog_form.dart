@@ -18,14 +18,14 @@ class AddUpdateInventoryForm extends StatelessWidget {
     super.key,
     required this.invController,
     required this.textStyle,
-    required this.inventoryItem, required this.fromHomeScreen,
+    required this.inventoryItem,
+    required this.fromHomeScreen,
   });
 
   final bool fromHomeScreen;
   final CInventoryModel inventoryItem;
   final CInventoryController invController;
   final TextStyle? textStyle;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -454,8 +454,11 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               fillColor: isDarkTheme
                                   ? CColors.transparent
                                   : CColors.lightGrey,
-                              labelStyle: textStyle,
-                              labelText: 'supplier contacts (optional)',
+                              labelStyle: TextStyle(
+                                color: CColors.darkGrey,
+                                inherit: true,
+                              ),
+                              labelText: 'supplier contacts',
 
                               prefixIcon: Icon(
                                 Icons.contact_mail,
@@ -560,14 +563,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               case true:
                                 navController.selectedIndex.value = 1;
                                 Navigator.pop(Get.overlayContext!, true);
-                                
+
                                 Get.to(const NavMenu());
                                 break;
                               default:
                                 Navigator.pop(Get.overlayContext!, true);
                                 break;
                             }
-                            
                           } else {
                             CPopupSnackBar.errorSnackBar(
                               title: 'error adding/updating inventory item ',

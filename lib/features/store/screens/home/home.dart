@@ -9,9 +9,11 @@ import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
+import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/fresh_dashboard_screen_view.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
+import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -31,6 +33,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final cartController = Get.put(CCartController());
+    AddUpdateItemDialog dialog = AddUpdateItemDialog();
     final dashboardController = Get.put(CDashboardController());
 
     final invController = Get.put(CInventoryController());
@@ -126,9 +129,10 @@ class HomeScreen extends StatelessWidget {
                                         .textTheme
                                         .bodyLarge!
                                         .apply(
-                                          color: isDarkTheme
-                                              ? CColors.darkGrey
-                                              : CColors.rBrown,
+                                          // color: isDarkTheme
+                                          //     ? CColors.darkGrey
+                                          //     : CColors.rBrown,
+                                          color: CColors.rBrown,
                                           fontSizeFactor: 1.3,
                                           fontWeightDelta: -2,
                                         ),
@@ -182,12 +186,63 @@ class HomeScreen extends StatelessWidget {
                                     dashboardController.lastWeekSales.value) /
                                 dashboardController.lastWeekSales.value) *
                             100;
-                        if (invController.inventoryItems.isEmpty &&
+
+                        if (invController.inventoryItems.isEmpty ||
                             txnsController.sales.isEmpty) {
                           return Column(
                             children: [
                               SizedBox(height: CSizes.defaultSpace),
-                              Center(child: CFreshDashboardScreenView()),
+                              Center(
+                                child: invController.inventoryItems.isEmpty
+                                    ? CFreshDashboardScreenView(
+                                        iconData: Icons.add,
+                                        label:
+                                            'add your first item to get started!',
+                                        onTap: () {
+                                          invController.resetInvFields();
+                                          showDialog(
+                                            context: context,
+                                            useRootNavigator: false,
+                                            builder: (BuildContext context) =>
+                                                dialog.buildDialog(
+                                                  context,
+                                                  CInventoryModel(
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0.0,
+                                                    0.0,
+                                                    0.0,
+                                                    0,
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    0,
+                                                    '',
+                                                  ),
+                                                  true,
+                                                  true,
+                                                ),
+                                          );
+                                        },
+                                      )
+                                    : CFreshDashboardScreenView(
+                                        iconData: Iconsax.tag,
+                                        label:
+                                            'your perfect brand awaits! make your first sale...',
+                                        onTap: () {
+                                          navController.selectedIndex.value = 1;
+                                        },
+                                      ),
+                              ),
                             ],
                           );
                         }
@@ -426,5 +481,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-

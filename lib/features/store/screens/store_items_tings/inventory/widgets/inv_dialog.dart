@@ -58,7 +58,7 @@ class AddUpdateItemDialog {
         child: AlertDialog(
           backgroundColor: isDarkTheme
               ? CColors.rBrown
-              : CColors.rBrown.withValues(alpha: 0.4),
+              : CColors.darkGrey.withValues(alpha: 0.3),
           insetPadding: const EdgeInsets.all(2.0),
           title: Obx(
             () => Row(
@@ -68,7 +68,7 @@ class AddUpdateItemDialog {
                   (invController.itemExists.value)
                       ? Icons.update
                       : Icons.add_circle,
-                  color: CColors.white,
+                  color: isDarkTheme ? CColors.white : CColors.rBrown,
                   size: CSizes.iconLg * 1.5,
                 ),
                 // const SizedBox(
@@ -82,6 +82,9 @@ class AddUpdateItemDialog {
                       // -- toggle entry for supplier details --
                       CCustomSwitch(
                         label: 'supplier details',
+                        labelColor: isDarkTheme
+                            ? CColors.darkGrey
+                            : CColors.rBrown,
                         onValueChanged: (value) {
                           invController.toggleSupplierDetsFieldsVisibility(
                             value,
@@ -93,6 +96,9 @@ class AddUpdateItemDialog {
                       // -- toggle entry for expiry date --
                       CCustomSwitch(
                         label: 'expiry date',
+                        labelColor: isDarkTheme
+                            ? CColors.darkGrey
+                            : CColors.rBrown,
                         onValueChanged: (value) {
                           invController.toggleExpiryDateFieldVisibility(value);
                         },
@@ -151,7 +157,6 @@ class AddUpdateItemDialog {
               inventoryItem: invModel,
               fromHomeScreen: fromHomeScreen,
               textStyle: textStyle,
-              
             ),
           ),
         ),
