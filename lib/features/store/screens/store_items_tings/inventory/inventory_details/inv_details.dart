@@ -8,6 +8,7 @@ import 'package:cri_v3/features/store/screens/store_items_tings/inventory/invent
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
@@ -145,6 +146,16 @@ class CInvDetails extends StatelessWidget {
                         onTap: () {},
                       ),
 
+                      // TODO: ability to update expiry date
+                      CMenuTile(
+                        icon: Iconsax.calendar,
+                        title: CFormatter.formatTimeRangeFromNow(
+                          invItem.expiryDate.replaceAll('@ ', ''),
+                        ).toString(),
+                        subTitle: 'expiry date',
+                        onTap: () {},
+                      ),
+
                       CMenuTile(
                         icon: Iconsax.shopping_cart,
                         title:
@@ -209,13 +220,7 @@ class CInvDetails extends StatelessWidget {
                         subTitle: 'total units sold',
                         onTap: () {},
                       ),
-                      // TODO: ability to update expiry date
-                      CMenuTile(
-                        icon: Iconsax.calendar,
-                        title: invItem.expiryDate,
-                        subTitle: 'expiry date',
-                        onTap: () {},
-                      ),
+
                       CMenuTile(
                         icon: Icons.contact_mail,
                         onTap: () {

@@ -8,7 +8,6 @@ import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
-import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -47,7 +46,8 @@ class CCartItems extends StatelessWidget {
         animation: CImages.noDataLottie,
         onActionBtnPressed: () {
           navController.selectedIndex.value = 1;
-          Get.to(() => const NavMenu());
+          //Get.to(() => const NavMenu());
+          Get.back();
         },
       );
       if (cartController.cartItems.isEmpty &&

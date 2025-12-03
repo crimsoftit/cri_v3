@@ -19,7 +19,6 @@ import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/billing_amount_section.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/payment_methods/payment_method_section.dart';
-import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -129,7 +128,8 @@ class CCheckoutScreen extends StatelessWidget {
                 }),
                 // CDivider(endIndent: 200, startIndent: 0),
                 /// -- custom divider --
-                CCustomDivider(),
+                CCustomDivider(leftPadding: 2.0),
+                const SizedBox(height: CSizes.defaultSpace),
                 Obx(() {
                   /// -- empty data widget --
                   final noDataWidget = CAnimatedLoaderWidget(
@@ -139,7 +139,9 @@ class CCheckoutScreen extends StatelessWidget {
                     animation: CImages.emptyCartLottie,
                     onActionBtnPressed: () {
                       navController.selectedIndex.value = 1;
-                      Get.to(() => const NavMenu());
+                      //AuthRepo.instance.screenRedirect();
+                      //Get.to(() => const NavMenu());
+                      Get.back();
                     },
                   );
 

@@ -1,4 +1,7 @@
 import 'package:cri_v3/common/styles/spacing_styles.dart';
+import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
+import 'package:cri_v3/common/widgets/switches/custom_switch.dart';
+import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -24,11 +27,15 @@ class CTxnSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appSettingsController = Get.put(CAppSettingsController());
     final syncController = Get.put(CSyncController());
     final userController = Get.put(CUserController());
 
+    // TODO: clear cart if home button is pressed while on this screen
+
     return Obx(() {
       return Scaffold(
+        appBar: CVersion2AppBar(autoImplyLeading: false),
         body: SingleChildScrollView(
           child: Padding(
             padding: CSpacingStyle.paddingWithAppBarHeight * 2,
@@ -68,6 +75,7 @@ class CTxnSuccessScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: CSizes.spaceBtnSections),
+
                 // -- continue button --
                 Container(
                   alignment: Alignment.center,
@@ -115,6 +123,18 @@ class CTxnSuccessScreen extends StatelessWidget {
                   //           ),
                   //         ),
                   //       ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Obx(() {
+                    return CCustomSwitch(
+                      label: 'auto-sync data',
+                      onValueChanged: (syncValue) {
+                        appSettingsController.toggleSyncSettings(syncValue);
+                      },
+                      switchValue: appSettingsController.dataSyncIsOn.value,
+                    );
+                  }),
                 ),
               ],
             ),

@@ -306,7 +306,8 @@ class CCheckoutController extends GetxController {
                 //   }
                 // }
               } else {
-                if (!internetIsConnected) {
+                if (!internetIsConnected &&
+                    appSettingsController.dataSyncIsOn.value) {
                   CPopupSnackBar.customToast(
                     message:
                         'internet connection required for cloud sync during checkout!',
