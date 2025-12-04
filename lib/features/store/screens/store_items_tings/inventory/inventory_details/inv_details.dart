@@ -316,6 +316,15 @@ class CInvDetails extends StatelessWidget {
                     useRootNavigator: false,
                     builder: (BuildContext context) {
                       invController.currentItemId.value = itemId;
+                      invController.txtSupplierName.text = invItem.supplierName;
+                      invController.txtSupplierContacts.text =
+                          invItem.supplierContacts;
+
+                      invController.includeSupplierDetails.value =
+                          invItem.supplierName != '' ||
+                          invItem.supplierContacts != '';
+                      invController.includeExpiryDate.value =
+                          invItem.expiryDate != '';
 
                       return dialog.buildDialog(
                         context,

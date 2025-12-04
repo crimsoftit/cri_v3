@@ -1,8 +1,10 @@
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/utils/computations/date_time_computations.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,18 +24,30 @@ class CAddToCartBtn extends StatelessWidget {
       var invItem = invController.inventoryItems.firstWhere(
         (item) => item.productId.toString() == pId.toString().toLowerCase(),
       );
+
+      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+        invItem.expiryDate.replaceAll('@ ', ''),
+      );
       return InkWell(
         onTap: () {
           cartController.fetchCartItems();
 
-          final cartItem = cartController.convertInvToCartItem(invItem, 1);
-          cartController.addSingleItemToCart(cartItem, false, null);
+          if (itemExpiry <= 0) {
+            CPopupSnackBar.warningSnackBar(
+              title: 'item is stale/expired',
+              message: '${invItem.name} has expired',
+            );
+          } else {
+            final cartItem = cartController.convertInvToCartItem(invItem, 1);
+            cartController.addSingleItemToCart(cartItem, false, null);
+          }
         },
         child: Container(
           decoration: BoxDecoration(
             color: pQtyInCart > 0
                 ? Colors.orange
-                : invItem.quantity <= invItem.lowStockNotifierLimit
+                : invItem.quantity <= invItem.lowStockNotifierLimit ||
+                      itemExpiry <= 0
                 ? Colors.red
                 : CNetworkManager.instance.hasConnection.value
                 ? CColors.rBrown

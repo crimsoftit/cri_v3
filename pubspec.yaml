@@ -116,6 +116,7 @@ dependencies:
   awesome_notifications_core: any
   awesome_notifications_fcm: any
   awesome_notifications: ^0.10.1
+  another_flushbar: ^1.12.32
   #awesome_notifications: ^0.7.4+1
 
   # -- utility packages

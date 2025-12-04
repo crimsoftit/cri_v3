@@ -7,8 +7,12 @@ import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
+import 'package:cri_v3/utils/computations/date_time_computations.dart'
+    show CDateTimeComputations;
+import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -239,7 +243,21 @@ class CInvGridviewScreen extends StatelessWidget {
                         }
                         invController.deleteInventoryWarningPopup(itemId);
                       },
-                expiryDate: expiryDate,
+                expiryDate: CFormatter.formatTimeRangeFromNow(
+                  expiryDate.replaceAll('@ ', ''),
+                ),
+                expiryColor:
+                    CDateTimeComputations.timeRangeFromNow(
+                          expiryDate.replaceAll('@ ', ''),
+                        ) <=
+                        0
+                    ? CColors.error
+                    : CDateTimeComputations.timeRangeFromNow(
+                            expiryDate.replaceAll('@ ', ''),
+                          ) <=
+                          3
+                    ? CColors.warning
+                    : null,
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
                 itemName: pName,

@@ -105,7 +105,9 @@ class HomeScreen extends StatelessWidget {
                           showActionBtn: true,
                           title: 'top sellers...',
                           // txtColor: CColors.white,
-                          txtColor: CColors.rBrown,
+                          txtColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown,
                           btnTitle: 'view all',
                           btnTxtColor: CColors.grey,
                           editFontSize: true,
@@ -170,7 +172,9 @@ class HomeScreen extends StatelessWidget {
                           showActionBtn: true,
                           title: 'weekly sales...',
                           // txtColor: CColors.white,
-                          txtColor: CColors.rBrown,
+                          txtColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown,
                           btnTitle: '',
                           btnTxtColor: CColors.grey,
                           editFontSize: true,

@@ -25,6 +25,7 @@ class CProductCardVertical extends StatelessWidget {
     this.expiryDate,
     this.deleteAction,
     this.isSynced,
+    this.expiryColor,
     this.itemAvatar,
     this.lowStockNotifierLimit,
     this.onAvatarIconTap,
@@ -39,6 +40,7 @@ class CProductCardVertical extends StatelessWidget {
   });
 
   final double containerHeight;
+  final Color? expiryColor;
   final int? lowStockNotifierLimit;
   final int pId;
   final String? bp,
@@ -285,9 +287,11 @@ class CProductCardVertical extends StatelessWidget {
                         Text(
                           'expiry date: $expiryDate',
                           style: Theme.of(context).textTheme.labelSmall!.apply(
-                            color: isDarkTheme
-                                ? CColors.white
-                                : CColors.darkGrey,
+                            color:
+                                expiryColor ??
+                                (isDarkTheme
+                                    ? CColors.white
+                                    : CColors.darkGrey),
                           ),
                         ),
                         CProductPriceTxt(

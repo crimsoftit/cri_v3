@@ -2,6 +2,8 @@ import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/utils/computations/date_time_computations.dart'
+    show CDateTimeComputations;
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -84,9 +86,11 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   width: 40.0,
                   height: 40.0,
                   color: minusIconBtnColor ?? CColors.white,
-                  onPressed: () => cartController.itemQtyInCart.value < 1
-                      ? null
-                      : cartController.itemQtyInCart.value -= 1,
+                  onPressed: () {
+                    cartController.itemQtyInCart.value < 1
+                        ? null
+                        : cartController.itemQtyInCart.value -= 1;
+                  },
                 ),
                 //const CFavoriteIcon(),
                 const SizedBox(width: CSizes.spaceBtnItems),
@@ -130,10 +134,23 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   : () {
                       invController.fetchUserInventoryItems();
                       cartController.fetchCartItems();
-                      cartController.addToCart(inventoryItem);
-                      cartController.fetchCartItems();
-                      if (fromCheckoutScreen) {
-                        Navigator.pop(context);
+
+                      /// -- check if item has expired before adding it to cart --
+                      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+                        inventoryItem.expiryDate.replaceAll('@ ', ''),
+                      );
+                      if (itemExpiry <= 0) {
+                        CPopupSnackBar.warningSnackBar(
+                          title: 'item is stale/expired',
+                          message: '${inventoryItem.name} has expired!',
+                        );
+                        return;
+                      } else {
+                        cartController.addToCart(inventoryItem);
+                        cartController.fetchCartItems();
+                        if (fromCheckoutScreen) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
               style: ElevatedButton.styleFrom(

@@ -313,13 +313,14 @@ class CCheckoutController extends GetxController {
                         'internet connection required for cloud sync during checkout!',
                     forInternetConnectivityStatus: true,
                   );
-                } else {
-                  CPopupSnackBar.warningSnackBar(
-                    title: 'auto-sync is off',
-                    message:
-                        'data auto-synchronization is turned off in you account settings!',
-                  );
                 }
+                // else {
+                //   CPopupSnackBar.warningSnackBar(
+                //     title: 'auto-sync is off',
+                //     message:
+                //         'data auto-synchronization is turned off in you account settings!',
+                //   );
+                // }
               }
               refreshData();
             },

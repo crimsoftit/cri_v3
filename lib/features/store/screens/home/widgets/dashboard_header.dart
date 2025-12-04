@@ -60,11 +60,16 @@ class DashboardHeaderWidget extends StatelessWidget {
                         ? userController.user.value.fullName
                         : userController.user.value.businessName,
                     style: Theme.of(context).textTheme.labelLarge!.apply(
-                      color: CNetworkManager.instance.hasConnection.value
-                          ? isDarkTheme
-                                ? CColors.darkGrey
-                                : CColors.rBrown
-                          : CColors.rBrown,
+                      color: isDarkTheme
+                          ? CColors.darkGrey
+                          : CNetworkManager.instance.hasConnection.value
+                          ? CColors.rBrown
+                          : CColors.darkGrey,
+                      // color: CNetworkManager.instance.hasConnection.value
+                      //     ? isDarkTheme
+                      //           ? CColors.darkGrey
+                      //           : CColors.rBrown
+                      //     : CColors.rBrown,
                       fontSizeFactor: 2.5,
                       fontWeightDelta: -7,
                     ),
