@@ -243,21 +243,24 @@ class CInvGridviewScreen extends StatelessWidget {
                         }
                         invController.deleteInventoryWarningPopup(itemId);
                       },
-                expiryDate: CFormatter.formatTimeRangeFromNow(
-                  expiryDate.replaceAll('@ ', ''),
-                ),
-                expiryColor:
-                    CDateTimeComputations.timeRangeFromNow(
-                          expiryDate.replaceAll('@ ', ''),
-                        ) <=
-                        0
-                    ? CColors.error
-                    : CDateTimeComputations.timeRangeFromNow(
-                            expiryDate.replaceAll('@ ', ''),
-                          ) <=
-                          3
-                    ? CColors.warning
-                    : null,
+                expiryDate: expiryDate != ''
+                    ? CFormatter.formatTimeRangeFromNow(
+                        expiryDate.replaceAll('@ ', ''),
+                      )
+                    : 'N/A',
+                expiryColor: expiryDate != ''
+                    ? CDateTimeComputations.timeRangeFromNow(
+                                expiryDate.replaceAll('@ ', ''),
+                              ) <=
+                              0
+                          ? CColors.error
+                          : CDateTimeComputations.timeRangeFromNow(
+                                  expiryDate.replaceAll('@ ', ''),
+                                ) <=
+                                3
+                          ? CColors.warning
+                          : CColors.darkGrey
+                    : CColors.grey,
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
                 itemName: pName,

@@ -226,7 +226,7 @@ class CUserController extends GetxController {
         user.refresh();
 
         CPopupSnackBar.successSnackBar(
-          title: 'congrats!',
+          title: 'update successful!',
           message: 'your profile picture was updated successfully!',
         );
       }

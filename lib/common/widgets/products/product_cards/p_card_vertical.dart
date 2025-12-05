@@ -291,7 +291,7 @@ class CProductCardVertical extends StatelessWidget {
                                 expiryColor ??
                                 (isDarkTheme
                                     ? CColors.white
-                                    : CColors.darkGrey),
+                                    : CColors.rBrown),
                           ),
                         ),
                         CProductPriceTxt(

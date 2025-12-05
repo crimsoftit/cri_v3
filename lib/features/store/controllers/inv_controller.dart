@@ -537,7 +537,9 @@ class CInventoryController extends GetxController {
       }
 
       if (forDeleteCartItemIndex >= 0) {
-        cartController.cartItems.removeAt(forDeleteCartItemIndex);
+        // cartController.cartItems.removeAt(forDeleteCartItemIndex);
+        // cartController.updateCart();
+        cartController.cartItems.clear();
         cartController.updateCart();
       }
 
@@ -751,7 +753,7 @@ class CInventoryController extends GetxController {
       confirm: ElevatedButton(
         onPressed: () async {
           // -- check internet connectivity
-          final isConnected = await CNetworkManager.instance.isConnected();
+          final isConnected = CNetworkManager.instance.hasConnection.value;
 
           if (isConnected) {
             if (inventoryItem.isSynced == 1) {

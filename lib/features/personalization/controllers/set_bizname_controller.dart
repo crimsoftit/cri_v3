@@ -66,10 +66,10 @@ class CSetBiznameController extends GetxController {
       CFullScreenLoader.stopLoading();
 
       // -- show success message
-      // CPopupSnackBar.successSnackBar(
-      //   title: 'ngrats!',
-      //   message: 'your business name was updated successfully.',
-      // );
+      CPopupSnackBar.successSnackBar(
+        title: 'update successful!',
+        message: 'your business name was updated successfully.',
+      );
 
       // -- redirect screens accordingly --
       AuthRepo.instance.screenRedirect();

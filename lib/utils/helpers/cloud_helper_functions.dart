@@ -4,8 +4,12 @@ import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-class CCloudHelperFunctions {
+class CCloudHelperFunctions extends GetxController {
+  static CCloudHelperFunctions get instance =>
+      Get.find<CCloudHelperFunctions>();
+
   /// helper function to check the state of a single db record
   ///
   /// returns a widget based on the state of the snapShot
@@ -107,5 +111,13 @@ class CCloudHelperFunctions {
     } catch (e) {
       throw 'something went wrong! ${e.toString()}';
     }
+  }
+
+  /// -- copy item to clipboard --
+  static Future<void> copyToClipboard(String data) async {
+    await Clipboard.setData(ClipboardData(text: data));
+    ScaffoldMessenger.of(
+      Get.overlayContext!,
+    ).showSnackBar(const SnackBar(content: Text('Copied to clipboard')));
   }
 }

@@ -172,7 +172,7 @@ class SignupController extends GetxController {
 
       // -- show signup success message
       CPopupSnackBar.successSnackBar(
-        title: 'ngrats!',
+        title: 'welcome aboard!',
         message:
             'your account has been created! verify your e-mail address to proceed!',
       );

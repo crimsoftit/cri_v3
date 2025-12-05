@@ -9,6 +9,7 @@ import 'package:cri_v3/features/personalization/screens/profile/widgets/update_n
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/cloud_helper_functions.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -102,7 +103,7 @@ class CProfileScreen extends StatelessWidget {
                     userController.uploadUserProfPic();
                   },
                   child: Text(
-                    'change profile picture',
+                    'change avatar',
                     style: Theme.of(
                       context,
                     ).textTheme.labelMedium!.apply(color: CColors.darkGrey),
@@ -125,24 +126,17 @@ class CProfileScreen extends StatelessWidget {
                 const SizedBox(height: CSizes.spaceBtnItems / 4),
 
                 CProfileMenu(
-                  title: 'full name',
-                  value: userController.user.value.fullName,
-                  titleFlex: 3,
-                  secondRowWidgetFlex: 6,
                   onTap: () {
-                    Get.to(() => const CUpdateName());
+                    Get.to(() => const CUpdateName(autoImplyLeading: true));
                   },
+                  secondRowWidgetFlex: 5,
+                  title: 'your name',
+                  titleFlex: 3,
+                  trailingIcon: Iconsax.edit,
+                  value: userController.user.value.fullName,
                 ),
 
                 CProfileMenu(
-                  title: 'business name',
-                  value: userController.user.value.businessName,
-                  titleFlex: 3,
-                  valueIsWidget: userController.user.value.businessName == ''
-                      ? true
-                      : false,
-                  secondRowWidgetFlex: 5,
-                  verticalPadding: 1.0,
                   onTap: () {
                     Get.to(
                       () => const CUpdateBusinessNameScreen(
@@ -150,16 +144,26 @@ class CProfileScreen extends StatelessWidget {
                       ),
                     );
                   },
-                ),
-
-                CProfileMenu(
-                  title: 'username',
-                  value: 'retail intelligence',
-                  titleFlex: 3,
                   secondRowWidgetFlex: 5,
-                  onTap: () {},
+                  title: 'business name',
+
+                  titleFlex: 3,
+                  trailingIcon: Iconsax.edit,
+                  value: userController.user.value.businessName,
+                  valueIsWidget: userController.user.value.businessName == ''
+                      ? true
+                      : false,
+
+                  verticalPadding: 1.0,
                 ),
 
+                // CProfileMenu(
+                //   title: 'username',
+                //   value: 'retail intelligence',
+                //   titleFlex: 3,
+                //   secondRowWidgetFlex: 5,
+                //   onTap: () {},
+                // ),
                 const SizedBox(height: CSizes.spaceBtnItems / 2),
                 const Divider(),
                 const SizedBox(height: CSizes.spaceBtnItems),
@@ -179,7 +183,11 @@ class CProfileScreen extends StatelessWidget {
                   trailingIcon: Iconsax.copy,
                   titleFlex: 2,
                   secondRowWidgetFlex: 6,
-                  onTap: () {},
+                  onTap: () {
+                    CCloudHelperFunctions.copyToClipboard(
+                      userController.user.value.id,
+                    );
+                  },
                 ),
                 CProfileMenu(
                   title: 'e-mail',
@@ -196,15 +204,8 @@ class CProfileScreen extends StatelessWidget {
                   onTap: () {},
                 ),
                 CProfileMenu(
-                  title: 'gender',
-                  value: 'male',
-                  titleFlex: 2,
-                  secondRowWidgetFlex: 6,
-                  onTap: () {},
-                ),
-                CProfileMenu(
-                  title: 'dob.',
-                  value: '8 Aug, 2000',
+                  title: 'account created',
+                  value: userController.user.value.createdAt.toString(),
                   titleFlex: 2,
                   secondRowWidgetFlex: 6,
                   onTap: () {},

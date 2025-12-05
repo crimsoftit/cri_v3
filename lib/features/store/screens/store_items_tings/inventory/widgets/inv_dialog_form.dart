@@ -430,10 +430,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               fillColor: isDarkTheme
                                   ? CColors.transparent
                                   : CColors.lightGrey,
-                              labelStyle: Theme.of(
-                                context,
-                              ).textTheme.labelSmall,
-                              labelText: 'supplier name (optional)',
+                              // labelStyle: Theme.of(
+                              //   context,
+                              // ).textTheme.labelSmall,
+                              labelText: 'supplier name',
                               prefixIcon: Icon(
                                 Iconsax.user_add,
                                 color: CColors.darkGrey,
@@ -454,10 +454,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               fillColor: isDarkTheme
                                   ? CColors.transparent
                                   : CColors.lightGrey,
-                              labelStyle: TextStyle(
-                                color: CColors.darkGrey,
-                                inherit: true,
-                              ),
+                              // labelStyle: TextStyle(
+                              //   color: CColors.darkGrey,
+                              //   inherit: true,
+                              // ),
                               labelText: 'supplier contacts',
 
                               prefixIcon: Icon(

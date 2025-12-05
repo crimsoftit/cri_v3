@@ -149,10 +149,12 @@ class CInvDetails extends StatelessWidget {
                       // TODO: ability to update expiry date
                       CMenuTile(
                         icon: Iconsax.calendar,
-                        title: CFormatter.formatTimeRangeFromNow(
-                          invItem.expiryDate.replaceAll('@ ', ''),
-                        ).toString(),
-                        subTitle: 'expiry date',
+                        title: invItem.expiryDate != ''
+                            ? CFormatter.formatTimeRangeFromNow(
+                                invItem.expiryDate.replaceAll('@ ', ''),
+                              ).toString()
+                            : 'N/A',
+                        subTitle: 'expiry date/shelflife',
                         onTap: () {},
                       ),
 

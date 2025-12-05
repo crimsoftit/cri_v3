@@ -25,14 +25,14 @@ class CAddToCartBtn extends StatelessWidget {
         (item) => item.productId.toString() == pId.toString().toLowerCase(),
       );
 
-      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+      var itemExpiry = invItem.expiryDate != '' ? CDateTimeComputations.timeRangeFromNow(
         invItem.expiryDate.replaceAll('@ ', ''),
-      );
+      ) : null;
       return InkWell(
         onTap: () {
           cartController.fetchCartItems();
 
-          if (itemExpiry <= 0) {
+          if (itemExpiry != null && itemExpiry <= 0) {
             CPopupSnackBar.warningSnackBar(
               title: 'item is stale/expired',
               message: '${invItem.name} has expired',
@@ -47,7 +47,7 @@ class CAddToCartBtn extends StatelessWidget {
             color: pQtyInCart > 0
                 ? Colors.orange
                 : invItem.quantity <= invItem.lowStockNotifierLimit ||
-                      itemExpiry <= 0
+                      (invItem.expiryDate != '' && itemExpiry != null && itemExpiry <= 0)
                 ? Colors.red
                 : CNetworkManager.instance.hasConnection.value
                 ? CColors.rBrown

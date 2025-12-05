@@ -15,7 +15,7 @@ class CFormatter {
 
     var differenceInDays = endTime.difference(startTime).inDays;
     var differenceInHours = endTime.difference(startTime).inHours;
-    var differenceInMinutes = endTime.difference(startTime).inMinutes % 60;
+    //var differenceInMinutes = endTime.difference(startTime).inMinutes % 60;
     var formattedRange = '';
 
     switch (differenceInDays) {
@@ -25,14 +25,14 @@ class CFormatter {
         break;
       case < 0 && > -1:
         differenceInHours = endTime.difference(startTime).inHours.abs();
-        differenceInMinutes = endTime.difference(startTime).inMinutes.abs();
+        //differenceInMinutes = endTime.difference(startTime).inMinutes.abs();
         // formattedRange =
         //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
         formattedRange = '$differenceInHours hour(s) ago';
         break;
       case >= 0 && < 1:
         differenceInHours = endTime.difference(startTime).inHours;
-        differenceInMinutes = endTime.difference(startTime).inMinutes % 60;
+        //differenceInMinutes = endTime.difference(startTime).inMinutes % 60;
         // formattedRange =
         //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
         formattedRange = '$differenceInHours hour(s) ago';

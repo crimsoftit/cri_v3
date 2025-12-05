@@ -89,16 +89,25 @@ class CUpdateBusinessNameScreen extends StatelessWidget {
                         side: const BorderSide(color: CColors.rBrown),
                       ),
                       onPressed: () async {
-                        final internetIsConnected = await CNetworkManager
-                            .instance
-                            .isConnected();
-                        if (internetIsConnected) {
-                          bizNameController.updateBizName();
+                        if (bizNameController.bizNameField.text.trim() ==
+                            bizNameController
+                                .userController
+                                .user
+                                .value
+                                .businessName) {
+                          Get.back();
                         } else {
-                          CPopupSnackBar.warningSnackBar(
-                            title: 'offline',
-                            message: 'internet connection required',
-                          );
+                          CNetworkManager.instance.hasConnection.refresh();
+                          final internetIsConnected =
+                              CNetworkManager.instance.hasConnection.value;
+                          if (internetIsConnected) {
+                            bizNameController.updateBizName();
+                          } else {
+                            CPopupSnackBar.warningSnackBar(
+                              title: 'offline',
+                              message: 'internet connection required',
+                            );
+                          }
                         }
                       },
                       label: Text(
@@ -108,7 +117,7 @@ class CUpdateBusinessNameScreen extends StatelessWidget {
                         ).textTheme.bodyMedium!.apply(color: CColors.white),
                       ),
                       icon: Icon(
-                        Iconsax.save_add,
+                        Iconsax.save_2,
                         size: CSizes.iconSm,
                         color: CColors.white,
                       ),

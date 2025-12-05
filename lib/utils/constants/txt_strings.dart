@@ -36,7 +36,7 @@ class CTexts {
       "your account security is our priority! we've sent you a secure link to safely reset your password and keep your account protected";
   static const String confirmEmail = "verify your e-mail address.";
   static const String confirmEmailSubTitle =
-      'ngrats! your account awaits. verify your e-mail address to start shopping and experience a world of unrivaled deals and personalized offers';
+      'welcome aboard! your account awaits. verify your e-mail address to start shopping and experience a world of unrivaled deals and personalized offers';
   static const String emailNotReceived =
       "didn't get the email? check your junk/spam, or resend it!";
   static const String accountCreatedTitle =

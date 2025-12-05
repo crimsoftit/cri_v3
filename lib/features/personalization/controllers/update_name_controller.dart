@@ -5,6 +5,7 @@ import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/full_screen_loader.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -65,7 +66,7 @@ class CUpdateNameController extends GetxController {
 
       // -- show success message
       CPopupSnackBar.successSnackBar(
-        title: 'ngrats!',
+        title: 'update successful!',
         message: 'your name was updated successfully.',
       );
 
@@ -73,7 +74,16 @@ class CUpdateNameController extends GetxController {
       Get.off(() => const CProfileScreen());
     } catch (e) {
       CFullScreenLoader.stopLoading();
-      CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+      if (kDebugMode) {
+        print('error updating name: ${e.toString()}');
+        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+      }
+      CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message:
+            'an error occurred while updating your name! please try again later.',
+      );
+      rethrow;
     }
   }
 }
