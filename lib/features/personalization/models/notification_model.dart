@@ -33,15 +33,7 @@ class CNotificationsModel {
   );
 
   CNotificationsModel empty() {
-    return CNotificationsModel(
-      0,
-      '',
-      '',
-      0,
-      0,
-      '',
-      '',
-    );
+    return CNotificationsModel(0, '', '', 0, 0, '', '');
   }
 
   int? get notificationId => _notificationId;

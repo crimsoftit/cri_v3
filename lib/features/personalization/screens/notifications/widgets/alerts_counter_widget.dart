@@ -11,12 +11,14 @@ class CAlertsCounterWidget extends StatelessWidget {
     this.counterTxtColor,
     this.rightPosition,
     this.topPosition,
+    required this.alertsCount,
   });
 
   final Color? counterBgColor;
   final Color? counterTxtColor;
 
   final double? rightPosition, topPosition;
+  final int alertsCount;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +40,9 @@ class CAlertsCounterWidget extends StatelessWidget {
             notsController.fetchUserNotifications();
 
             /// -- display count of only created notifications --
-            var notifiedAlerts = notsController.allNotifications.where(
-              (notifiedAlert) => notifiedAlert.alertCreated == 1,
-            );
+
             return Text(
-              notifiedAlerts.length.toString(),
+              '$alertsCount',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color:
                     counterTxtColor ??

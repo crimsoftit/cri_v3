@@ -3,6 +3,7 @@ import 'package:cri_v3/features/authentication/screens/signup/widgets/t_and_c_ch
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
+import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class CSignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final signupController = Get.put(SignupController());
+
     FocusNode focusNode = FocusNode();
     return Form(
       key: signupController.signupFormKey,
@@ -26,11 +29,17 @@ class CSignupForm extends StatelessWidget {
             controller: signupController.fullName,
             expands: false,
             style: const TextStyle(height: 0.7),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: .6,
+                  color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                ),
+              ),
+              labelText: 'your name',
               prefixIcon: Icon(Iconsax.user),
-              labelText: 'full name',
             ),
-            validator: (value) => CValidator.validateName('full name', value),
+            validator: (value) => CValidator.validateName('your name', value),
           ),
 
           const SizedBox(height: CSizes.spaceBtnInputFields),
@@ -57,9 +66,15 @@ class CSignupForm extends StatelessWidget {
           TextFormField(
             controller: signupController.txtEmail,
             style: const TextStyle(height: 0.7),
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Iconsax.direct),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: .6,
+                  color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                ),
+              ),
               labelText: CTexts.email,
+              prefixIcon: Icon(Iconsax.direct),
             ),
             validator: (value) => CValidator.validateEmail(value),
           ),
@@ -76,9 +91,14 @@ class CSignupForm extends StatelessWidget {
               fontFamily: 'Poppins',
               height: 0.8,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               counterStyle: TextStyle(fontSize: 8.0),
-              //counterText: '',
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: .6,
+                  color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                ),
+              ),
               label: Text('phone number'),
               // focusedBorder: OutlineInputBorder(
               //   borderSide: BorderSide(width: 1.0, color: CColors.darkGrey),
@@ -116,6 +136,12 @@ class CSignupForm extends StatelessWidget {
               obscureText: signupController.hidePswdTxt.value,
               style: const TextStyle(height: 0.7),
               decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: .6,
+                    color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                  ),
+                ),
                 labelText: CTexts.password,
                 prefixIcon: const Icon(Iconsax.password_check),
                 suffixIcon: IconButton(
@@ -146,6 +172,12 @@ class CSignupForm extends StatelessWidget {
               obscureText: signupController.hideConfirmPswdTxt.value,
               style: const TextStyle(height: 0.7),
               decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: .6,
+                    color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                  ),
+                ),
                 labelText: 're-type password',
                 prefixIcon: const Icon(Iconsax.password_check),
                 suffixIcon: IconButton(

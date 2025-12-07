@@ -201,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                                     ? CFreshDashboardScreenView(
                                         iconData: Icons.add,
                                         label:
-                                            'add your first item to get started!',
+                                            'add your first inventory item to get started!',
                                         onTap: () {
                                           invController.resetInvFields();
                                           showDialog(

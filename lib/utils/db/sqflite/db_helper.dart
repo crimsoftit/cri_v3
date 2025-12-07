@@ -1,7 +1,7 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
-import 'package:cri_v3/features/store/models/notifications_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';

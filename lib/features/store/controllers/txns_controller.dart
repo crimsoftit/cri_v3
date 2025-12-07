@@ -11,6 +11,7 @@ import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
+import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
@@ -101,6 +102,7 @@ class CTxnsController extends GetxController {
   final searchController = Get.put(CSearchBarController());
   final invController = Get.put(CInventoryController());
   final notsController = Get.put(CNotificationsController());
+  final notsServices = Get.put(CNotificationServices());
   final txnsFormKey = GlobalKey<FormState>();
 
   @override
@@ -199,15 +201,15 @@ class CTxnsController extends GetxController {
       // -- TODO: check if notifications are allowed --
 
       // Only after at least the action method is set, the notification events are delivered
-      AwesomeNotifications().setListeners(
-        onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
-        onNotificationCreatedMethod:
-            CNotificationsController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:
-            CNotificationsController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:
-            CNotificationsController.onDismissActionReceivedMethod,
-      );
+      // AwesomeNotifications().setListeners(
+      //   onActionReceivedMethod: CNotificationServices.onActionReceivedMethod,
+      //   onNotificationCreatedMethod:
+      //       CNotificationServices.onNotificationCreatedMethod,
+      //   onNotificationDisplayedMethod:
+      //       CNotificationServices.onNotificationDisplayedMethod,
+      //   onDismissActionReceivedMethod:
+      //       CNotificationServices.onDismissActionReceivedMethod,
+      // );
 
       AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
         if (!isAllowed) {
@@ -217,19 +219,19 @@ class CTxnsController extends GetxController {
           AwesomeNotifications().requestPermissionToSendNotifications();
         } else {
           await notsController.fetchUserNotifications().then((_) {
-            if (notsController.pendingAlerts.isNotEmpty) {
-              for (var pendingAlert in notsController.pendingAlerts) {
-                notsController.notify(
-                  CHelperFunctions.generateAlertId(),
-                  pendingAlert.notificationTitle,
-                  pendingAlert.notificationBody,
-                );
+            // if (notsController.pendingAlerts.isNotEmpty) {
+            //   for (var pendingAlert in notsController.pendingAlerts) {
+            //     notsServices.displayAlert(
+            //       CHelperFunctions.generateAlertId(),
+            //       pendingAlert.notificationTitle,
+            //       pendingAlert.notificationBody,
+            //     );
 
-                pendingAlert.alertCreated = 1;
+            //     pendingAlert.alertCreated = 1;
 
-                dbHelper.updateNotificationItem(pendingAlert);
-              }
-            }
+            //     dbHelper.updateNotificationItem(pendingAlert);
+            //   }
+            // }
           });
         }
       });

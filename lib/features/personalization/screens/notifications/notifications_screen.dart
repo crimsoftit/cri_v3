@@ -2,16 +2,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
-import 'package:cri_v3/features/store/models/notifications_model.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
+import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
-import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class CNotificationsScreen extends StatefulWidget {
   const CNotificationsScreen({super.key});
@@ -24,15 +21,16 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   void initState() {
     // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
-      onNotificationCreatedMethod:
-          CNotificationsController.onNotificationCreatedMethod,
-      onNotificationDisplayedMethod:
-          CNotificationsController.onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod:
-          CNotificationsController.onDismissActionReceivedMethod,
-    );
+    // AwesomeNotifications().setListeners(
+    //   onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
+    //   onNotificationCreatedMethod:
+    //       CNotificationsController.onNotificationCreatedMethod,
+    //   onNotificationDisplayedMethod:
+    //       CNotificationsController.onNotificationDisplayedMethod,
+    //   onDismissActionReceivedMethod:
+    //       CNotificationsController.onDismissActionReceivedMethod,
+    // );
+    Get.put<CNotificationServices>(CNotificationServices());
 
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -48,7 +46,8 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final notsController = Get.put(CNotificationsController());
+    // final notsController = Get.put(CNotificationsController());
+    // final notServices = Get.put(CNotificationServices());
     final userController = Get.put(CUserController());
 
     return Container(
@@ -90,7 +89,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                       //CDivider(endIndent: 250.0, startIndent: 0),
 
                       /// -- custom divider --
-                  CCustomDivider(leftPadding: 5.0,),
+                      CCustomDivider(leftPadding: 5.0),
                     ],
                   );
                 }),
@@ -98,22 +97,19 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                 // -- list notifications on an ExpansionPanelList.radio widget --
                 CAlertsListView(),
                 FilledButton(
-                  onPressed: () {
-                    var notification = CNotificationsModel(
-                      1,
-                      'noma',
-                      'noma sana!!',
-                      0,
-                      0,
-                      userController.user.value.email,
-                      DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
-                    );
-                    notsController.saveAndOrTriggerNotification(
-                      notification,
-                      1,
-                      notification.notificationTitle,
-                      notification.notificationBody,
-                      true,
+                  onPressed: () async {
+                    await CNotificationServices.notify(
+                      alertLayout: NotificationLayout.Inbox,
+                      body: "alert body",
+                      payload: {
+                        'id': '10',
+                        'title': 'simple alert title',
+                        'body': 'simple alert body',
+                        'product_id': '102456',
+                      },
+                      summary:
+                          'this summary is useless... in fact, there\'s nothing here!',
+                      title: 'alert title',
                     );
                   },
                   child: Text('instant notifications'),

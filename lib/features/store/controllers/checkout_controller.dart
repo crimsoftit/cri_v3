@@ -14,7 +14,6 @@ import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
-import 'package:cri_v3/features/store/models/notifications_model.dart';
 import 'package:cri_v3/features/store/models/payment_method_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
@@ -245,22 +244,22 @@ class CCheckoutController extends GetxController {
                     alertBody = '';
                 }
 
-                var alertItem = CNotificationsModel(
-                  0,
-                  'low stock alert',
-                  alertBody,
-                  0,
-                  invItem.productId ?? 0,
-                  userController.user.value.email,
-                  DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
-                );
-                notificationsController.saveAndOrTriggerNotification(
-                  alertItem,
-                  CHelperFunctions.generateAlertId(),
-                  alertItem.notificationTitle,
-                  alertBody,
-                  alertItem.alertCreated == 1 ? true : false,
-                );
+                // var alertItem = CNotificationsModel(
+                //   0,
+                //   'low stock alert',
+                //   alertBody,
+                //   0,
+                //   invItem.productId ?? 0,
+                //   userController.user.value.email,
+                //   DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+                // );
+                // notificationsController.saveAndOrTriggerNotification(
+                //   alertItem,
+                //   CHelperFunctions.generateAlertId(),
+                //   alertItem.notificationTitle,
+                //   alertBody,
+                //   alertItem.alertCreated == 1 ? true : false,
+                // );
               }
             } else {
               result = 'ERROR ADDING SALE ITEM';

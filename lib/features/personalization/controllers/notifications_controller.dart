@@ -1,9 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
-import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
-import 'package:cri_v3/features/store/models/notifications_model.dart';
-import 'package:cri_v3/main.dart';
-import 'package:cri_v3/nav_menu.dart';
+import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
@@ -43,76 +40,76 @@ class CNotificationsController extends GetxController {
     }
 
     // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
-      onNotificationCreatedMethod:
-          CNotificationsController.onNotificationCreatedMethod,
-      onNotificationDisplayedMethod:
-          CNotificationsController.onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod:
-          CNotificationsController.onDismissActionReceivedMethod,
-    );
+    // AwesomeNotifications().setListeners(
+    //   onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
+    //   onNotificationCreatedMethod:
+    //       CNotificationsController.onNotificationCreatedMethod,
+    //   onNotificationDisplayedMethod:
+    //       CNotificationsController.onNotificationDisplayedMethod,
+    //   onDismissActionReceivedMethod:
+    //       CNotificationsController.onDismissActionReceivedMethod,
+    // );
 
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        notificationsEnabled.value = false;
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      } else if (isAllowed) {
-        notificationsEnabled.value = true;
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     notificationsEnabled.value = false;
+    //     // This is just a basic example. For real apps, you must show some
+    //     // friendly dialog box before call the request method.
+    //     // This is very important to not harm the user experience
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   } else if (isAllowed) {
+    //     notificationsEnabled.value = true;
+    //   }
+    // });
 
     super.onInit();
   }
 
   /// Use this method to detect when a new notification or a schedule is created
-  @pragma("vm:entry-point")
-  static Future<void> onNotificationCreatedMethod(
-    ReceivedNotification receivedNotification,
-  ) async {
-    // Your code goes here
-  }
+  // @pragma("vm:entry-point")
+  // static Future<void> onNotificationCreatedMethod(
+  //   ReceivedNotification receivedNotification,
+  // ) async {
+  //   // Your code goes here
+  // }
 
-  /// Use this method to detect every time that a new notification is displayed
-  @pragma("vm:entry-point")
-  static Future<void> onNotificationDisplayedMethod(
-    ReceivedNotification receivedNotification,
-  ) async {
-    // Your code goes here
-  }
+  // /// Use this method to detect every time that a new notification is displayed
+  // @pragma("vm:entry-point")
+  // static Future<void> onNotificationDisplayedMethod(
+  //   ReceivedNotification receivedNotification,
+  // ) async {
+  //   // Your code goes here
+  // }
 
-  /// Use this method to detect if the user dismissed a notification
-  @pragma("vm:entry-point")
-  static Future<void> onDismissActionReceivedMethod(
-    ReceivedAction receivedAction,
-  ) async {
-    // Your code goes here
-  }
+  // /// Use this method to detect if the user dismissed a notification
+  // @pragma("vm:entry-point")
+  // static Future<void> onDismissActionReceivedMethod(
+  //   ReceivedAction receivedAction,
+  // ) async {
+  //   // Your code goes here
+  // }
 
-  /// Use this method to detect when the user taps on a notification or action button
-  @pragma("vm:entry-point")
-  static Future<void> onActionReceivedMethod(
-    ReceivedAction receivedAction,
-  ) async {
-    // Your code goes here
+  // /// Use this method to detect when the user taps on a notification or action button
+  // @pragma("vm:entry-point")
+  // static Future<void> onActionReceivedMethod(
+  //   ReceivedAction receivedAction,
+  // ) async {
+  //   // Your code goes here
 
-    // Navigate into pages, avoiding to open the notification details page over another details page already opened
+  //   // Navigate into pages, avoiding to open the notification details page over another details page already opened
 
-    final navController = Get.put(CNavMenuController());
+  //   final navController = Get.put(CNavMenuController());
 
-    globalNavigatorKey.currentState?.pushNamedAndRemoveUntil(
-      '/landing_screen',
-      (route) => (route.settings.name != '/landing_screen') || route.isFirst,
-      arguments: receivedAction,
-    );
-    navController.selectedIndex.value = 4;
-    Get.to(() => NavMenu());
-  }
+  //   globalNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+  //     '/landing_screen',
+  //     (route) => (route.settings.name != '/landing_screen') || route.isFirst,
+  //     arguments: receivedAction,
+  //   );
+  //   navController.selectedIndex.value = 4;
+  //   Get.to(() => NavMenu());
+  // }
 
-  void notify(
+  void notif(
     int notificationId,
     String notificationTitle,
     String notificationBody,
@@ -134,23 +131,15 @@ class CNotificationsController extends GetxController {
   }
 
   /// -- save notification details to sqflite db --
-  Future saveAndOrTriggerNotification(
+  Future<void> addNotificationToDb(
     CNotificationsModel notificationItem,
-    int notId,
-    String notTitle,
-    String notBody,
-    bool triggerAlert,
   ) async {
     try {
       // -- start loader
       isLoading.value = true;
 
       // -- insert notification item into sqflite db --
-      if (await dbHelper.addNotificationItem(notificationItem)) {
-        if (triggerAlert) {
-          notify(notId, notTitle, notBody);
-        }
-      }
+      await dbHelper.addNotificationItem(notificationItem);
 
       // -- refresh list --
       fetchUserNotifications();
@@ -170,6 +159,43 @@ class CNotificationsController extends GetxController {
       }
     }
   }
+
+  // Future saveAndOrTriggerNotification(
+  //   CNotificationsModel notificationItem,
+  //   int notId,
+  //   String notTitle,
+  //   String notBody,
+  //   bool triggerAlert,
+  // ) async {
+  //   try {
+  //     // -- start loader
+  //     isLoading.value = true;
+
+  //     // -- insert notification item into sqflite db --
+  //     if (await dbHelper.addNotificationItem(notificationItem)) {
+  //       if (triggerAlert) {
+  //         notify(notId, notTitle, notBody);
+  //       }
+  //     }
+
+  //     // -- refresh list --
+  //     fetchUserNotifications();
+
+  //     // -- stop loader
+  //     isLoading.value = false;
+  //   } catch (e) {
+  //     // -- stop loader
+  //     isLoading.value = false;
+
+  //     if (kDebugMode) {
+  //       print(e);
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'error saving notification',
+  //         message: e.toString(),
+  //       );
+  //     }
+  //   }
+  // }
 
   /// -- fetch user notifications from local db --
   Future<List<CNotificationsModel>> fetchUserNotifications() async {

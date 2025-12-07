@@ -1,3 +1,4 @@
+import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class OnboardingScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+
     return Padding(
       padding: const EdgeInsets.all(CSizes.defaultSpace),
       child: Column(
@@ -25,7 +28,9 @@ class OnboardingScreenWidget extends StatelessWidget {
           ),
           Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall,
+            style: Theme.of(context).textTheme.headlineMedium!.apply(
+              color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: CSizes.spaceBtnItems),

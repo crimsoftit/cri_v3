@@ -57,9 +57,7 @@ class CAlertsListView extends StatelessWidget {
                       : CColors.darkerGrey,
                   radius: 15.0,
                   child: Icon(
-                    color: CNetworkManager.instance.hasConnection.value
-                        ? CColors.grey
-                        : CColors.rBrown,
+                    color: isDarkTheme ? CColors.grey : CColors.rBrown,
                     items[index].productId!.isGreaterThan(10)
                         ? Iconsax.information
                         : Iconsax.user,
