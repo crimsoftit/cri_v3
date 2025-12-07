@@ -100,7 +100,7 @@ class CAlertsListView extends StatelessWidget {
                                       : CColors.rBrown,
                                 ),
                             text:
-                                'notified: ${items[index].alertCreated}; isRead: ${items[index].notificationIsRead} ',
+                                'alertId: ${items[index].notificationId}; notified: ${items[index].alertCreated}; isRead: ${items[index].notificationIsRead}; ',
                           ),
                           TextSpan(
                             style: Theme.of(context).textTheme.labelMedium!
@@ -109,8 +109,16 @@ class CAlertsListView extends StatelessWidget {
                                       ? CColors.darkGrey
                                       : CColors.rBrown,
                                 ),
-                            // text:
-                            //     'user: ${items[index].userEmail}; pId: ${items[index].productId! > 100 ? items[index].productId : 'N/A'} ',
+                            text:
+                                'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
+                          ),
+                          TextSpan(
+                            style: Theme.of(context).textTheme.labelMedium!
+                                .apply(
+                                  color: isDarkTheme
+                                      ? CColors.darkGrey
+                                      : CColors.rBrown,
+                                ),
                             text:
                                 'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
                           ),

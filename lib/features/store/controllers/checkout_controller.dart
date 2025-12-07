@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -23,6 +24,7 @@ import 'package:cri_v3/features/store/screens/store_items_tings/inventory/invent
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/services/location_services.dart';
+import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/services/pdf_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
@@ -89,6 +91,7 @@ class CCheckoutController extends GetxController {
   final invController = Get.put(CInventoryController());
   final navController = Get.put(CNavMenuController());
   final notificationsController = Get.put(CNotificationsController());
+  final notServices = Get.put(CNotificationServices());
   final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 
@@ -244,6 +247,37 @@ class CCheckoutController extends GetxController {
                     alertBody = '';
                 }
 
+                await notificationsController.fetchUserNotifications().then((
+                  _,
+                ) async {
+                  var previousAlertId =
+                      notificationsController.allNotifications.isNotEmpty
+                      ? notificationsController.allNotifications.fold(
+                          notificationsController
+                              .allNotifications
+                              .first
+                              .notificationId!,
+                          (max, element) {
+                            return element.notificationId! > max
+                                ? element.notificationId!
+                                : max;
+                          },
+                        )
+                      : 0;
+                  var thisAlertId = previousAlertId + 1;
+                  await CNotificationServices.notify(
+                    alertLayout: NotificationLayout.Inbox,
+                    notificationId: thisAlertId,
+                    body: alertBody,
+                    payload: {
+                      'notification_id': thisAlertId.toString(),
+                      'product_id': invItem.productId.toString(),
+                    },
+                    summary: 'this notification is product/inventory-related!',
+                    title: 'low stock alert!',
+                  );
+                });
+
                 // var alertItem = CNotificationsModel(
                 //   0,
                 //   'low stock alert',
@@ -252,13 +286,6 @@ class CCheckoutController extends GetxController {
                 //   invItem.productId ?? 0,
                 //   userController.user.value.email,
                 //   DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
-                // );
-                // notificationsController.saveAndOrTriggerNotification(
-                //   alertItem,
-                //   CHelperFunctions.generateAlertId(),
-                //   alertItem.notificationTitle,
-                //   alertBody,
-                //   alertItem.alertCreated == 1 ? true : false,
                 // );
               }
             } else {

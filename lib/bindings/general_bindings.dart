@@ -1,6 +1,7 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
+import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class CGeneralBindings extends Bindings {
     Get.lazyPut(() => CNetworkManager(), fenix: true);
     Get.lazyPut(() => CUserController(), fenix: true);
     Get.lazyPut(() => CTxnsController(), fenix: true);
+    Get.lazyPut(() => CNotificationServices(), fenix: true);
     // Get.put(CNetworkManager());
     // Get.put(CTxnsController());
 

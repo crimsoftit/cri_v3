@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
+import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
 import 'package:cri_v3/services/notification_services.dart';
@@ -20,24 +21,14 @@ class CNotificationsScreen extends StatefulWidget {
 class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   void initState() {
-    // Only after at least the action method is set, the notification events are delivered
-    // AwesomeNotifications().setListeners(
-    //   onActionReceivedMethod: CNotificationsController.onActionReceivedMethod,
-    //   onNotificationCreatedMethod:
-    //       CNotificationsController.onNotificationCreatedMethod,
-    //   onNotificationDisplayedMethod:
-    //       CNotificationsController.onNotificationDisplayedMethod,
-    //   onDismissActionReceivedMethod:
-    //       CNotificationsController.onDismissActionReceivedMethod,
-    // );
-    Get.put<CNotificationServices>(CNotificationServices());
-
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         // This is just a basic example. For real apps, you must show some
         // friendly dialog box before call the request method.
         // This is very important to not harm the user experience
         AwesomeNotifications().requestPermissionToSendNotifications();
+      } else {
+        Get.put<CNotificationServices>(CNotificationServices());
       }
     });
     super.initState();
@@ -46,7 +37,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    // final notsController = Get.put(CNotificationsController());
+    final notsController = Get.put(CNotificationsController());
     // final notServices = Get.put(CNotificationServices());
     final userController = Get.put(CUserController());
 
@@ -98,19 +89,37 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                 CAlertsListView(),
                 FilledButton(
                   onPressed: () async {
-                    await CNotificationServices.notify(
-                      alertLayout: NotificationLayout.Inbox,
-                      body: "alert body",
-                      payload: {
-                        'id': '10',
-                        'title': 'simple alert title',
-                        'body': 'simple alert body',
-                        'product_id': '102456',
-                      },
-                      summary:
-                          'this summary is useless... in fact, there\'s nothing here!',
-                      title: 'alert title',
-                    );
+                    await notsController.fetchUserNotifications().then((
+                      _,
+                    ) async {
+                      var previousAlertId =
+                          notsController.allNotifications.isNotEmpty
+                          ? notsController.allNotifications.fold(
+                              notsController
+                                  .allNotifications
+                                  .first
+                                  .notificationId!,
+                              (max, element) {
+                                return element.notificationId! > max
+                                    ? element.notificationId!
+                                    : max;
+                              },
+                            )
+                          : 0;
+                      var thisAlertId = previousAlertId + 1;
+                      await CNotificationServices.notify(
+                        alertLayout: NotificationLayout.Inbox,
+                        notificationId: thisAlertId,
+                        body: "alert body",
+                        payload: {
+                          'notification_id': thisAlertId.toString(),
+                          'product_id': '102456',
+                        },
+                        summary:
+                            'this summary is useless... in fact, there\'s nothing here!',
+                        title: 'alert title',
+                      );
+                    });
                   },
                   child: Text('instant notifications'),
                 ),

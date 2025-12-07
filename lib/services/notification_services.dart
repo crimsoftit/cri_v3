@@ -5,6 +5,7 @@ import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/main.dart';
 import 'package:cri_v3/nav_menu.dart';
+import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,9 @@ class CNotificationServices extends GetxController {
   /// -- variables --
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    initializeNotifications();
+    await initializeNotifications();
   }
 
   /// -- initialize notifications --
@@ -60,12 +61,12 @@ class CNotificationServices extends GetxController {
       }
     });
 
-    // await AwesomeNotifications().setListeners(
-    //   onActionReceivedMethod: onActionReceivedMethod,
-    //   onNotificationCreatedMethod: onNotificationCreatedMethod,
-    //   onNotificationDisplayedMethod: onNotificationDisplayedMethod,
-    //   onDismissActionReceivedMethod: onDismissActionReceivedMethod,
-    // );
+    await AwesomeNotifications().setListeners(
+      onActionReceivedMethod: onActionReceivedMethod,
+      onNotificationCreatedMethod: onNotificationCreatedMethod,
+      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod: onDismissActionReceivedMethod,
+    );
   }
 
   /// -- method detects when a new notification or schedule is created --
@@ -118,7 +119,29 @@ class CNotificationServices extends GetxController {
   ) async {
     debugPrint('alert received action');
 
+    final notificationsController = Get.put(CNotificationsController());
     final payload = receivedAction.payload ?? {};
+
+    if (payload["notification_id"] != null) {
+      notificationsController.fetchUserNotifications().then((_) {
+        if (notificationsController.allNotifications.isNotEmpty) {
+          final int notifId =
+              int.tryParse(payload["notification_id"] ?? '') ?? 0;
+          final notifIndex = notificationsController.allNotifications
+              .indexWhere((notif) => notif.notificationId == notifId);
+          if (notifIndex != -1) {
+            notificationsController
+                    .allNotifications[notifIndex]
+                    .notificationIsRead =
+                1;
+            DbHelper.instance.updateNotificationItem(
+              notificationsController.allNotifications[notifIndex],
+            );
+            notificationsController.fetchUserNotifications();
+          }
+        }
+      });
+    }
     if (payload["navigate"] == "true") {
       globalNavigatorKey.currentState?.push(
         MaterialPageRoute(
@@ -138,6 +161,7 @@ class CNotificationServices extends GetxController {
     title,
     final bool scheduled = false,
     final int? interval,
+    required final int notificationId,
     final String? bigPicture,
     summary,
     final Map<String, String>? payload,
@@ -147,8 +171,6 @@ class CNotificationServices extends GetxController {
     final List<NotificationActionButton>? actionButtons,
   }) async {
     assert(!scheduled || (scheduled && interval != null));
-
-    var notificationId = 1 + DateTime.now().millisecond;
 
     await AwesomeNotifications()
         .createNotification(
@@ -178,11 +200,11 @@ class CNotificationServices extends GetxController {
           // -- save notification to sqflite db --
           var notificationItem = CNotificationsModel(
             1,
-            title ?? '',
+            title ?? 'no title',
             body,
             0,
             payload != null && payload.containsKey('product_id')
-                ? int.tryParse(payload['product_id']!) ?? null
+                ? int.tryParse(payload['product_id']!)
                 : null,
             CUserController.instance.user.value.email,
             DateTime.now().toIso8601String(),
