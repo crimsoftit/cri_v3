@@ -48,6 +48,8 @@ class HomeScreen extends StatelessWidget {
     );
 
     Get.put(CDashboardController());
+    //Get.put(CTxnsController());
+    txnsController.fetchTopSellersFromSales();
 
     return Container(
       color: isDarkTheme ? CColors.transparent : CColors.white,
@@ -90,6 +92,7 @@ class HomeScreen extends StatelessWidget {
                   if (invController.inventoryItems.isEmpty &&
                       !invController.isLoading.value) {
                     invController.fetchUserInventoryItems();
+                    txnsController.fetchTopSellersFromSales();
                   }
                   if (invController.isLoading.value &&
                       invController.inventoryItems.isNotEmpty) {
@@ -100,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (invController.topSellers.isNotEmpty)
+                      if (txnsController.bestSellers.isNotEmpty)
                         CSectionHeading(
                           showActionBtn: true,
                           title: 'top sellers...',
@@ -111,13 +114,15 @@ class HomeScreen extends StatelessWidget {
                           btnTitle: 'view all',
                           btnTxtColor: CColors.grey,
                           editFontSize: true,
+                          fWeight: FontWeight.w400,
                           onPressed: () {
                             navController.selectedIndex.value = 1;
                             Get.to(() => const NavMenu());
                           },
                         ),
-                      invController.topSellers.isEmpty ||
-                              invController.inventoryItems.isEmpty
+                      // txnsController.bestSellers.isEmpty ||
+                      //         invController.inventoryItems.isEmpty
+                      txnsController.bestSellers.isEmpty
                           ? Center(
                               child: Column(
                                 children: [
@@ -167,7 +172,7 @@ class HomeScreen extends StatelessWidget {
                             )
                           : CTopSellers(),
 
-                      if (invController.topSellers.isNotEmpty)
+                      if (txnsController.bestSellers.isNotEmpty)
                         CSectionHeading(
                           showActionBtn: true,
                           title: 'weekly sales...',
@@ -191,8 +196,7 @@ class HomeScreen extends StatelessWidget {
                                 dashboardController.lastWeekSales.value) *
                             100;
 
-                        if (invController.inventoryItems.isEmpty ||
-                            txnsController.sales.isEmpty) {
+                        if (txnsController.sales.isEmpty) {
                           return Column(
                             children: [
                               SizedBox(height: CSizes.defaultSpace),
@@ -250,229 +254,287 @@ class HomeScreen extends StatelessWidget {
                             ],
                           );
                         }
-                        return CRoundedContainer(
-                          // bgColor:
-                          //     isDarkTheme ? CColors.darkGrey : CColors.grey,
-                          bgColor: CColors.grey,
-                          borderRadius: CSizes.cardRadiusSm,
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: CHelperFunctions.screenWidth(),
-                                height: 45.0,
-                                child: Stack(
+                        return dashboardController.currentWeekSales.value > 0
+                            ? CRoundedContainer(
+                                // bgColor:
+                                //     isDarkTheme ? CColors.darkGrey : CColors.grey,
+                                bgColor: CColors.grey,
+                                borderRadius: CSizes.cardRadiusSm,
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Column(
                                   children: [
-                                    // CircularPercentIndicator(
-                                    //   radius: 100.0,
-                                    //   lineWidth: 10.0,
-                                    //   percent:
-                                    //       0.7, // Represents 70% sales progress
-                                    //   center: Text(
-                                    //     "70%",
-                                    //     style: TextStyle(
-                                    //         fontWeight: FontWeight.bold,
-                                    //         fontSize: 20.0),
-                                    //   ),
-                                    //   footer: Text(
-                                    //     "Sales this week",
-                                    //     style: TextStyle(
-                                    //         fontWeight: FontWeight.bold,
-                                    //         fontSize: 17.0),
-                                    //   ),
-                                    //   progressColor: Colors.green,
-                                    // ),
-                                    dashboardController.currentWeekSales.value >
-                                                0 &&
-                                            dashboardController
-                                                    .lastWeekSales
-                                                    .value >
-                                                0
-                                        ? Stack(
-                                            children: [
-                                              Positioned(
-                                                right: 0,
-                                                top: 10.0,
-                                                child:
-                                                    dashboardController
-                                                            .weeklyPercentageChange
-                                                            .value >=
-                                                        0.0
-                                                    ? Icon(
-                                                        Iconsax.trend_up,
-                                                        color: Colors.green,
-                                                        size: CSizes.iconMd,
-                                                      )
-                                                    : Icon(
-                                                        Iconsax.trend_down,
-                                                        color: Colors.red,
-                                                        size: CSizes.iconMd,
-                                                      ),
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                right: 27.0,
-                                                child: Text(
+                                    SizedBox(
+                                      width: CHelperFunctions.screenWidth(),
+                                      height: 45.0,
+                                      child: Stack(
+                                        children: [
+                                          // CircularPercentIndicator(
+                                          //   radius: 100.0,
+                                          //   lineWidth: 10.0,
+                                          //   percent:
+                                          //       0.7, // Represents 70% sales progress
+                                          //   center: Text(
+                                          //     "70%",
+                                          //     style: TextStyle(
+                                          //         fontWeight: FontWeight.bold,
+                                          //         fontSize: 20.0),
+                                          //   ),
+                                          //   footer: Text(
+                                          //     "Sales this week",
+                                          //     style: TextStyle(
+                                          //         fontWeight: FontWeight.bold,
+                                          //         fontSize: 17.0),
+                                          //   ),
+                                          //   progressColor: Colors.green,
+                                          // ),
+                                          dashboardController
+                                                          .currentWeekSales
+                                                          .value >
+                                                      0 &&
                                                   dashboardController
-                                                              .weeklyPercentageChange
-                                                              .value >
-                                                          0
-                                                      ? 'trend: +${dashboardController.weeklyPercentageChange.value.toStringAsFixed(2)}%'
-                                                      : 'trend: ${dashboardController.weeklyPercentageChange.value.toStringAsFixed(2)}%',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelMedium!
-                                                      .apply(
-                                                        color:
-                                                            dashboardController
+                                                          .lastWeekSales
+                                                          .value >
+                                                      0
+                                              ? Stack(
+                                                  children: [
+                                                    Positioned(
+                                                      right: 0,
+                                                      top: 10.0,
+                                                      child:
+                                                          dashboardController
+                                                                  .weeklyPercentageChange
+                                                                  .value >=
+                                                              0.0
+                                                          ? Icon(
+                                                              Iconsax.trend_up,
+                                                              color:
+                                                                  Colors.green,
+                                                              size:
+                                                                  CSizes.iconMd,
+                                                            )
+                                                          : Icon(
+                                                              Iconsax
+                                                                  .trend_down,
+                                                              color: Colors.red,
+                                                              size:
+                                                                  CSizes.iconMd,
+                                                            ),
+                                                    ),
+                                                    Positioned(
+                                                      top: 0,
+                                                      right: 27.0,
+                                                      child: Text(
+                                                        dashboardController
                                                                     .weeklyPercentageChange
-                                                                    .value <
+                                                                    .value >
                                                                 0
-                                                            ? Colors.redAccent
-                                                            : dashboardController
-                                                                      .weeklyPercentageChange
-                                                                      .value ==
-                                                                  0.0
-                                                            ? CColors.rBrown
-                                                            : Colors.green,
+                                                            ? 'trend: +${dashboardController.weeklyPercentageChange.value.toStringAsFixed(2)}%'
+                                                            : 'trend: ${dashboardController.weeklyPercentageChange.value.toStringAsFixed(2)}%',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelMedium!
+                                                            .apply(
+                                                              color:
+                                                                  dashboardController
+                                                                          .weeklyPercentageChange
+                                                                          .value <
+                                                                      0
+                                                                  ? Colors
+                                                                        .redAccent
+                                                                  : dashboardController
+                                                                            .weeklyPercentageChange
+                                                                            .value ==
+                                                                        0.0
+                                                                  ? CColors
+                                                                        .rBrown
+                                                                  : Colors
+                                                                        .green,
+                                                            ),
                                                       ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                top: 15.0,
-                                                right: 27.0,
-                                                child: Text(
-                                                  '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelSmall!
-                                                      .apply(
-                                                        color: CColors.rBrown,
-                                                        fontStyle:
-                                                            FontStyle.italic,
+                                                    ),
+                                                    Positioned(
+                                                      top: 15.0,
+                                                      right: 27.0,
+                                                      child: Text(
+                                                        '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall!
+                                                            .apply(
+                                                              color: CColors
+                                                                  .rBrown,
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                            ),
                                                       ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : SizedBox.shrink(),
+                                                    ),
+                                                  ],
+                                                )
+                                              : SizedBox.shrink(),
 
-                                    Positioned(
-                                      top:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 30.0
-                                          : 0,
-                                      right:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 27.0
-                                          : 5.0,
-                                      child: Text(
-                                        '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .apply(
-                                              color: CColors.rBrown,
-                                              //color: CColors.black,
-                                              fontSizeDelta:
-                                                  dashboardController
-                                                              .currentWeekSales
-                                                              .value >
-                                                          0 &&
-                                                      dashboardController
-                                                              .lastWeekSales
-                                                              .value >
-                                                          0
-                                                  ? 1.0
-                                                  : 2.0,
-                                              fontWeightDelta:
-                                                  dashboardController
-                                                              .currentWeekSales
-                                                              .value >
-                                                          0 &&
-                                                      dashboardController
-                                                              .lastWeekSales
-                                                              .value >
-                                                          0
-                                                  ? 1
-                                                  : 2,
+                                          Positioned(
+                                            top:
+                                                dashboardController
+                                                            .currentWeekSales
+                                                            .value >
+                                                        0 &&
+                                                    dashboardController
+                                                            .lastWeekSales
+                                                            .value >
+                                                        0
+                                                ? 30.0
+                                                : 0,
+                                            right:
+                                                dashboardController
+                                                            .currentWeekSales
+                                                            .value >
+                                                        0 &&
+                                                    dashboardController
+                                                            .lastWeekSales
+                                                            .value >
+                                                        0
+                                                ? 27.0
+                                                : 5.0,
+                                            child: Text(
+                                              '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .apply(
+                                                    color: CColors.rBrown,
+                                                    //color: CColors.black,
+                                                    fontSizeDelta:
+                                                        dashboardController
+                                                                    .currentWeekSales
+                                                                    .value >
+                                                                0 &&
+                                                            dashboardController
+                                                                    .lastWeekSales
+                                                                    .value >
+                                                                0
+                                                        ? 1.0
+                                                        : 2.0,
+                                                    fontWeightDelta:
+                                                        dashboardController
+                                                                    .currentWeekSales
+                                                                    .value >
+                                                                0 &&
+                                                            dashboardController
+                                                                    .lastWeekSales
+                                                                    .value >
+                                                                0
+                                                        ? 1
+                                                        : 2,
+                                                  ),
                                             ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 200.0,
+                                      child: BarChart(
+                                        BarChartData(
+                                          titlesData: dashboardController
+                                              .buildFlTitlesData(),
+                                          borderData: FlBorderData(
+                                            show: true,
+                                            border: const Border(
+                                              top: BorderSide.none,
+                                              right: BorderSide.none,
+                                            ),
+                                          ),
+                                          gridData: FlGridData(
+                                            show: true,
+                                            drawHorizontalLine: true,
+                                            drawVerticalLine: false,
+                                            horizontalInterval: 200,
+                                          ),
+                                          barGroups: dashboardController
+                                              .weeklySales
+                                              .asMap()
+                                              .entries
+                                              .map(
+                                                (entry) => BarChartGroupData(
+                                                  x: entry.key,
+                                                  barRods: [
+                                                    BarChartRodData(
+                                                      width: 25.0,
+                                                      toY: entry.value,
+                                                      color:
+                                                          isConnectedToInternet
+                                                          ? CColors.rBrown
+                                                          : CColors.darkerGrey,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            CSizes.sm,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                              .toList(),
+                                          groupsSpace: CSizes.spaceBtnItems / 2,
+                                          barTouchData: BarTouchData(
+                                            touchTooltipData:
+                                                BarTouchTooltipData(
+                                                  getTooltipColor: (group) {
+                                                    return CColors.secondary;
+                                                  },
+                                                ),
+                                            touchCallback:
+                                                (
+                                                  barTouchEvent,
+                                                  barTouchResponse,
+                                                ) {},
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: 200.0,
-                                child: BarChart(
-                                  BarChartData(
-                                    titlesData: dashboardController
-                                        .buildFlTitlesData(),
-                                    borderData: FlBorderData(
-                                      show: true,
-                                      border: const Border(
-                                        top: BorderSide.none,
-                                        right: BorderSide.none,
-                                      ),
-                                    ),
-                                    gridData: FlGridData(
-                                      show: true,
-                                      drawHorizontalLine: true,
-                                      drawVerticalLine: false,
-                                      horizontalInterval: 200,
-                                    ),
-                                    barGroups: dashboardController.weeklySales
-                                        .asMap()
-                                        .entries
-                                        .map(
-                                          (entry) => BarChartGroupData(
-                                            x: entry.key,
-                                            barRods: [
-                                              BarChartRodData(
-                                                width: 25.0,
-                                                toY: entry.value,
-                                                color: isConnectedToInternet
-                                                    ? CColors.rBrown
-                                                    : CColors.darkerGrey,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      CSizes.sm,
-                                                    ),
-                                              ),
-                                            ],
+                              )
+                            : CFreshDashboardScreenView(
+                                iconData: Icons.add,
+                                label:
+                                    'add your first inventory item to get started!',
+                                onTap: () {
+                                  invController.resetInvFields();
+                                  showDialog(
+                                    context: context,
+                                    useRootNavigator: false,
+                                    builder: (BuildContext context) =>
+                                        dialog.buildDialog(
+                                          context,
+                                          CInventoryModel(
+                                            '',
+                                            '',
+                                            '',
+                                            '',
+                                            '',
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            0,
+                                            '',
+                                            '',
+                                            '',
+                                            '',
+                                            '',
+                                            0,
+                                            '',
                                           ),
-                                        )
-                                        .toList(),
-                                    groupsSpace: CSizes.spaceBtnItems / 2,
-                                    barTouchData: BarTouchData(
-                                      touchTooltipData: BarTouchTooltipData(
-                                        getTooltipColor: (group) {
-                                          return CColors.secondary;
-                                        },
-                                      ),
-                                      touchCallback:
-                                          (barTouchEvent, barTouchResponse) {},
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                                          true,
+                                          true,
+                                        ),
+                                  );
+                                },
+                              );
                       }),
                     ],
                   );

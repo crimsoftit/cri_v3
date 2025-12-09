@@ -11,12 +11,14 @@ class CSectionHeading extends StatelessWidget {
     this.btnTxtColor,
     required this.editFontSize,
     this.fSize = 13.0,
+    this.fWeight = FontWeight.w500,
   });
 
-  final Color? txtColor, btnTxtColor;
   final bool showActionBtn, editFontSize;
-  final String title, btnTitle;
+  final Color? txtColor, btnTxtColor;
   final double? fSize;
+  final FontWeight? fWeight;
+  final String title, btnTitle;
   final void Function()? onPressed;
 
   @override
@@ -30,7 +32,7 @@ class CSectionHeading extends StatelessWidget {
                 style: TextStyle(
                   color: txtColor,
                   fontSize: fSize,
-                  fontWeight: FontWeight.w100,
+                  fontWeight: fWeight,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -38,9 +40,10 @@ class CSectionHeading extends StatelessWidget {
             : Text(
                 title,
                 style: Theme.of(context).textTheme.headlineSmall!.apply(
-                      color: txtColor,
-                      fontSizeFactor: 0.75,
-                    ),
+                  color: txtColor,
+                  fontSizeFactor: 0.75,
+                  fontWeightDelta: 2,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -50,9 +53,9 @@ class CSectionHeading extends StatelessWidget {
             child: Text(
               btnTitle,
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: txtColor,
-                    //fontSizeFactor: 0.75,
-                  ),
+                color: txtColor,
+                //fontSizeFactor: 0.75,
+              ),
             ),
           ),
       ],

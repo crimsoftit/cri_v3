@@ -9,6 +9,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
+import 'package:cri_v3/features/store/models/best_sellers_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
 import 'package:cri_v3/services/notification_services.dart';
@@ -49,6 +50,8 @@ class CTxnsController extends GetxController {
   RxList<CTxnsModel> transactionItems = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> refunds = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundRefunds = <CTxnsModel>[].obs;
+
+  final RxList<CBestSellersModel> bestSellers = <CBestSellersModel>[].obs;
 
   final RxList<CTxnsModel> receipts = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundReceipts = <CTxnsModel>[].obs;
@@ -110,6 +113,7 @@ class CTxnsController extends GetxController {
     dbHelper.openDb();
 
     await StoreSheetsApi.initSpreadSheets();
+    await fetchTopSellersFromSales();
 
     fetchSoldItems();
     fetchTxns();
@@ -197,44 +201,27 @@ class CTxnsController extends GetxController {
         foundRefunds.assignAll(refundedItems);
       }
 
-      // -- check for any pending alerts --
-      // -- TODO: check if notifications are allowed --
-
-      // Only after at least the action method is set, the notification events are delivered
-      // AwesomeNotifications().setListeners(
-      //   onActionReceivedMethod: CNotificationServices.onActionReceivedMethod,
-      //   onNotificationCreatedMethod:
-      //       CNotificationServices.onNotificationCreatedMethod,
-      //   onNotificationDisplayedMethod:
-      //       CNotificationServices.onNotificationDisplayedMethod,
-      //   onDismissActionReceivedMethod:
-      //       CNotificationServices.onDismissActionReceivedMethod,
-      // );
-
       AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
         if (!isAllowed) {
           // This is just a basic example. For real apps, you must show some
           // friendly dialog box before call the request method.
           // This is very important to not harm the user experience
           AwesomeNotifications().requestPermissionToSendNotifications();
-        } else {
-          await notsController.fetchUserNotifications().then((_) {
-            // if (notsController.pendingAlerts.isNotEmpty) {
-            //   for (var pendingAlert in notsController.pendingAlerts) {
-            //     notsServices.displayAlert(
-            //       CHelperFunctions.generateAlertId(),
-            //       pendingAlert.notificationTitle,
-            //       pendingAlert.notificationBody,
-            //     );
-
-            //     pendingAlert.alertCreated = 1;
-
-            //     dbHelper.updateNotificationItem(pendingAlert);
-            //   }
-            // }
-          });
         }
       });
+
+      final values = {};
+      for (final item in sales) {
+        final itemName = item.productName;
+        final qty = item.quantity;
+        final previousValue = values.containsKey(itemName)
+            ? values[itemName]!
+            : 0;
+        values[itemName] = previousValue + qty;
+      }
+
+      final result = values.values.toList();
+      print('result: $result');
 
       // stop loader
       isLoading.value = false;
@@ -419,6 +406,43 @@ class CTxnsController extends GetxController {
         );
       }
       //throw e.toString();
+      rethrow;
+    }
+  }
+
+  /// -- fetch top sellers grouped by product id --
+  Future<List<CBestSellersModel>> fetchTopSellersFromSales() async {
+    try {
+      // -- start loader while top sellers are fetched --
+      isLoading.value = true;
+
+      await dbHelper.openDb();
+
+      final topSales = await dbHelper
+          .fetchTopSellersFromSalesGroupedByProductId(
+            userController.user.value.email,
+          );
+
+      bestSellers.assignAll(topSales);
+
+      // stop loader
+      isLoading.value = false;
+
+      return bestSellers;
+    } catch (e) {
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error fetching top sellers from sales table: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching top sellers from sales table',
+          message: e.toString(),
+        );
+      }
+      CPopupSnackBar.errorSnackBar(
+        title: 'error fetching top sellers',
+        message:
+            'an unknown error occurred while fetching top sellers! please try again later...',
+      );
       rethrow;
     }
   }
@@ -1266,6 +1290,39 @@ class CTxnsController extends GetxController {
       );
 
       //throw e.toString();
+      rethrow;
+    }
+  }
+
+  /// -- check if an inventory item exists by product name --
+  Future<bool> checkIfInventoryItemExistsByName(String name) async {
+    try {
+      isLoading.value = true;
+
+      final fetchedItemIndex = sales.indexWhere(
+        (item) => item.productName.toLowerCase() == name.toLowerCase(),
+      );
+
+      bool returnValue;
+
+      if (fetchedItemIndex != -1) {
+        returnValue = true;
+      } else {
+        returnValue = false;
+      }
+
+      isLoading.value = false;
+
+      return returnValue;
+    } catch (e) {
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error checking inventory item by name: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error checking inventory item by name',
+          message: e.toString(),
+        );
+      }
       rethrow;
     }
   }

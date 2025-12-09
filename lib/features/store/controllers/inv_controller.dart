@@ -39,7 +39,7 @@ class CInventoryController extends GetxController {
   final RxList<CInvDelsModel> dItems = <CInvDelsModel>[].obs;
   final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
-  final RxList<CInventoryModel> topSellers = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> invTopSellers = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
@@ -148,7 +148,7 @@ class CInventoryController extends GetxController {
           .where((soldItem) => soldItem.qtySold >= 1)
           .toList();
       soldInvItems.sort((a, b) => b.qtySold.compareTo(a.qtySold));
-      topSellers.assignAll(soldInvItems);
+      invTopSellers.assignAll(soldInvItems);
 
       if (searchController.showSearchField.isTrue &&
           searchController.txtSearchField.text == '') {
@@ -1195,7 +1195,7 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch top sellers --
-  Future<List<CInventoryModel>> fetchTopSellers() async {
+  Future<List<CInventoryModel>> fetchTopSellersFromInventory() async {
     try {
       // start loader while products are fetched
       isLoading.value = true;
@@ -1207,12 +1207,12 @@ class CInventoryController extends GetxController {
       );
 
       // assign top sold items to a list
-      topSellers.assignAll(topSellers);
+      invTopSellers.assignAll(topSellers);
 
       // stop loader
       isLoading.value = false;
 
-      return topSellers;
+      return invTopSellers;
     } catch (e) {
       isLoading.value = false;
       if (kDebugMode) {
@@ -1260,24 +1260,22 @@ class CInventoryController extends GetxController {
   }
 
   /// -- bottomSheetModal for when usp is less than ubp --
-  Future<dynamic> confirmUspUbpModal(BuildContext context) {
+  Future<dynamic> confirmInvalidUspModal(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(CSizes.lg / 3),
-            child: Column(
-              children: [
-                const CSectionHeading(
-                  showActionBtn: false,
-                  title: 'select payment method...',
-                  btnTitle: '',
-                  editFontSize: true,
-                ),
-                const SizedBox(height: CSizes.spaceBtnSections / 4),
-              ],
-            ),
+        return Padding(
+          padding: const EdgeInsets.all(CSizes.lg / 3),
+          child: Column(
+            children: [
+              const CSectionHeading(
+                showActionBtn: false,
+                title: 'select payment method...',
+                btnTitle: '',
+                editFontSize: true,
+              ),
+              const SizedBox(height: CSizes.spaceBtnSections / 4),
+            ],
           ),
         );
       },
@@ -1301,4 +1299,6 @@ class CInventoryController extends GetxController {
       txtExpiryDatePicker.text = formattedDate;
     }
   }
+
+  
 }

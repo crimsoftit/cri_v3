@@ -545,13 +545,14 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               invController.unitBP.value > 0) {
                             if (invController.unitBP.value >
                                 double.parse(invController.txtUnitSP.text)) {
-                              invController.confirmUspUbpModal(context);
+                              invController.confirmInvalidUspModal(context);
                               // CPopupSnackBar.warningSnackBar(
                               //   title:
                               //       'is this the right unit selling price?',
                               // );
                             }
                           }
+                          
 
                           // invController
                           //     .addOrUpdateInventoryItem(inventoryItem);

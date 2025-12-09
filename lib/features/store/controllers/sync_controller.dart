@@ -22,9 +22,12 @@ class CSyncController extends GetxController {
     try {
       processingSync.value = true;
 
+      await invController.fetchUserInventoryItems();
+      await txnsController.fetchSoldItems();
+
       if (await invController.cloudSyncInventory()) {
         await txnsController.addUpdateSalesDataToCloud().then((_) async {
-          if (invController.syncIsLoading.value &&
+          if (invController.syncIsLoading.value ||
               txnsController.txnsSyncIsLoading.value) {
             processingSync.value = true;
           } else {
@@ -32,8 +35,6 @@ class CSyncController extends GetxController {
           }
         });
       }
-      await invController.fetchUserInventoryItems();
-      await txnsController.fetchSoldItems();
 
       return processingSync.value;
     } catch (e) {

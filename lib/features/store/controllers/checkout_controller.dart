@@ -273,7 +273,7 @@ class CCheckoutController extends GetxController {
                       'notification_id': thisAlertId.toString(),
                       'product_id': invItem.productId.toString(),
                     },
-                    summary: 'this notification is product/inventory-related!',
+                    summary: 'low-stock alert!',
                     title: 'low stock alert!',
                   );
                 });

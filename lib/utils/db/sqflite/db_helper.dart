@@ -1,5 +1,6 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
+import 'package:cri_v3/features/store/models/best_sellers_model.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
@@ -300,12 +301,12 @@ class DbHelper extends GetxController {
   Future<int> deleteInventoryItem(CInventoryModel inventory) async {
     try {
       int result = await _db!.delete(
-      'inventory',
-      where: 'productId = ?',
-      whereArgs: [inventory.productId],
-    );
+        'inventory',
+        where: 'productId = ?',
+        whereArgs: [inventory.productId],
+      );
 
-    return result;
+      return result;
     } catch (e) {
       if (kDebugMode) {
         print(' error deleting inventory item: $e ');
@@ -321,7 +322,6 @@ class DbHelper extends GetxController {
       }
       rethrow;
     }
-    
   }
 
   /// -- update inventory upon sale --
@@ -449,7 +449,7 @@ class DbHelper extends GetxController {
     return delRes;
   }
 
-  /// -- fetch top sellers --
+  /// -- fetch top sellers from inventory table --
   Future<List<CInventoryModel>> fetchTopSellers(String email) async {
     try {
       // Get a reference to the database.
@@ -469,7 +469,36 @@ class DbHelper extends GetxController {
         title: 'error fetching top sellers',
         message: '$e',
       );
-      throw e.toString();
+      rethrow;
+    }
+  }
+
+  /// -- fetch top sellers from sales table --
+  Future<List<CBestSellersModel>> fetchTopSellersFromSalesGroupedByProductId(
+    String email,
+  ) async {
+    try {
+      // Get a reference to the database.
+      final db = _db;
+
+      final topSellers = await db!.rawQuery(
+        'SELECT productId, productName, SUM(quantity) as totalSales FROM $txnsTable WHERE userEmail = ? GROUP BY productId ORDER BY totalSales DESC LIMIT 20',
+        [email],
+      );
+
+      // convert the List<Map<String, dynamic> into a List<CBestSellersModel>.
+      return topSellers
+          .map((json) => CBestSellersModel.fromMapObject(json))
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('error fetching top sellers from sales: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching top sellers from sales!',
+          message: e.toString(),
+        );
+      }
+      rethrow;
     }
   }
 

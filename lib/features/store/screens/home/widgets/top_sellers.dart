@@ -1,9 +1,11 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/products/circle_avatar.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,14 +14,18 @@ class CTopSellers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final invController = Get.put(CInventoryController());
+    final txnsController = Get.put(CTxnsController());
 
     return Obx(() {
+      /// -- compute sum of quantities for each productId --
+      txnsController.fetchTopSellersFromSales();
+
       return SizedBox(
         height: 40.0,
         child: ListView.separated(
-          itemCount: invController.topSellers.length,
+          itemCount: txnsController.bestSellers.length,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           separatorBuilder: (_, __) {
@@ -28,16 +34,31 @@ class CTopSellers extends StatelessWidget {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Get.toNamed(
-                  '/inventory/item_details/',
-                  arguments: invController.topSellers[index].productId,
+                var itemIndex = invController.inventoryItems.indexWhere(
+                  (item) =>
+                      item.productId ==
+                      txnsController.bestSellers[index].productId,
                 );
+
+                if (itemIndex >= 0) {
+                  Get.toNamed(
+                    '/inventory/item_details/',
+                    arguments: txnsController.bestSellers[index].productId,
+                  );
+                } else {
+                  CPopupSnackBar.warningSnackBar(
+                    message: 'this item is nolonger listed in your inventory',
+                    title: 'item not found/deleted',
+                  );
+                }
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CCircleAvatar(
-                    avatarInitial: invController.topSellers[index].name[0]
+                    avatarInitial: txnsController
+                        .bestSellers[index]
+                        .productName[0]
                         .toUpperCase(),
                     bgColor: CColors.white,
                     radius: 20.0,
@@ -53,7 +74,8 @@ class CTopSellers extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          invController.topSellers[index].name.toUpperCase(),
+                          txnsController.bestSellers[index].productName
+                              .toUpperCase(),
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             fontWeightDelta: 1,
                             color: isDarkTheme ? CColors.white : CColors.rBrown,
@@ -62,7 +84,7 @@ class CTopSellers extends StatelessWidget {
                           maxLines: 1,
                         ),
                         Text(
-                          '${invController.topSellers[index].qtySold} sold',
+                          '${txnsController.bestSellers[index].totalSales} sold',
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             color: CColors.darkGrey,
                           ),
