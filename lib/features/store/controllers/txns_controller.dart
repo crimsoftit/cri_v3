@@ -12,7 +12,6 @@ import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/models/best_sellers_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
@@ -105,7 +104,6 @@ class CTxnsController extends GetxController {
   final searchController = Get.put(CSearchBarController());
   final invController = Get.put(CInventoryController());
   final notsController = Get.put(CNotificationsController());
-  final notsServices = Get.put(CNotificationServices());
   final txnsFormKey = GlobalKey<FormState>();
 
   @override
@@ -221,7 +219,9 @@ class CTxnsController extends GetxController {
       }
 
       final result = values.values.toList();
-      print('result: $result');
+      if (kDebugMode) {
+        print('result: $result');
+      }
 
       // stop loader
       isLoading.value = false;

@@ -1,12 +1,15 @@
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -31,6 +34,8 @@ class CInventoryController extends GetxController {
   final localStorage = GetStorage();
 
   DbHelper dbHelper = DbHelper.instance;
+
+  final alertServices = Get.put(CNotificationServices());
   final cartController = Get.put(CCartController());
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
@@ -71,7 +76,7 @@ class CInventoryController extends GetxController {
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
-
+  final notificationsController = Get.put(CNotificationsController());
   final isLoading = false.obs;
   final syncIsLoading = false.obs;
 
@@ -111,6 +116,38 @@ class CInventoryController extends GetxController {
       }
 
       fetchUserInventoryItems();
+    }
+
+    /// -- schedule notifications for items nearing expiry date --
+    var itemsWithShelfLife = inventoryItems
+        .where(
+          (item) =>
+              item.expiryDate != '' &&
+              CFormatter.formatTimeRangeFromNow(
+                item.expiryDate.replaceAll('@ ', ''),
+              ).toString().contains('in'),
+        )
+        .toList();
+
+    for (var item in itemsWithShelfLife) {
+      alertServices.createScheduledNotification(
+        id: await notificationsController.generateNotificationId(),
+        title: '',
+        body:
+            '${item.name} is nearing its expiry date! Please check your inventory to take necessary action.',
+        expiryDate: item.expiryDate.toString().contains('@')
+            ? DateTime.parse(item.expiryDate.replaceAll(' @ ', ' '))
+            : DateTime.parse(item.expiryDate),
+        notificationTimeInDays: int.fromEnvironment(
+          'NOTIFICATION_TIME_INTERVAL_IN_DAYS',
+          defaultValue: 4,
+        ),
+      );
+      if (kDebugMode) {
+        print(
+          'scheduling notification for item: ${item.name} with expiry date: ${item.expiryDate}',
+        );
+      }
     }
   }
 
@@ -163,12 +200,6 @@ class CInventoryController extends GetxController {
           )
           .toList();
 
-      // unsynced updates == RAW ==
-      // unSyncedUpdates.value = inventoryItems
-      //     .where((updateItem) =>
-      //         updateItem.syncAction.toLowerCase().contains('update'))
-      //     .toList();
-
       // unsynced updates
       unSyncedUpdates.value = inventoryItems
           .where(
@@ -177,15 +208,15 @@ class CInventoryController extends GetxController {
           )
           .toList();
 
+      List<CInventoryModel> returnItems;
       if (inventoryItems.isNotEmpty) {
-        // stop loader
-        isLoading.value = false;
-        return [];
+        returnItems = [];
       } else {
-        // stop loader
-        isLoading.value = false;
-        return inventoryItems;
+        returnItems = inventoryItems;
       }
+      // stop loader
+      isLoading.value = false;
+      return returnItems;
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
@@ -1300,5 +1331,42 @@ class CInventoryController extends GetxController {
     }
   }
 
-  
+  /// -- toggle favorite status --
+  Future<void> toggleFavoriteStatus(CInventoryModel inventoryItem) async {
+    try {
+      // -- start loader
+      isLoading.value = true;
+
+      inventoryItem.markedAsFavorite = inventoryItem.markedAsFavorite == 1
+          ? 0
+          : 1;
+
+      // -- update entry
+      await dbHelper.updateInventoryItem(
+        inventoryItem,
+        inventoryItem.productId!,
+      );
+      // -- refresh inventory list
+      await fetchUserInventoryItems();
+      inventoryItems.refresh();
+
+      // -- stop loader
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error toggling favorite status: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error toggling favorite status',
+          message: e.toString(),
+        );
+      }
+      CPopupSnackBar.errorSnackBar(
+        title: 'error toggling favorite status',
+        message: 'unable to toggle favorite status, please try again later!',
+      );
+      rethrow;
+    }
+  }
 }

@@ -131,9 +131,7 @@ class CNotificationsController extends GetxController {
   }
 
   /// -- save notification details to sqflite db --
-  Future<void> addNotificationToDb(
-    CNotificationsModel notificationItem,
-  ) async {
+  Future<void> addNotificationToDb(CNotificationsModel notificationItem) async {
     try {
       // -- start loader
       isLoading.value = true;
@@ -308,5 +306,21 @@ class CNotificationsController extends GetxController {
         //AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
+  }
+
+  /// -- generate notification id --
+  Future<int> generateNotificationId() async {
+    var previousAlertId = allNotifications.isNotEmpty
+        ? allNotifications.fold(allNotifications.first.notificationId!, (
+            max,
+            element,
+          ) {
+            return element.notificationId! > max
+                ? element.notificationId!
+                : max;
+          })
+        : 0;
+    var thisAlertId = previousAlertId + 1;
+    return thisAlertId;
   }
 }

@@ -259,8 +259,11 @@ class CInvGridviewScreen extends StatelessWidget {
                                 ) <=
                                 3
                           ? CColors.warning
-                          : CColors.darkGrey
+                          : const Color.fromRGBO(147, 147, 147, 1)
                     : CColors.grey,
+                favIconColor: isFavorite == 1
+                    ? CColors.error
+                    : (Get.isDarkMode ? CColors.transparent : CColors.white),
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
                 itemName: pName,
@@ -319,6 +322,14 @@ class CInvGridviewScreen extends StatelessWidget {
                   Get.toNamed(
                     '/inventory/item_details/',
                     arguments: invController.inventoryItems[index].productId,
+                  );
+                },
+                onFavoriteIconTap: () {
+                  invController.toggleFavoriteStatus(
+                    searchController.showSearchField.value &&
+                            invController.foundInventoryItems.isNotEmpty
+                        ? invController.foundInventoryItems[index]
+                        : invController.inventoryItems[index],
                   );
                 },
                 onTapAction: () {

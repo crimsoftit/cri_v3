@@ -52,7 +52,9 @@ class CAlertsListView extends StatelessWidget {
               margin: EdgeInsets.all(1),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: CNetworkManager.instance.hasConnection.value
+                  backgroundColor: isDarkTheme
+                      ? CColors.darkGrey
+                      : CNetworkManager.instance.hasConnection.value
                       ? CColors.rBrown.withValues(alpha: .3)
                       : CColors.darkerGrey,
                   radius: 15.0,
@@ -72,7 +74,7 @@ class CAlertsListView extends StatelessWidget {
                 ),
                 //isThreeLine: true,
                 title: Text(
-                  items[index].notificationTitle,
+                  '#${items[index].notificationId} ${items[index].notificationTitle}',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
                   ),
@@ -89,40 +91,43 @@ class CAlertsListView extends StatelessWidget {
                     ),
 
                     /// -- other alert item details... --
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            style: Theme.of(context).textTheme.labelMedium!
-                                .apply(
-                                  color: isDarkTheme
-                                      ? CColors.darkGrey
-                                      : CColors.rBrown,
-                                ),
-                            text:
-                                'alertId: ${items[index].notificationId}; notified: ${items[index].alertCreated}; isRead: ${items[index].notificationIsRead}; ',
-                          ),
-                          TextSpan(
-                            style: Theme.of(context).textTheme.labelMedium!
-                                .apply(
-                                  color: isDarkTheme
-                                      ? CColors.darkGrey
-                                      : CColors.rBrown,
-                                ),
-                            text:
-                                'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
-                          ),
-                          TextSpan(
-                            style: Theme.of(context).textTheme.labelMedium!
-                                .apply(
-                                  color: isDarkTheme
-                                      ? CColors.darkGrey
-                                      : CColors.rBrown,
-                                ),
-                            text:
-                                'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
-                          ),
-                        ],
+                    Visibility(
+                      visible: false,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              style: Theme.of(context).textTheme.labelMedium!
+                                  .apply(
+                                    color: isDarkTheme
+                                        ? CColors.darkGrey
+                                        : CColors.rBrown,
+                                  ),
+                              text:
+                                  'alertId: ${items[index].notificationId}; notified: ${items[index].alertCreated}; isRead: ${items[index].notificationIsRead}; ',
+                            ),
+                            TextSpan(
+                              style: Theme.of(context).textTheme.labelMedium!
+                                  .apply(
+                                    color: isDarkTheme
+                                        ? CColors.darkGrey
+                                        : CColors.rBrown,
+                                  ),
+                              text:
+                                  'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
+                            ),
+                            TextSpan(
+                              style: Theme.of(context).textTheme.labelMedium!
+                                  .apply(
+                                    color: isDarkTheme
+                                        ? CColors.darkGrey
+                                        : CColors.rBrown,
+                                  ),
+                              text:
+                                  'user: ${items[index].userEmail}; pId: ${items[index].productId} ',
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Text(
@@ -131,6 +136,8 @@ class CAlertsListView extends StatelessWidget {
                         context,
                       ).textTheme.labelSmall!.apply(color: CColors.rBrown),
                     ),
+                    if (items[index].productId != null)
+                      IconButton(onPressed: () {}, icon: Icon(Icons.info)),
                   ],
                 ),
 

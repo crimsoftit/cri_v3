@@ -6,6 +6,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
 import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
@@ -77,13 +78,13 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                           fontWeightDelta: -7,
                         ),
                       ),
-                      //CDivider(endIndent: 250.0, startIndent: 0),
 
                       /// -- custom divider --
                       CCustomDivider(leftPadding: 5.0),
                     ],
                   );
                 }),
+                const SizedBox(height: CSizes.spaceBtnSections),
 
                 // -- list notifications on an ExpansionPanelList.radio widget --
                 CAlertsListView(),
@@ -111,9 +112,10 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                         alertLayout: NotificationLayout.Inbox,
                         notificationId: thisAlertId,
                         body: "alert body",
+
                         payload: {
                           'notification_id': thisAlertId.toString(),
-                          'product_id': '102456',
+                          //'product_id': '102456',
                         },
                         summary:
                             'this summary is useless... in fact, there\'s nothing here!',

@@ -541,18 +541,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               .validate()) {
                             return;
                           }
-                          if (invController.txtUnitSP.text.isNotEmpty &&
-                              invController.unitBP.value > 0) {
-                            if (invController.unitBP.value >
-                                double.parse(invController.txtUnitSP.text)) {
-                              invController.confirmInvalidUspModal(context);
-                              // CPopupSnackBar.warningSnackBar(
-                              //   title:
-                              //       'is this the right unit selling price?',
-                              // );
-                            }
+                          // if (invController.txtUnitSP.text.isNotEmpty &&
+                          //     invController.unitBP.value > 0) {
+                          //   if (invController.unitBP.value >
+                          //       double.parse(invController.txtUnitSP.text)) {
+                          //     invController.confirmInvalidUspModal(context);
+                          //     return;
+                          //   }
+                          // }
+
+                          if (invController.unitBP.value >
+                              double.parse(invController.txtUnitSP.text.trim())) {
+                            invController.confirmInvalidUspModal(context);
+                            return;
                           }
-                          
 
                           // invController
                           //     .addOrUpdateInventoryItem(inventoryItem);

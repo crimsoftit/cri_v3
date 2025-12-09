@@ -274,7 +274,7 @@ class CCheckoutController extends GetxController {
                       'product_id': invItem.productId.toString(),
                     },
                     summary: 'low-stock alert!',
-                    title: 'low stock alert!',
+                    title: 'restocking is due!',
                   );
                 });
 

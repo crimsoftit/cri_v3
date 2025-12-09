@@ -24,12 +24,15 @@ class CProductCardVertical extends StatelessWidget {
     this.lastModified,
     this.expiryDate,
     this.deleteAction,
+    this.favIconColor,
+    this.favIconData,
     this.isSynced,
     this.expiryColor,
     this.itemAvatar,
     this.lowStockNotifierLimit,
     this.onAvatarIconTap,
     this.onDoubleTapAction,
+    this.onFavoriteIconTap,
     this.onTapAction,
     this.qtyAvailable,
     this.qtyRefunded,
@@ -40,9 +43,10 @@ class CProductCardVertical extends StatelessWidget {
   });
 
   final double containerHeight;
-  final Color? expiryColor;
+  final Color? expiryColor, favIconColor;
   final int? lowStockNotifierLimit;
   final int pId;
+  final IconData? favIconData;
   final String? bp,
       expiryDate,
       lastModified,
@@ -58,6 +62,7 @@ class CProductCardVertical extends StatelessWidget {
   final VoidCallback? deleteAction,
       onAvatarIconTap,
       onDoubleTapAction,
+      onFavoriteIconTap,
       onTapAction;
 
   @override
@@ -118,15 +123,16 @@ class CProductCardVertical extends StatelessWidget {
                                     radius: 30.0,
                                   )
                                 : CCircularIconBtn(
-                                    bgColor: isDarkTheme
+                                    bgColor: favIconColor ?? (isDarkTheme
                                         ? CColors.transparent
-                                        : CColors.white,
+                                        : CColors.white),
                                     color: isDarkTheme
                                         ? CColors.white
                                         : CColors.rBrown,
-                                    icon: Iconsax.heart_add,
+                                    icon: favIconData ?? Iconsax.heart,
                                     iconSize: CSizes.md,
                                     height: 33.0,
+                                    onPressed: onFavoriteIconTap,
                                     width: 33.0,
                                   ),
                           ),
@@ -289,9 +295,7 @@ class CProductCardVertical extends StatelessWidget {
                           style: Theme.of(context).textTheme.labelSmall!.apply(
                             color:
                                 expiryColor ??
-                                (isDarkTheme
-                                    ? CColors.white
-                                    : CColors.rBrown),
+                                (isDarkTheme ? CColors.white : CColors.rBrown),
                           ),
                         ),
                         CProductPriceTxt(

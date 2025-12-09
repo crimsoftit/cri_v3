@@ -243,6 +243,9 @@ flutter:
     - assets/images/banners/banner_2.jpg
     - assets/images/banners/banner_3.jpg
     - assets/images/banners/banner_4.jpg
+    - assets/images/banners/pos_banner.png
+    - assets/images/banners/pos_banner.webp
+    - assets/images/banners/pos_banner_5.webp
     - assets/images/logos/
     - assets/images/lottie_anime/
     - assets/images/lottie_anime/loader_2.gif

@@ -215,4 +215,68 @@ class CNotificationServices extends GetxController {
           await CNotificationsController.instance.fetchUserNotifications();
         });
   }
+
+  /// -- schedule notifications for items nearing expiry date --
+  Future<void> createScheduledNotification({
+    required String body,
+    required DateTime expiryDate,
+    required int id,
+    required int notificationTimeInDays,
+    required String title,
+    
+  }) async {
+    try {
+      // compute notification time (e.g., 2 days before expiry)
+      final notificationTime = expiryDate.subtract(Duration(days: notificationTimeInDays));
+
+      // ensure notification time is in the future
+      if (notificationTime.isAfter(DateTime.now())) {
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: 'basic_channel',
+            title: title,
+            body: body,
+            notificationLayout: NotificationLayout.Inbox,
+          ),
+          // schedule: NotificationInterval(
+          //   interval: Duration(seconds: interval),
+          //   preciseAlarm: true,
+          //   timeZone:
+          //       await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+          // ),
+          schedule: NotificationCalendar(
+            year: notificationTime.year,
+            month: notificationTime.month,
+            day: notificationTime.day,
+            hour: notificationTime.hour,
+            minute: notificationTime.minute,
+            second: notificationTime.second,
+            millisecond: 0,
+            repeats: false,
+            timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+          ),
+        );
+      } else {
+        debugPrint(
+          'Notification time $notificationTime is not in the future. Skipping scheduling.',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error scheduling expiry notifications: $e');
+      if (kDebugMode) {
+        print('Error scheduling expiry notifications: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'Notification Error',
+          message: 'Error scheduling expiry notifications: $e',
+        );
+      }
+      CPopupSnackBar.errorSnackBar(
+        title: 'notification error',
+        message:
+            'an unknown error occurred while scheduling expiry notifications',
+      );
+      rethrow;
+    }
+  }
 }
