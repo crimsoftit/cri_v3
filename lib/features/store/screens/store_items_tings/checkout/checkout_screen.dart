@@ -252,7 +252,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                           height: 32.0,
                                                           iconBorderRadius: 100,
                                                           iconSize: CSizes.md,
-                                                          color: isDarkTheme
+                                                          iconColor: isDarkTheme
                                                               ? CColors.white
                                                               : CColors.rBrown,
                                                           bgColor: isDarkTheme
@@ -434,7 +434,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                           width: 32.0,
                                                           height: 32.0,
                                                           iconSize: CSizes.md,
-                                                          color: CColors.white,
+                                                          iconColor: CColors.white,
                                                           bgColor:
                                                               CColors.rBrown,
                                                           onPressed: () {

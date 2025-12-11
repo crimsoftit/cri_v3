@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
 import 'package:cri_v3/services/notification_services.dart';
@@ -38,7 +37,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final notsController = Get.put(CNotificationsController());
+    //final notsController = Get.put(CNotificationsController());
     // final notServices = Get.put(CNotificationServices());
     final userController = Get.put(CUserController());
 
@@ -88,43 +87,43 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
 
                 // -- list notifications on an ExpansionPanelList.radio widget --
                 CAlertsListView(),
-                FilledButton(
-                  onPressed: () async {
-                    await notsController.fetchUserNotifications().then((
-                      _,
-                    ) async {
-                      var previousAlertId =
-                          notsController.allNotifications.isNotEmpty
-                          ? notsController.allNotifications.fold(
-                              notsController
-                                  .allNotifications
-                                  .first
-                                  .notificationId!,
-                              (max, element) {
-                                return element.notificationId! > max
-                                    ? element.notificationId!
-                                    : max;
-                              },
-                            )
-                          : 0;
-                      var thisAlertId = previousAlertId + 1;
-                      await CNotificationServices.notify(
-                        alertLayout: NotificationLayout.Inbox,
-                        notificationId: thisAlertId,
-                        body: "alert body",
+                // FilledButton(
+                //   onPressed: () async {
+                //     await notsController.fetchUserNotifications().then((
+                //       _,
+                //     ) async {
+                //       var previousAlertId =
+                //           notsController.allNotifications.isNotEmpty
+                //           ? notsController.allNotifications.fold(
+                //               notsController
+                //                   .allNotifications
+                //                   .first
+                //                   .notificationId!,
+                //               (max, element) {
+                //                 return element.notificationId! > max
+                //                     ? element.notificationId!
+                //                     : max;
+                //               },
+                //             )
+                //           : 0;
+                //       var thisAlertId = previousAlertId + 1;
+                //       await CNotificationServices.notify(
+                //         alertLayout: NotificationLayout.Inbox,
+                //         notificationId: thisAlertId,
+                //         body: "alert body",
 
-                        payload: {
-                          'notification_id': thisAlertId.toString(),
-                          //'product_id': '102456',
-                        },
-                        summary:
-                            'this summary is useless... in fact, there\'s nothing here!',
-                        title: 'alert title',
-                      );
-                    });
-                  },
-                  child: Text('instant notifications'),
-                ),
+                //         payload: {
+                //           'notification_id': thisAlertId.toString(),
+                //           //'product_id': '102456',
+                //         },
+                //         summary:
+                //             'this summary is useless... in fact, there\'s nothing here!',
+                //         title: 'alert title',
+                //       );
+                //     });
+                //   },
+                //   child: Text('instant notifications'),
+                // ),
               ],
             ),
           ),

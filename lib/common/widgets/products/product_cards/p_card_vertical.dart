@@ -123,13 +123,18 @@ class CProductCardVertical extends StatelessWidget {
                                     radius: 30.0,
                                   )
                                 : CCircularIconBtn(
-                                    bgColor: favIconColor ?? (isDarkTheme
-                                        ? CColors.transparent
-                                        : CColors.white),
-                                    color: isDarkTheme
-                                        ? CColors.white
-                                        : CColors.rBrown,
-                                    icon: favIconData ?? Iconsax.heart,
+                                    // bgColor:
+                                    //     favIconColor ??
+                                    //     (isDarkTheme
+                                    //         ? CColors.transparent
+                                    //         : CColors.white),
+                                    bgColor: CColors.transparent,
+                                    iconColor:
+                                        favIconColor ??
+                                        (isDarkTheme
+                                            ? CColors.white
+                                            : CColors.rBrown),
+                                    icon: favIconData ?? Iconsax.heart5,
                                     iconSize: CSizes.md,
                                     height: 33.0,
                                     onPressed: onFavoriteIconTap,
@@ -151,16 +156,17 @@ class CProductCardVertical extends StatelessWidget {
                                     radius: 30.0,
                                   )
                                 : CCircularIconBtn(
-                                    color: isDarkTheme
+                                    iconColor: isDarkTheme
                                         ? CColors.white
                                         : Colors.red,
                                     icon: Icons.delete,
                                     iconSize: CSizes.md,
                                     height: 33.0,
                                     width: 33.0,
-                                    bgColor: isDarkTheme
-                                        ? CColors.transparent
-                                        : CColors.white,
+                                    // bgColor: isDarkTheme
+                                    //     ? CColors.transparent
+                                    //     : CColors.white,
+                                    bgColor: CColors.transparent,
                                     onPressed: deleteAction,
                                   ),
                           ),

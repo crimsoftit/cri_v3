@@ -85,7 +85,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                           : CColors.black.withValues(alpha: 0.5)),
                   width: 40.0,
                   height: 40.0,
-                  color: minusIconBtnColor ?? CColors.white,
+                  iconColor: minusIconBtnColor ?? CColors.white,
                   onPressed: () {
                     cartController.itemQtyInCart.value < 1
                         ? null
@@ -109,7 +109,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                           ? CColors.rBrown
                           : CColors.black),
                   icon: Iconsax.add,
-                  color: addIconTxtColor ?? CColors.white,
+                  iconColor: addIconTxtColor ?? CColors.white,
                   width: 40.0,
                   height: 40.0,
                   onPressed: () {

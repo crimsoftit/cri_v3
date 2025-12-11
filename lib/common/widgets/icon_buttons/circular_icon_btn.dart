@@ -10,7 +10,7 @@ class CCircularIconBtn extends StatelessWidget {
     this.iconSize,
     this.iconBorderRadius = 100.0,
     required this.icon,
-    this.color,
+    this.iconColor,
     this.bgColor,
     this.onPressed,
   });
@@ -18,7 +18,7 @@ class CCircularIconBtn extends StatelessWidget {
   final double? width, height, iconSize;
   final double iconBorderRadius;
   final IconData icon;
-  final Color? color, bgColor;
+  final Color? iconColor, bgColor;
   final VoidCallback? onPressed;
 
   @override
@@ -40,7 +40,7 @@ class CCircularIconBtn extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: onPressed,
-        icon: Icon(icon, color: color, size: iconSize),
+        icon: Icon(icon, color: iconColor, size: iconSize),
       ),
     );
   }

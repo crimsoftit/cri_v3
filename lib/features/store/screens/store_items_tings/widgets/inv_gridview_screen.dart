@@ -261,9 +261,8 @@ class CInvGridviewScreen extends StatelessWidget {
                           ? CColors.warning
                           : const Color.fromRGBO(147, 147, 147, 1)
                     : CColors.grey,
-                favIconColor: isFavorite == 1
-                    ? CColors.error
-                    : (Get.isDarkMode ? CColors.transparent : CColors.white),
+                favIconColor: isFavorite == 1 ? CColors.error : CColors.white,
+
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
                 itemName: pName,

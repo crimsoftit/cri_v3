@@ -1022,7 +1022,7 @@ class CTxnsController extends GetxController {
                         bgColor: CColors.black.withValues(alpha: 0.5),
                         width: 45.0,
                         height: 45.0,
-                        color: CColors.white,
+                        iconColor: CColors.white,
                         onPressed: () {
                           if (refundQty.value > 0 &&
                               refundQty.value <= soldItem.quantity) {
@@ -1049,7 +1049,7 @@ class CTxnsController extends GetxController {
                         //     : CColors.black),
                         bgColor: CColors.black,
                         icon: Iconsax.add,
-                        color: CColors.white,
+                        iconColor: CColors.white,
                         width: 45.0,
                         height: 45.0,
                         onPressed: () {

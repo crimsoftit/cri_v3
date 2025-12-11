@@ -1,5 +1,6 @@
 import 'package:cri_v3/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
+import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -15,6 +16,7 @@ class CAlertsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final invController = Get.put(CInventoryController());
     final notsController = Get.put(CNotificationsController());
 
     var items = notsController.allNotifications;
@@ -51,6 +53,7 @@ class CAlertsListView extends StatelessWidget {
                   : CColors.lightGrey,
               margin: EdgeInsets.all(1),
               child: ListTile(
+                contentPadding: EdgeInsets.only(left: 5, right: 10.0),
                 leading: CircleAvatar(
                   backgroundColor: isDarkTheme
                       ? CColors.darkGrey
@@ -58,6 +61,7 @@ class CAlertsListView extends StatelessWidget {
                       ? CColors.rBrown.withValues(alpha: .3)
                       : CColors.darkerGrey,
                   radius: 15.0,
+
                   child: Icon(
                     color: isDarkTheme ? CColors.grey : CColors.rBrown,
                     items[index].productId!.isGreaterThan(10)
@@ -73,16 +77,35 @@ class CAlertsListView extends StatelessWidget {
                   // ),
                 ),
                 //isThreeLine: true,
-                title: Text(
-                  '#${items[index].notificationId} ${items[index].notificationTitle}',
-                  style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
-                  ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // -- date --
+                    Text(
+                      items[index].date,
+                      style: Theme.of(context).textTheme.labelSmall!.apply(
+                        color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+
+                    // -- alert title --
+                    Text(
+                      items[index].notificationTitle,
+                      style: Theme.of(context).textTheme.labelMedium!.apply(
+                        color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                        fontFamily: 'Roboto',
+                        fontWeightDelta: items[index].notificationIsRead == 0
+                            ? 2
+                            : 1,
+                      ),
+                    ),
+                  ],
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// -- alert message (subtitle, body) --
+                    // -- alert message (subtitle, body) --
                     Text(
                       items[index].notificationBody,
                       style: Theme.of(context).textTheme.labelMedium!.apply(
@@ -130,14 +153,67 @@ class CAlertsListView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      items[index].date,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelSmall!.apply(color: CColors.rBrown),
-                    ),
+
                     if (items[index].productId != null)
-                      IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+                      TextButton.icon(
+                        onPressed: () {
+                          invController.fetchUserInventoryItems().then((_) {
+                            var invItemIndex = invController.inventoryItems
+                                .indexWhere(
+                                  (item) =>
+                                      item.productId == items[index].productId,
+                                );
+                            if (invItemIndex >= 0) {
+                              Get.toNamed(
+                                '/inventory/item_details/',
+                                arguments: items[index].productId,
+                              );
+                            } else {
+                              Get.snackbar(
+                                'item not found',
+                                'the product associated with this alert was not found in inventory',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: isDarkTheme
+                                    ? CColors.darkGrey.withValues(alpha: 0.7)
+                                    : CColors.lightGrey.withValues(alpha: 0.7),
+                                colorText: isDarkTheme
+                                    ? CColors.rBrown
+                                    : CColors.darkerGrey,
+                              );
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Iconsax.eye,
+                          color: CNetworkManager.instance.hasConnection.value
+                              ? CColors.rBrown
+                              : CColors.darkerGrey,
+                          size: CSizes.iconSm,
+                        ),
+                        label: Text(
+                          'view product',
+                          style: Theme.of(context).textTheme.labelMedium!.apply(
+                            color: CNetworkManager.instance.hasConnection.value
+                                ? CColors.rBrown
+                                : CColors.darkerGrey,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown.withValues(
+                                  alpha: 0.2,
+                                ), // background color
+                          foregroundColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown, // foreground (text) color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              CSizes.borderRadiusSm,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
 
