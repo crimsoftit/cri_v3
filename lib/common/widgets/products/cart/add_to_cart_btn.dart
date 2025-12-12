@@ -25,9 +25,11 @@ class CAddToCartBtn extends StatelessWidget {
         (item) => item.productId.toString() == pId.toString().toLowerCase(),
       );
 
-      var itemExpiry = invItem.expiryDate != '' ? CDateTimeComputations.timeRangeFromNow(
-        invItem.expiryDate.replaceAll('@ ', ''),
-      ) : null;
+      var itemExpiry = invItem.expiryDate != ''
+          ? CDateTimeComputations.timeRangeFromNow(
+              invItem.expiryDate.replaceAll('@ ', ''),
+            )
+          : null;
       return InkWell(
         onTap: () {
           cartController.fetchCartItems();
@@ -47,7 +49,9 @@ class CAddToCartBtn extends StatelessWidget {
             color: pQtyInCart > 0
                 ? Colors.orange
                 : invItem.quantity <= invItem.lowStockNotifierLimit ||
-                      (invItem.expiryDate != '' && itemExpiry != null && itemExpiry <= 0)
+                      (invItem.expiryDate != '' &&
+                          itemExpiry != null &&
+                          itemExpiry <= 0)
                 ? Colors.red
                 : CNetworkManager.instance.hasConnection.value
                 ? CColors.rBrown

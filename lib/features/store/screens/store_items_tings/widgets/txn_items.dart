@@ -4,8 +4,8 @@ import 'package:cri_v3/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
+import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
-import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:cri_v3/utils/constants/app_icons.dart';
@@ -102,9 +102,9 @@ class CTxnItemsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final checkoutController = Get.put(CCheckoutController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    //final invController = Get.put(CInventoryController());
+    final invController = Get.put(CInventoryController());
     final searchController = Get.put(CSearchBarController());
-    final syncController = Get.put(CSyncController());
+    //final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
     final userCurrency = CHelperFunctions.formatCurrency(
@@ -174,11 +174,7 @@ class CTxnItemsListView extends StatelessWidget {
           );
         }
 
-        // if (invController.isLoading.value ||
-        //     syncController.processingSync.value) {
-        //   return const CVerticalProductShimmer(itemCount: 5);
-        // }
-        if (syncController.processingSync.value) {
+        if (txnsController.isLoading.value || invController.isLoading.value) {
           return const CVerticalProductShimmer(itemCount: 5);
         }
 

@@ -7,8 +7,10 @@ import 'package:cri_v3/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,6 +72,7 @@ class CProductCardVertical extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final syncController = Get.put(CSyncController());
+    final txnsController = Get.put(CTxnsController());
 
     return GestureDetector(
       onDoubleTap: onDoubleTapAction,
@@ -103,7 +106,7 @@ class CProductCardVertical extends StatelessWidget {
                 children: [
                   CRoundedContainer(
                     width: CHelperFunctions.screenWidth() * 0.45,
-                    height: 52.0,
+                    height: 53.0,
                     bgColor: const Color.fromRGBO(0, 0, 0, 0),
                     boxShadow: [],
                     child: Obx(() {
@@ -114,8 +117,10 @@ class CProductCardVertical extends StatelessWidget {
                             top: 0,
                             left: 0,
                             child:
-                                (invController.isLoading.value ||
-                                        syncController.processingSync.value) &&
+                                // (invController.isLoading.value ||
+                                //         syncController.processingSync.value) &&
+                                //     invController.inventoryItems.isNotEmpty
+                                invController.isLoading.value &&
                                     invController.inventoryItems.isNotEmpty
                                 ? CShimmerEffect(
                                     width: 30,
@@ -128,7 +133,9 @@ class CProductCardVertical extends StatelessWidget {
                                     //     (isDarkTheme
                                     //         ? CColors.transparent
                                     //         : CColors.white),
-                                    bgColor: CColors.transparent,
+                                    bgColor: isDarkTheme
+                                        ? CColors.transparent
+                                        : CColors.rBrown.withValues(alpha: 0.2),
                                     iconColor:
                                         favIconColor ??
                                         (isDarkTheme
@@ -147,8 +154,7 @@ class CProductCardVertical extends StatelessWidget {
                             top: 0,
                             right: 0,
                             child:
-                                (invController.isLoading.value ||
-                                        syncController.processingSync.value) &&
+                                invController.isLoading.value &&
                                     invController.inventoryItems.isNotEmpty
                                 ? CShimmerEffect(
                                     width: 30,
@@ -181,8 +187,7 @@ class CProductCardVertical extends StatelessWidget {
                                 ? 60.0
                                 : 40.0,
                             child:
-                                (invController.isLoading.value ||
-                                        syncController.processingSync.value) &&
+                                invController.isLoading.value &&
                                     invController.inventoryItems.isNotEmpty
                                 ? CShimmerEffect(
                                     width: 40,
@@ -223,7 +228,10 @@ class CProductCardVertical extends StatelessWidget {
                                               CSizes.spaceBtnInputFields / 2.0,
                                         ),
                                         Text(
-                                          lastModified!,
+                                          CFormatter.formatTimeRangeFromNow(
+                                            lastModified!.replaceAll('@ ', ''),
+                                          ),
+                                          //lastModified!,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
@@ -345,9 +353,7 @@ class CProductCardVertical extends StatelessWidget {
                                   bottom: 0,
                                   child:
                                       (invController.isLoading.value ||
-                                              syncController
-                                                  .processingSync
-                                                  .value) &&
+                                              txnsController.isLoading.value) &&
                                           invController
                                               .inventoryItems
                                               .isNotEmpty

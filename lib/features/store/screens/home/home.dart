@@ -25,7 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-/// -- TODO: set widget for a freshly registered account -with no sales --
+/// -- TODO: do peak transaction hours & days --
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

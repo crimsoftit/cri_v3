@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CInvGridviewScreen extends StatelessWidget {
-  const CInvGridviewScreen({super.key, this.mainAxisExtent = 165.0});
+  const CInvGridviewScreen({super.key, this.mainAxisExtent = 166.0});
 
   final double? mainAxisExtent;
 
@@ -230,7 +230,7 @@ class CInvGridviewScreen extends StatelessWidget {
 
               return CProductCardVertical(
                 bp: bp.toString(),
-                containerHeight: 174.0,
+                containerHeight: 175.0,
                 deleteAction: syncController.processingSync.value
                     ? null
                     : () {

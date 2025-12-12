@@ -208,20 +208,20 @@ class CTxnsController extends GetxController {
         }
       });
 
-      final values = {};
-      for (final item in sales) {
-        final itemName = item.productName;
-        final qty = item.quantity;
-        final previousValue = values.containsKey(itemName)
-            ? values[itemName]!
-            : 0;
-        values[itemName] = previousValue + qty;
-      }
+      // final values = {};
+      // for (final item in sales) {
+      //   final itemName = item.productName;
+      //   final qty = item.quantity;
+      //   final previousValue = values.containsKey(itemName)
+      //       ? values[itemName]!
+      //       : 0;
+      //   values[itemName] = previousValue + qty;
+      // }
 
-      final result = values.values.toList();
-      if (kDebugMode) {
-        print('result: $result');
-      }
+      // final result = values.values.toList();
+      // if (kDebugMode) {
+      //   print('result: $result');
+      // }
 
       // stop loader
       isLoading.value = false;

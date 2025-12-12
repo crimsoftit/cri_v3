@@ -59,7 +59,9 @@ class CInvDetails extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                },
                 icon: Icon(
                   Iconsax.notification,
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
@@ -150,9 +152,7 @@ class CInvDetails extends StatelessWidget {
                       CMenuTile(
                         icon: Iconsax.calendar,
                         title: invItem.expiryDate != ''
-                            ? CFormatter.formatTimeRangeFromNow(
-                                invItem.expiryDate.replaceAll('@ ', ''),
-                              ).toString()
+                            ? '${CFormatter.formatTimeRangeFromNow(invItem.expiryDate.replaceAll('@ ', ''))} (${invItem.expiryDate})'
                             : 'N/A',
                         subTitle: 'expiry date/shelflife',
                         onTap: () {},
