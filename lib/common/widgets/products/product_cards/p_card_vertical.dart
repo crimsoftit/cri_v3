@@ -6,7 +6,6 @@ import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
-import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -71,7 +70,7 @@ class CProductCardVertical extends StatelessWidget {
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final syncController = Get.put(CSyncController());
+    //final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
 
     return GestureDetector(
@@ -172,7 +171,10 @@ class CProductCardVertical extends StatelessWidget {
                                     // bgColor: isDarkTheme
                                     //     ? CColors.transparent
                                     //     : CColors.white,
-                                    bgColor: CColors.transparent,
+                                    bgColor: isDarkTheme
+                                        ? CColors.transparent
+                                        : CColors.rBrown.withValues(alpha: 0.2),
+                                    //  CColors.transparent,
                                     onPressed: deleteAction,
                                   ),
                           ),
@@ -180,12 +182,12 @@ class CProductCardVertical extends StatelessWidget {
                           /// -- avatar, date, and(or) edit iconButton --
                           Positioned(
                             top: 2,
-                            left:
-                                (invController.isLoading.value ||
-                                        syncController.processingSync.value) &&
-                                    invController.inventoryItems.isNotEmpty
-                                ? 60.0
-                                : 40.0,
+                            // left:
+                            //     invController.isLoading.value &&
+                            //         invController.inventoryItems.isNotEmpty
+                            //     ? 60.0
+                            //     : 40.0,
+                            left: 50.0,
                             child:
                                 invController.isLoading.value &&
                                     invController.inventoryItems.isNotEmpty
@@ -194,10 +196,12 @@ class CProductCardVertical extends StatelessWidget {
                                     height: 40.0,
                                     radius: 40.0,
                                   )
-                                : Center(
+                                : Align(
+                                    alignment: Alignment.center,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.max,
                                       children: [
                                         CCircleAvatar(
                                           avatarInitial: itemAvatar!,
@@ -229,8 +233,18 @@ class CProductCardVertical extends StatelessWidget {
                                         ),
                                         Text(
                                           CFormatter.formatTimeRangeFromNow(
-                                            lastModified!.replaceAll('@ ', ''),
-                                          ),
+                                                lastModified!.replaceAll(
+                                                  '@ ',
+                                                  '',
+                                                ),
+                                              ).contains('just now')
+                                              ? 'modified: ${CFormatter.formatTimeRangeFromNow(lastModified!.replaceAll('@ ', ''))}'
+                                              : CFormatter.formatTimeRangeFromNow(
+                                                  lastModified!.replaceAll(
+                                                    '@ ',
+                                                    '',
+                                                  ),
+                                                ),
                                           //lastModified!,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,

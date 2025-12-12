@@ -240,13 +240,21 @@ flutter:
     - assets/images/
     - assets/images/animations/
     - assets/images/banners/
+    
+        ## --- pos banners --- ##
     - assets/images/banners/banner_1.jpg
     - assets/images/banners/banner_2.jpg
     - assets/images/banners/banner_3.jpg
     - assets/images/banners/banner_4.jpg
+
+    - assets/images/banners/pos_banner_graph.webp
+    - assets/images/banners/pos_banner_2.webp
+    - assets/images/banners/pos_banner_2.jpg
     - assets/images/banners/pos_banner.png
+    - assets/images/banners/pos_banner_1.png
     - assets/images/banners/pos_banner.webp
-    - assets/images/banners/pos_banner_5.webp
+    - assets/images/banners/pos_banner_3.jpg
+
     - assets/images/logos/
     - assets/images/lottie_anime/
     - assets/images/lottie_anime/loader_2.gif

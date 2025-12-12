@@ -133,8 +133,10 @@ class CImages {
   static const String visaLogo = "assets/icons/payment_methods/visa.png";
 
   /// -- banners/slider images --
-  static const String sliderImg1 = "assets/images/banners/pos_banner_5.webp";
-  static const String sliderImg2 = "assets/images/banners/banner_2.jpg";
-  static const String sliderImg3 = "assets/images/banners/banner_3.jpg";
-  static const String sliderImg4 = "assets/images/banners/banner_4.jpg";
+  static const String sliderImg0 = "assets/images/banners/pos_banner.png";
+  static const String sliderImg1 =
+      "assets/images/banners/pos_banner_graph.webp";
+  static const String sliderImg2 = "assets/images/banners/pos_banner_2.png";
+  static const String sliderImg3 = "assets/images/banners/pos_banner_1.png";
+  static const String sliderImg4 = "assets/images/banners/pos_banner_1.webp";
 }

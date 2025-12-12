@@ -25,14 +25,14 @@ class CFormatter {
         break;
       case < 0 && > -1:
         differenceInHours = endTime.difference(startTime).inHours.abs();
-        //differenceInMinutes = endTime.difference(startTime).inMinutes.abs();
+        
         // formattedRange =
         //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
         formattedRange = '$differenceInHours hour(s) ago';
         break;
       case >= 0 && < 1:
         differenceInHours = endTime.difference(startTime).inHours.abs();
-
+        differenceInMinutes = endTime.difference(startTime).inMinutes.abs();
         if (differenceInMinutes < 1) {
           formattedRange = 'just now';
           break;

@@ -2,7 +2,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
-import 'package:cri_v3/common/widgets/sliders/carousel_slider.dart';
+import 'package:cri_v3/common/widgets/sliders/auto_img_slider.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
@@ -128,8 +128,11 @@ class HomeScreen extends StatelessWidget {
                                 children: [
                                   const SizedBox(height: CSizes.defaultSpace),
 
-                                  CCarouselSlider(),
-                                  const SizedBox(height: CSizes.defaultSpace),
+                                  //CCarouselSlider(),
+                                  CAutoImgSlider(),
+                                  const SizedBox(
+                                    height: CSizes.defaultSpace / 1.5,
+                                  ),
                                   Text(
                                     'welcome aboard!!'.toUpperCase(),
                                     style: Theme.of(context)
