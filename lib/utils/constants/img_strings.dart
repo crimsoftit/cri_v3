@@ -139,4 +139,8 @@ class CImages {
   static const String sliderImg2 = "assets/images/banners/pos_banner_2.png";
   static const String sliderImg3 = "assets/images/banners/pos_banner_1.png";
   static const String sliderImg4 = "assets/images/banners/pos_banner_1.webp";
+  static const String sliderImg5 = "assets/images/banners/pos_banner_5.png";
+  static const String sliderImg6 = "assets/images/banners/pos_banner_4.png";
+  static const String sliderImg7 = "assets/images/banners/pos_banner_7.webp";
+  static const String sliderImg8 = "assets/images/banners/pos_banner_8.webp";
 }

@@ -12,12 +12,14 @@ import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/fresh_dashboard_screen_view.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/store_summary_card.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -99,27 +101,96 @@ class HomeScreen extends StatelessWidget {
                     return CHorizontalProductShimmer();
                   }
 
-                  /// -- top sellers --
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (txnsController.bestSellers.isNotEmpty)
-                        CSectionHeading(
-                          showActionBtn: true,
-                          title: 'top sellers...',
-                          // txtColor: CColors.white,
-                          txtColor: isDarkTheme
-                              ? CColors.darkGrey
-                              : CColors.rBrown,
-                          btnTitle: 'view all',
-                          btnTxtColor: CColors.grey,
-                          editFontSize: true,
-                          fWeight: FontWeight.w400,
-                          onPressed: () {
-                            navController.selectedIndex.value = 1;
-                            Get.to(() => const NavMenu());
-                          },
+                        /// -- store summary --
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: CSizes.defaultSpace),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.tag,
+                                      subTitleTxt: 'g.revenue($userCurrency)',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        1000,
+                                      ),
+                                    ),
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.money_send,
+                                      subTitleTxt:
+                                          'cost of sales($userCurrency)',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        1500,
+                                      ),
+                                    ),
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.money_tick,
+                                      subTitleTxt: 'g. profit($userCurrency)',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        200,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: CSizes.defaultSpace / 4),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.tag,
+                                      subTitleTxt: 'complete txns',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        1000,
+                                      ),
+                                    ),
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.money_send,
+                                      subTitleTxt: 'pending txns',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        1500,
+                                      ),
+                                    ),
+                                    CStoreSummaryCard(
+                                      iconData: Iconsax.money_tick,
+                                      subTitleTxt: 'expired items',
+                                      titleTxt: CFormatter.kSuffixFormatter(
+                                        200,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+
+                            /// -- top sellers --
+                            CSectionHeading(
+                              showActionBtn: true,
+                              title: 'top sellers...',
+                              // txtColor: CColors.white,
+                              txtColor: isDarkTheme
+                                  ? CColors.darkGrey
+                                  : CColors.rBrown,
+                              btnTitle: 'view all',
+                              btnTxtColor: CColors.grey,
+                              editFontSize: true,
+                              fWeight: FontWeight.w400,
+                              onPressed: () {
+                                navController.selectedIndex.value = 1;
+                                Get.to(() => const NavMenu());
+                              },
+                            ),
+                          ],
                         ),
+
                       // txnsController.bestSellers.isEmpty ||
                       //         invController.inventoryItems.isEmpty
                       txnsController.bestSellers.isEmpty
@@ -175,19 +246,7 @@ class HomeScreen extends StatelessWidget {
                             )
                           : CTopSellers(),
 
-                      if (txnsController.bestSellers.isNotEmpty)
-                        CSectionHeading(
-                          showActionBtn: true,
-                          title: 'weekly sales...',
-                          // txtColor: CColors.white,
-                          txtColor: isDarkTheme
-                              ? CColors.darkGrey
-                              : CColors.rBrown,
-                          btnTitle: '',
-                          btnTxtColor: CColors.grey,
-                          editFontSize: true,
-                          onPressed: () {},
-                        ),
+                      //if (txnsController.bestSellers.isNotEmpty)
 
                       /// -- weekly sales bar graph --
                       Obx(() {
@@ -259,10 +318,11 @@ class HomeScreen extends StatelessWidget {
                         }
                         return dashboardController.currentWeekSales.value > 0
                             ? CRoundedContainer(
-                                // bgColor:
-                                //     isDarkTheme ? CColors.darkGrey : CColors.grey,
-                                bgColor: CColors.grey,
-                                borderRadius: CSizes.cardRadiusSm,
+                                bgColor: isDarkTheme
+                                    ? CColors.darkGrey
+                                    : CColors.white,
+                                //bgColor: CColors.grey,
+                                borderRadius: CSizes.cardRadiusSm / 2.5,
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Column(
                                   children: [
@@ -399,37 +459,47 @@ class HomeScreen extends StatelessWidget {
                                                         0
                                                 ? 27.0
                                                 : 5.0,
-                                            child: Text(
-                                              '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .apply(
-                                                    color: CColors.rBrown,
-                                                    //color: CColors.black,
-                                                    fontSizeDelta:
-                                                        dashboardController
-                                                                    .currentWeekSales
-                                                                    .value >
-                                                                0 &&
-                                                            dashboardController
-                                                                    .lastWeekSales
-                                                                    .value >
-                                                                0
-                                                        ? 1.0
-                                                        : 2.0,
-                                                    fontWeightDelta:
-                                                        dashboardController
-                                                                    .currentWeekSales
-                                                                    .value >
-                                                                0 &&
-                                                            dashboardController
-                                                                    .lastWeekSales
-                                                                    .value >
-                                                                0
-                                                        ? 1
-                                                        : 2,
+                                            child: CRoundedContainer(
+                                              width:
+                                                  CHelperFunctions.screenWidth() *
+                                                  .85,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text('weekly sales...'),
+                                                  Text(
+                                                    '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
+                                                    style: Theme.of(context).textTheme.labelSmall!.apply(
+                                                      color: CColors.rBrown,
+                                                      //color: CColors.black,
+                                                      fontSizeDelta:
+                                                          dashboardController
+                                                                      .currentWeekSales
+                                                                      .value >
+                                                                  0 &&
+                                                              dashboardController
+                                                                      .lastWeekSales
+                                                                      .value >
+                                                                  0
+                                                          ? 1.0
+                                                          : 2.0,
+                                                      fontWeightDelta:
+                                                          dashboardController
+                                                                      .currentWeekSales
+                                                                      .value >
+                                                                  0 &&
+                                                              dashboardController
+                                                                      .lastWeekSales
+                                                                      .value >
+                                                                  0
+                                                          ? 1
+                                                          : 2,
+                                                    ),
                                                   ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],

@@ -1,5 +1,4 @@
 import 'package:cri_v3/common/styles/spacing_styles.dart';
-import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -27,7 +26,7 @@ class CSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final syncController = Get.put(CSyncController());
-    final userController = Get.put(CUserController());
+    //final userController = Get.put(CUserController());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -50,15 +49,6 @@ class CSuccessScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: CSizes.spaceBtnItems),
-              Obx(
-                () => Text(
-                  userController.user.value.email,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelMedium!.apply(color: CColors.grey),
-                  textAlign: TextAlign.center,
-                ),
-              ),
               const SizedBox(height: CSizes.spaceBtnItems),
               Text(
                 subTitle,

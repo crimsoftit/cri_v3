@@ -42,7 +42,7 @@ class CTexts {
   static const String accountCreatedTitle =
       "your account was successfully created!";
   static const String accountCreatedSubTitle =
-      "welcome to your ultimate shopping destination! your account is created, unleash the joy of seamless & revolutionary POS services with Retail Intel!!";
+      "welcome to your ultimate retail experience! your account is created, unleash the joy of seamless & revolutionary POS services with Retail Intel!!";
 
   // -- signup screen - text
   static const String signUp = 'Sign up';

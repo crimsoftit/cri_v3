@@ -29,6 +29,7 @@ import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
+/// TODO: get summary data
 class CTxnsController extends GetxController {
   static CTxnsController get instance {
     return Get.find();

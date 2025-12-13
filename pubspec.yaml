@@ -242,14 +242,8 @@ flutter:
     - assets/images/banners/
     
         ## --- pos banners --- ##
-    - assets/images/banners/banner_1.jpg
-    - assets/images/banners/banner_2.jpg
-    - assets/images/banners/banner_3.jpg
-    - assets/images/banners/banner_4.jpg
-
+   
     - assets/images/banners/pos_banner_graph.webp
-    - assets/images/banners/pos_banner_2.webp
-    - assets/images/banners/pos_banner_2.jpg
     - assets/images/banners/pos_banner.png
     - assets/images/banners/pos_banner_1.png
     - assets/images/banners/pos_banner.webp

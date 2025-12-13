@@ -19,6 +19,9 @@ class _CAutoImgSliderState extends State<CAutoImgSlider> {
     Image.asset(CImages.sliderImg2, fit: BoxFit.cover),
     Image.asset(CImages.sliderImg3, fit: BoxFit.cover),
     Image.asset(CImages.sliderImg4, fit: BoxFit.cover),
+    Image.asset(CImages.sliderImg5, fit: BoxFit.cover),
+    Image.asset(CImages.sliderImg6, fit: BoxFit.cover),
+    Image.asset(CImages.sliderImg7, fit: BoxFit.cover),
   ];
 
   int currentImgIndex = 0;

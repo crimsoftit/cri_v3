@@ -25,7 +25,7 @@ class CFormatter {
         break;
       case < 0 && > -1:
         differenceInHours = endTime.difference(startTime).inHours.abs();
-        
+
         // formattedRange =
         //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
         formattedRange = '$differenceInHours hour(s) ago';
@@ -62,5 +62,11 @@ class CFormatter {
     }
 
     return formattedRange;
+  }
+
+  /// -- display values greater than 1000 with a 'K' suffix --
+  static String kSuffixFormatter(double amount) {
+    final formatter = NumberFormat.compact(locale: 'en_US');
+    return formatter.format(amount);
   }
 }
