@@ -1,4 +1,6 @@
+import 'package:cri_v3/common/styles/shadows.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/common/widgets/dates/date_picker_widget.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
@@ -89,7 +91,11 @@ class HomeScreen extends StatelessWidget {
               CCustomDivider(),
 
               Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 0),
+                padding: const EdgeInsets.only(
+                  left: 18.0,
+                  right: 18.0,
+                  top: 10.0,
+                ),
                 child: Obx(() {
                   if (invController.inventoryItems.isEmpty &&
                       !invController.isLoading.value) {
@@ -106,89 +112,68 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       if (txnsController.bestSellers.isNotEmpty)
                         /// -- store summary --
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: CSizes.defaultSpace),
-                            Column(
-                              children: [
-                                Row(
+                        CRoundedContainer(
+                          bgColor: CColors.transparent,
+                          borderColor: CColors.grey,
+                          borderRadius: CSizes.cardRadiusSm / 2.5,
+                          boxShadow: [CShadowStyle.verticalProductShadow],
+                          padding: const EdgeInsets.all(5.0),
+                          showBorder: true,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CDateRangePickerWidget(),
+                              const SizedBox(height: CSizes.defaultSpace / 8),
+                              Obx(() {
+                                return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     CStoreSummaryCard(
                                       iconData: Iconsax.tag,
-                                      subTitleTxt: 'g.revenue($userCurrency)',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        1000,
-                                      ),
+                                      subTitleTxt: 'g.revenue',
+                                      titleTxt:
+                                          '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.totalRevenue.value..toStringAsFixed(1))}',
                                     ),
                                     CStoreSummaryCard(
                                       iconData: Iconsax.money_send,
-                                      subTitleTxt:
-                                          'cost of sales($userCurrency)',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        1500,
-                                      ),
+                                      subTitleTxt: 'cost of sales',
+                                      titleTxt:
+                                          '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
                                     ),
                                     CStoreSummaryCard(
                                       iconData: Iconsax.money_tick,
                                       subTitleTxt: 'g. profit($userCurrency)',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        200,
-                                      ),
+                                      titleTxt: txnsController.totalProfit.value
+                                          .toStringAsFixed(1),
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: CSizes.defaultSpace / 4),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.tag,
-                                      subTitleTxt: 'complete txns',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        1000,
-                                      ),
-                                    ),
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.money_send,
-                                      subTitleTxt: 'pending txns',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        1500,
-                                      ),
-                                    ),
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.money_tick,
-                                      subTitleTxt: 'expired items',
-                                      titleTxt: CFormatter.kSuffixFormatter(
-                                        200,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            /// -- top sellers --
-                            CSectionHeading(
-                              showActionBtn: true,
-                              title: 'top sellers...',
-                              // txtColor: CColors.white,
-                              txtColor: isDarkTheme
-                                  ? CColors.darkGrey
-                                  : CColors.rBrown,
-                              btnTitle: 'view all',
-                              btnTxtColor: CColors.grey,
-                              editFontSize: true,
-                              fWeight: FontWeight.w400,
-                              onPressed: () {
-                                navController.selectedIndex.value = 1;
-                                Get.to(() => const NavMenu());
-                              },
-                            ),
-                          ],
+                                );
+                              }),
+                              const SizedBox(height: CSizes.defaultSpace / 4),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.tag,
+                                    subTitleTxt: 'complete txns',
+                                    titleTxt: CFormatter.kSuffixFormatter(1000),
+                                  ),
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.money_send,
+                                    subTitleTxt: 'pending txns',
+                                    titleTxt: CFormatter.kSuffixFormatter(1500),
+                                  ),
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.money_tick,
+                                    subTitleTxt: 'expired items',
+                                    titleTxt: CFormatter.kSuffixFormatter(200),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
 
                       // txnsController.bestSellers.isEmpty ||
@@ -244,7 +229,28 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : CTopSellers(),
+                          : Column(
+                              children: [
+                                /// -- top sellers --
+                                CSectionHeading(
+                                  showActionBtn: true,
+                                  title: 'top sellers...',
+                                  // txtColor: CColors.white,
+                                  txtColor: isDarkTheme
+                                      ? CColors.darkGrey
+                                      : CColors.rBrown,
+                                  btnTitle: 'view all',
+                                  btnTxtColor: CColors.grey,
+                                  editFontSize: true,
+                                  fWeight: FontWeight.w400,
+                                  onPressed: () {
+                                    navController.selectedIndex.value = 1;
+                                    Get.to(() => const NavMenu());
+                                  },
+                                ),
+                                CTopSellers(),
+                              ],
+                            ),
 
                       //if (txnsController.bestSellers.isNotEmpty)
 
@@ -460,6 +466,7 @@ class HomeScreen extends StatelessWidget {
                                                 ? 27.0
                                                 : 5.0,
                                             child: CRoundedContainer(
+                                              bgColor: CColors.transparent,
                                               width:
                                                   CHelperFunctions.screenWidth() *
                                                   .85,
@@ -468,7 +475,15 @@ class HomeScreen extends StatelessWidget {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text('weekly sales...'),
+                                                  Text(
+                                                    'weekly sales...',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium!
+                                                        .apply(
+                                                          color: CColors.rBrown,
+                                                        ),
+                                                  ),
                                                   Text(
                                                     '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
                                                     style: Theme.of(context).textTheme.labelSmall!.apply(

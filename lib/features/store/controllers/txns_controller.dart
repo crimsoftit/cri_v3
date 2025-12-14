@@ -80,6 +80,11 @@ class CTxnsController extends GetxController {
   final RxBool updatesOnRefundDone = false.obs;
   final RxBool refundDataUpdated = false.obs;
 
+  /// -- summary variables --
+  final RxDouble costOfSales = 0.0.obs;
+  final RxDouble totalProfit = 0.0.obs;
+  final RxDouble totalRevenue = 0.0.obs;
+
   final txtAmountIssued = TextEditingController();
   final txtCustomerName = TextEditingController();
   final txtCustomerContacts = TextEditingController();
@@ -96,6 +101,7 @@ class CTxnsController extends GetxController {
   final RxString saleItemCode = ''.obs;
 
   final RxDouble saleItemBp = 0.0.obs;
+  final RxDouble saleItemUnitBP = 0.0.obs;
   final RxDouble saleItemUsp = 0.0.obs;
   final RxDouble deposit = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
@@ -117,25 +123,18 @@ class CTxnsController extends GetxController {
     fetchSoldItems();
     fetchTxns();
     initTxnsSync();
-    //notsController.fetchUserNotifications();
-    // Future.delayed(
-    //   Duration.zero,
-    //   () {
-    //     WidgetsBinding.instance.addPostFrameCallback(
-    //       (_) async {
-    //         await dbHelper.openDb();
-
-    //         await fetchSoldItems();
-    //         await fetchTxns();
-    //         await initTxnsSync();
-    //         await notsController.fetchUserNotifications();
-    //       },
-    //     );
-    //   },
-    // );
 
     showAmountIssuedField.value = true;
     refundQty.value = 0;
+
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
+      if (!isAllowed) {
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        // This is very important to not harm the user experience
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
     super.onInit();
   }
 
@@ -200,14 +199,8 @@ class CTxnsController extends GetxController {
         foundRefunds.assignAll(refundedItems);
       }
 
-      AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
-        if (!isAllowed) {
-          // This is just a basic example. For real apps, you must show some
-          // friendly dialog box before call the request method.
-          // This is very important to not harm the user experience
-          AwesomeNotifications().requestPermissionToSendNotifications();
-        }
-      });
+      /// -- initialize sales summary values --
+      initializeSalesSummaryValues();
 
       // final values = {};
       // for (final item in sales) {
@@ -470,6 +463,7 @@ class CTxnsController extends GetxController {
         saleItemCode.value = fetchedItem.first.pCode;
         saleItemName.value = fetchedItem.first.name;
         saleItemBp.value = fetchedItem.first.buyingPrice;
+        saleItemUnitBP.value = fetchedItem.first.unitBp;
         saleItemUsp.value = fetchedItem.first.unitSellingPrice;
 
         qtyAvailable.value = fetchedItem.first.quantity;
@@ -503,7 +497,6 @@ class CTxnsController extends GetxController {
   // -- search store --
   searchSales(String value) async {
     try {
-      // / -- TODO: ability to search txns based on dates, customer details --
       await fetchTxns();
 
       /// -- search all sold items --
@@ -664,6 +657,7 @@ class CTxnsController extends GetxController {
     saleItemCode.value = foundItem.pCode;
     saleItemName.value = foundItem.name;
     saleItemBp.value = foundItem.buyingPrice;
+    saleItemUnitBP.value = foundItem.unitBp;
     saleItemUsp.value = foundItem.unitSellingPrice;
     qtyAvailable.value = foundItem.quantity;
     totalSales.value = foundItem.qtySold;
@@ -693,6 +687,7 @@ class CTxnsController extends GetxController {
     qtyAvailable.value = 0;
     totalSales.value = 0;
     saleItemBp.value = 0.0;
+    saleItemUnitBP.value = 0.0;
     saleItemUsp.value = 0.0;
     deposit.value = 0.0;
     totalAmount.value = 0.0;
@@ -752,6 +747,7 @@ class CTxnsController extends GetxController {
                     'totalAmount': sale.totalAmount,
                     'amountIssued': sale.amountIssued,
                     'customerBalance': sale.customerBalance,
+                    'unitBP': sale.unitBP,
                     'unitSellingPrice': sale.unitSellingPrice,
                     'deposit': sale.deposit,
                     'paymentMethod': sale.paymentMethod,
@@ -902,6 +898,7 @@ class CTxnsController extends GetxController {
               element.totalAmount,
               element.amountIssued,
               element.customerBalance,
+              element.unitBP,
               element.unitSellingPrice,
               element.deposit,
               element.paymentMethod,
@@ -1326,5 +1323,30 @@ class CTxnsController extends GetxController {
       }
       rethrow;
     }
+  }
+
+  /// -- summarize sales data --
+  void summarizeSalesData() {}
+
+  /// -- initialize sales summary values --
+  void initializeSalesSummaryValues() {
+    // -- compute total revenue --
+    totalRevenue.value = sales
+        .where(
+          (sale) =>
+              sale.quantity >= 1 && sale.txnStatus.toLowerCase() == 'complete',
+        )
+        .fold(
+          0.0,
+          (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+        );
+
+    // -- compute cost of sales --
+    costOfSales.value = sales
+        .where((sale) => sale.quantity >= 1)
+        .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
+
+    // -- compute gross profit --
+    totalProfit.value = totalRevenue.value - costOfSales.value;
   }
 }

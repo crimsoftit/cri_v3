@@ -24,6 +24,7 @@ class CTxnsModel {
   double _totalAmount = 0.0;
   double _amountIssued = 0.0;
   double _customerBalance = 0.0;
+  double _unitBP = 0.0;
   double _unitSellingPrice = 0.0;
   double _deposit = 0.0;
 
@@ -52,7 +53,9 @@ class CTxnsModel {
     this._totalAmount,
     this._amountIssued,
     this._customerBalance,
+    this._unitBP,
     this._unitSellingPrice,
+
     this._deposit,
     this._paymentMethod,
     this._customerName,
@@ -80,6 +83,7 @@ class CTxnsModel {
     this._totalAmount,
     this._amountIssued,
     this._customerBalance,
+    this._unitBP,
     this._unitSellingPrice,
     this._deposit,
     this._paymentMethod,
@@ -109,6 +113,7 @@ class CTxnsModel {
       'totalAmount',
       'amountIssued',
       'customerBalance',
+      'unitBP',
       'unitSellingPrice',
       'deposit',
       'paymentMethod',
@@ -140,7 +145,9 @@ class CTxnsModel {
   double get totalAmount => _totalAmount;
   double get amountIssued => _amountIssued;
   double get customerBalance => _customerBalance;
+  double get unitBP => _unitBP;
   double get unitSellingPrice => _unitSellingPrice;
+
   double get deposit => _deposit;
 
   String get paymentMethod => _paymentMethod;
@@ -225,6 +232,12 @@ class CTxnsModel {
     _customerBalance = newCustomerBal;
   }
 
+  set unitBP(double newUbp) {
+    if (newUbp >= 0.0) {
+      _unitBP = newUbp;
+    }
+  }
+
   set unitSellingPrice(double newUsp) {
     if (newUsp >= 0.0) {
       _unitSellingPrice = newUsp;
@@ -298,6 +311,7 @@ class CTxnsModel {
     map['totalAmount'] = _totalAmount;
     map['amountIssued'] = _amountIssued;
     map['customerBalance'] = _customerBalance;
+    map['unitBP'] = _unitBP;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['deposit'] = _deposit;
     map['paymentMethod'] = _paymentMethod;
@@ -329,6 +343,7 @@ class CTxnsModel {
     _totalAmount = map['totalAmount'];
     _amountIssued = map['amountIssued'];
     _customerBalance = map['customerBalance'];
+    _unitBP = map['unitBP'];
     _unitSellingPrice = map['unitSellingPrice'];
     _deposit = map['deposit'];
     _paymentMethod = map['paymentMethod'];
@@ -359,7 +374,9 @@ class CTxnsModel {
       double.parse(json[TxnsSheetFields.totalAmount]),
       double.parse(json[TxnsSheetFields.amountIssued]),
       double.parse(json[TxnsSheetFields.customerBalance]),
+      double.parse(json[TxnsSheetFields.unitBP]),
       double.parse(json[TxnsSheetFields.unitSellingPrice]),
+
       double.parse(json[TxnsSheetFields.deposit]),
       json[TxnsSheetFields.paymentMethod],
       json[TxnsSheetFields.customerName],

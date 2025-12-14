@@ -96,6 +96,7 @@ class DbHelper extends GetxController {
             totalAmount  REAL NOT NULL,
             amountIssued REAL NOT NULL,
             customerBalance REAL NOT NULL,
+            unitBP REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
             deposit REAL NOT NULL,
             paymentMethod TEXT NOT NULL,
@@ -180,7 +181,7 @@ class DbHelper extends GetxController {
 
     await _db!.execute('INSERT INTO $invTable VALUES ($invItem)');
     await _db!.execute(
-      'INSERT INTO $txnsTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")',
+      'INSERT INTO $txnsTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 10, 13, 15, 10.0, "Cash", "2/1/2022")',
     );
 
     var alertItem = CNotificationsModel(

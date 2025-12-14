@@ -38,6 +38,7 @@ dependencies:
   # money matters
   mpesa_flutter_plugin: ^1.6.1
 
+  # -- mambo na files --
   open_file: any
   pdf: any
 
@@ -120,24 +121,25 @@ dependencies:
   #awesome_notifications: ^0.7.4+1
 
   # -- utility packages
-  file_picker: ^10.3.7
-  jiffy: ^6.4.3
-  timezone: any
-  csv: any
-  http: any
-  
-  intl: ^0.20.0
-  logger: any
-  lottie: any
-  url_launcher: any
-  path_provider: any  
-  flutter_native_splash: any
-  image_picker: any
-  flutter_typeahead: any
   country_picker: any
+  csv: any
+  file_picker: ^10.3.7
+  flutter_native_splash: any
+  flutter_typeahead: any
   gsheets: ^0.5.0
   googleapis: any
-
+  http: any
+  image_picker: any
+  intl: ^0.20.0
+  jiffy: ^6.4.3
+  logger: any
+  lottie: any
+  path_provider: any
+  syncfusion_flutter_datepicker: ^31.2.18
+  timezone: any
+  url_launcher: any
+  
+  
   #googleapis: ^13.2.0
 
   # swipe/slideshow and indicator - onboardng packages

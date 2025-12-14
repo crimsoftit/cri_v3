@@ -162,6 +162,13 @@ class CCheckoutController extends GetxController {
         }
 
         for (var cartItem in itemsInCart) {
+
+          var saleItemUnitBP = invController.inventoryItems
+              .firstWhere(
+                (item) => item.productId == cartItem.productId,
+              )
+              .unitBp;
+
           var newTxnData = CTxnsModel(
             txnId.value,
             userController.user.value.id,
@@ -180,6 +187,7 @@ class CCheckoutController extends GetxController {
             selectedPaymentMethod.value.platformName == 'cash'
                 ? customerBal.value
                 : 0.00,
+            saleItemUnitBP,
             cartItem.price,
             0.00,
             selectedPaymentMethod.value.platformName,

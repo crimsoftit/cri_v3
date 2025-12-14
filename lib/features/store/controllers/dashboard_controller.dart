@@ -20,11 +20,14 @@ class CDashboardController extends GetxController {
   final carouselSliderIndex = 0.obs;
 
   final invController = Get.put(CInventoryController());
-  final RxDouble weeklySalesHighestAmount = 0.0.obs;
+
   final RxDouble currentWeekSales = 0.0.obs;
   final RxDouble lastWeekSales = 0.0.obs;
+
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxList<double> weeklySales = <double>[].obs;
+  final RxDouble weeklySalesHighestAmount = 0.0.obs;
+
   final txnsController = Get.put(CTxnsController());
 
   @override
@@ -206,4 +209,10 @@ class CDashboardController extends GetxController {
   void updateCarouselSliderIndex(int index) {
     carouselSliderIndex.value = index;
   }
+
+  /// -- handle sales summary --
+  Future<void> handleSalesSummary() async {}
+
+  /// -- calculate total revenue --
+  void calculateTotalRevenue() {}
 }

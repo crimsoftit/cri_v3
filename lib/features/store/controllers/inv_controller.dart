@@ -9,7 +9,6 @@ import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
-import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -62,7 +61,6 @@ class CInventoryController extends GetxController {
   final RxInt currentItemId = 0.obs;
 
   final RxDouble unitBP = 0.0.obs;
-
   final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
   final txtNameController = TextEditingController();
@@ -118,37 +116,37 @@ class CInventoryController extends GetxController {
       fetchUserInventoryItems();
     }
 
-    /// -- schedule notifications for items nearing expiry date --
-    var itemsWithShelfLife = inventoryItems
-        .where(
-          (item) =>
-              item.expiryDate != '' &&
-              CFormatter.formatTimeRangeFromNow(
-                item.expiryDate.replaceAll('@ ', ''),
-              ).toString().contains('in'),
-        )
-        .toList();
+    /// TODO:-- schedule notifications for items nearing expiry date (NOT HERE - CAUSES SYSTEM CRASH) --
+    // var itemsWithShelfLife = inventoryItems
+    //     .where(
+    //       (item) =>
+    //           item.expiryDate != '' &&
+    //           CFormatter.formatTimeRangeFromNow(
+    //             item.expiryDate.replaceAll('@ ', ''),
+    //           ).toString().contains('in'),
+    //     )
+    //     .toList();
 
-    for (var item in itemsWithShelfLife) {
-      alertServices.createScheduledNotification(
-        id: await notificationsController.generateNotificationId(),
-        title: '',
-        body:
-            '${item.name} is nearing its expiry date! Please check your inventory to take necessary action.',
-        expiryDate: item.expiryDate.toString().contains('@')
-            ? DateTime.parse(item.expiryDate.replaceAll(' @ ', ' '))
-            : DateTime.parse(item.expiryDate),
-        notificationTimeInDays: int.fromEnvironment(
-          'NOTIFICATION_TIME_INTERVAL_IN_DAYS',
-          defaultValue: 4,
-        ),
-      );
-      if (kDebugMode) {
-        print(
-          'scheduling notification for item: ${item.name} with expiry date: ${item.expiryDate}',
-        );
-      }
-    }
+    // for (var item in itemsWithShelfLife) {
+    //   alertServices.createScheduledNotification(
+    //     id: await notificationsController.generateNotificationId(),
+    //     title: '',
+    //     body:
+    //         '${item.name} is nearing its expiry date! Please check your inventory to take necessary action.',
+    //     expiryDate: item.expiryDate.toString().contains('@')
+    //         ? DateTime.parse(item.expiryDate.replaceAll(' @ ', ' '))
+    //         : DateTime.parse(item.expiryDate),
+    //     notificationTimeInDays: int.fromEnvironment(
+    //       'NOTIFICATION_TIME_INTERVAL_IN_DAYS',
+    //       defaultValue: 4,
+    //     ),
+    //   );
+    //   if (kDebugMode) {
+    //     print(
+    //       'scheduling notification for item: ${item.name} with expiry date: ${item.expiryDate}',
+    //     );
+    //   }
+    // }
   }
 
   void printLatestFieldValue() {
