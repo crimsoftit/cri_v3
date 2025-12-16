@@ -123,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CDateRangePickerWidget(),
-                              const SizedBox(height: CSizes.defaultSpace / 8),
+                              const SizedBox(height: CSizes.defaultSpace / 4),
                               Obx(() {
                                 return Row(
                                   mainAxisAlignment:

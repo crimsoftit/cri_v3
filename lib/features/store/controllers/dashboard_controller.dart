@@ -12,26 +12,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_date_utils/in_date_utils.dart';
+import 'package:intl/intl.dart';
 
 class CDashboardController extends GetxController {
   static CDashboardController get instance => Get.find();
 
   /// -- variables --
   final carouselSliderIndex = 0.obs;
-
+  final dateRangeFieldController = TextEditingController();
   final invController = Get.put(CInventoryController());
 
   final RxDouble currentWeekSales = 0.0.obs;
   final RxDouble lastWeekSales = 0.0.obs;
 
   final RxDouble weeklyPercentageChange = 0.0.obs;
-  final RxList<double> weeklySales = <double>[].obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
+  final RxList<double> weeklySales = <double>[].obs;
+
+  final RxString filterEndDate = ''.obs;
+  final RxString filterStartDate = ''.obs;
 
   final txnsController = Get.put(CTxnsController());
 
   @override
   void onInit() async {
+    filterStartDate.value = '';
+    filterEndDate.value = '';
     weeklySalesHighestAmount.value = 1000.0;
     Future.delayed(Duration.zero, () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -210,9 +216,29 @@ class CDashboardController extends GetxController {
     carouselSliderIndex.value = index;
   }
 
-  /// -- handle sales summary --
-  Future<void> handleSalesSummary() async {}
+  /// -- set summary filter dates --
+  void setFilterDates(DateTime newDate) {
+    var formattedDate = DateFormat(
+      'yyyy-MM-dd',
+    ).format(newDate);
 
-  /// -- calculate total revenue --
-  void calculateTotalRevenue() {}
+    String returnString;
+    if (dateRangeFieldController.text.trim().isEmpty) {
+      filterStartDate.value = formattedDate;
+      returnString = '${filterStartDate.value} to ';
+    } else {
+      filterEndDate.value = formattedDate;
+      returnString = '${filterStartDate.value} to ${filterEndDate.value}';
+    }
+
+    dateRangeFieldController.text = returnString;
+    // switch () {
+    //   case '':
+    //     filterStartDate.value = formattedDate;
+    //     returnString = '${filterStartDate.value} to ';
+    //     break;
+    //   case text.isNotEmpty:
+    //   default:
+    // }
+  }
 }

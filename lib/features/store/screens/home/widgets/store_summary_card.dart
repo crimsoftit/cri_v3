@@ -30,43 +30,47 @@ class CStoreSummaryCard extends StatelessWidget {
         CRoundedContainer(
           width: containerWidth ?? CHelperFunctions.screenWidth() * 0.28,
           borderRadius: CSizes.cardRadiusSm / 1.5,
-          padding: EdgeInsets.only(
-            top: 2,
-            bottom: CSizes.sm / 2,
-            left: CSizes.sm / 3,
-            right: CSizes.sm / 3,
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            onTap: onTap,
-            subtitle: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                subTitleTxt ?? '',
-                style: Theme.of(
-                  context,
-                ).textTheme.labelSmall!.apply(color: CColors.rBrown),
-                textAlign: TextAlign.center,
+
+          child: Card(
+            elevation: 1.0,
+
+            child: ListTile(
+              contentPadding: EdgeInsets.only(
+                top: 2,
+                bottom: CSizes.sm / 2,
+                left: CSizes.sm / 3,
+                right: CSizes.sm / 3,
               ),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      titleTxt,
-                      style: Theme.of(context).textTheme.titleMedium!.apply(
-                        color: CColors.rBrown,
-                        //fontSizeFactor: 1.1,
-                        //fontWeightDelta: 2,
-                      ),
-                    ),
-                    Icon(iconData, color: CColors.rBrown, size: 20),
-                  ],
+              onTap: onTap,
+              subtitle: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  subTitleTxt ?? '',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall!.apply(color: CColors.rBrown),
+                  textAlign: TextAlign.center,
                 ),
-              ],
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        titleTxt,
+                        style: Theme.of(context).textTheme.titleMedium!.apply(
+                          color: CColors.rBrown,
+                          //fontSizeFactor: 1.1,
+                          //fontWeightDelta: 2,
+                        ),
+                      ),
+                      Icon(iconData, color: CColors.rBrown, size: 20),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

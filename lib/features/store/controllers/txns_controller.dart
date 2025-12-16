@@ -1326,7 +1326,9 @@ class CTxnsController extends GetxController {
   }
 
   /// -- summarize sales data --
-  void summarizeSalesData() {}
+  void summarizeSalesData() {
+    
+  }
 
   /// -- initialize sales summary values --
   void initializeSalesSummaryValues() {
