@@ -12,9 +12,11 @@ class CExpandedSearchField extends StatelessWidget {
     super.key,
     required this.txtColor,
     required this.controller,
+    this.hintTxt,
   });
 
   final Color txtColor;
+  final String? hintTxt;
   final TextEditingController controller;
 
   @override
@@ -55,7 +57,8 @@ class CExpandedSearchField extends StatelessWidget {
                 ),
 
                 // hintText: 'search $hintTxt',
-                hintText: 'search store (inventory, txns, dates, etc.)',
+                hintText:
+                    hintTxt ?? 'search store (inventory, txns, dates, etc.)',
                 hintStyle: TextStyle(
                   color: CColors.rBrown.withValues(alpha: 0.6),
                   //fontSize: 12.0,

@@ -49,14 +49,15 @@ class CDateRangePickerWidget extends StatelessWidget {
           ),
           suffixIcon: IconButton(
             icon: Icon(
-              Iconsax.close_circle,
+              Icons.close,
               color: CColors.darkGrey,
-              size: CSizes.iconSm + 4,
+              size: CSizes.iconSm,
             ),
             onPressed: () {
               dashboardController.dateRangeFieldController.text = '';
               dashboardController.filterEndDate.value = '';
               dashboardController.filterStartDate.value = '';
+              dashboardController.toggleDateFieldVisibility();
             },
           ),
         ),
@@ -152,46 +153,5 @@ class CDateRangePickerWidget extends StatelessWidget {
         },
       ),
     );
-    // ElevatedButton.icon(
-    //   onPressed: () {
-    //     showDialog(
-    //       context: context,
-    //       fullscreenDialog: true,
-    //       builder: (BuildContext context) {
-    //         return CRoundedContainer(
-    //           bgColor: isDarkTheme
-    //               ? CColors.transparent
-    //               : CColors.white.withValues(alpha: 0.6),
-    //           width: CHelperFunctions.screenWidth() * .95,
-    //           height: 200.0,
-    //           child: AlertDialog(
-    //             insetPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-    //             shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-    //             ),
-    //             title: const Text('select date/range'),
-    //             content: SizedBox(
-    //               width: CHelperFunctions.screenWidth() * .95,
-    //               height: 200.0,
-    //               child: CupertinoDatePicker(
-    //                 onDateTimeChanged: (newDate) {},
-    //                 mode: CupertinoDatePickerMode.date,
-    //                 initialDateTime: DateTime.now(),
-    //               ),
-    //             ),
-    //             actions: [
-    //               TextButton(
-    //                 onPressed: () => Navigator.of(context).pop(),
-    //                 child: const Text('Close'),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   },
-    //   label: Text('pick date range'),
-    //   icon: Icon(Iconsax.calendar),
-    // );
   }
 }

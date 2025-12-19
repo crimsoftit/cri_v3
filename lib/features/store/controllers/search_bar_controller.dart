@@ -8,9 +8,10 @@ class CSearchBarController extends GetxController {
   }
 
   /// -- variables --
+  RxBool showAnimatedTypeAheadField = false.obs;
+
   RxBool showSearchField = false.obs;
   //RxBool salesShowSearchField = false.obs;
-  RxBool showAnimatedTypeAheadField = false.obs;
 
   // final txtInvSearchField = TextEditingController();
   final txtSearchField = TextEditingController();
@@ -20,7 +21,7 @@ class CSearchBarController extends GetxController {
   @override
   void onInit() {
     showSearchField.value = false;
-    //salesShowSearchField.value = false;
+
     showAnimatedTypeAheadField.value = false;
     txtSearchField.text = '';
     // txtSalesSearch.text = '';
@@ -37,6 +38,7 @@ class CSearchBarController extends GetxController {
 
   toggleSearchFieldVisibility() {
     showSearchField.value = !showSearchField.value;
+
     if (!showSearchField.value) {
       txtSearchField.text = '';
     }

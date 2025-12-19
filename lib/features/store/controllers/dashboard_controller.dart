@@ -22,6 +22,7 @@ class CDashboardController extends GetxController {
   final dateRangeFieldController = TextEditingController();
   final invController = Get.put(CInventoryController());
 
+  final RxBool showSummaryFilterField = false.obs;
   final RxDouble currentWeekSales = 0.0.obs;
   final RxDouble lastWeekSales = 0.0.obs;
 
@@ -38,6 +39,7 @@ class CDashboardController extends GetxController {
   void onInit() async {
     filterStartDate.value = '';
     filterEndDate.value = '';
+    showSummaryFilterField.value = false;
     weeklySalesHighestAmount.value = 1000.0;
     Future.delayed(Duration.zero, () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -232,13 +234,12 @@ class CDashboardController extends GetxController {
     }
 
     dateRangeFieldController.text = returnString;
-    // switch () {
-    //   case '':
-    //     filterStartDate.value = formattedDate;
-    //     returnString = '${filterStartDate.value} to ';
-    //     break;
-    //   case text.isNotEmpty:
-    //   default:
-    // }
+  }
+
+  toggleDateFieldVisibility() {
+    showSummaryFilterField.value = !showSummaryFilterField.value;
+    if (!showSummaryFilterField.value) {
+      dateRangeFieldController.text = '';
+    }
   }
 }

@@ -65,7 +65,7 @@ class CStoreScreen extends StatelessWidget {
                                       : Colors.transparent,
                                   controller: searchController.txtSearchField,
                                 )
-                              : Container(),
+                              : SizedBox.shrink(),
                         ),
                       ],
                     ),

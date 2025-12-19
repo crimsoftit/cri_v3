@@ -3,6 +3,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/common/widgets/dates/date_picker_widget.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
+import 'package:cri_v3/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
 import 'package:cri_v3/common/widgets/sliders/auto_img_slider.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
@@ -117,12 +118,22 @@ class HomeScreen extends StatelessWidget {
                           borderColor: CColors.grey,
                           borderRadius: CSizes.cardRadiusSm / 2.5,
                           boxShadow: [CShadowStyle.verticalProductShadow],
-                          padding: const EdgeInsets.all(5.0),
+                          padding: const EdgeInsets.all(3.0),
                           showBorder: true,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CDateRangePickerWidget(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: CAnimatedSearchBar(
+                                  controller: dashboardController
+                                      .dateRangeFieldController,
+                                  customTxtField: CDateRangePickerWidget(),
+                                  useCustomTxtField: true,
+                                  hintTxt: '',
+                                ),
+                              ),
+                              //CDateRangePickerWidget(),
                               const SizedBox(height: CSizes.defaultSpace / 4),
                               Obx(() {
                                 return Row(

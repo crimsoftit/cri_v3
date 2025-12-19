@@ -12,13 +12,19 @@ class CAnimatedSearchBar extends StatelessWidget {
   const CAnimatedSearchBar({
     super.key,
     required this.hintTxt,
-    this.boxColor,
+
     required this.controller,
+    this.boxColor,
+    this.customTxtField,
+    this.useCustomTxtField = false,
   });
 
-  final String hintTxt;
+  final bool? useCustomTxtField;
   final Color? boxColor;
+  final String hintTxt;
+
   final TextEditingController controller;
+  final Widget? customTxtField;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +44,8 @@ class CAnimatedSearchBar extends StatelessWidget {
           color: boxColor,
           //boxShadow: kElevationToShadow[2],
         ),
-        child: searchController.showSearchField.value
-            ? CExpandedSearchField(
+        child:  searchController.showSearchField.value
+            ?  useCustomTxtField! ? customTxtField : CExpandedSearchField(
                 txtColor: CColors.rBrown,
                 controller: controller,
               )

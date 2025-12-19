@@ -27,19 +27,19 @@ class CStoreSummaryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// -- store summary widgets go here --
-        CRoundedContainer(
-          width: containerWidth ?? CHelperFunctions.screenWidth() * 0.28,
-          borderRadius: CSizes.cardRadiusSm / 1.5,
-
-          child: Card(
-            elevation: 1.0,
-
+        Card(
+          elevation: 1.0,
+          margin: EdgeInsets.all(1),
+          child: CRoundedContainer(
+            bgColor: CColors.transparent,
+            borderRadius: CSizes.cardRadiusSm / 1.5,
+            width: containerWidth ?? CHelperFunctions.screenWidth() * 0.28,
             child: ListTile(
               contentPadding: EdgeInsets.only(
                 top: 2,
-                bottom: CSizes.sm / 2,
-                left: CSizes.sm / 3,
-                right: CSizes.sm / 3,
+                bottom: CSizes.sm / 4,
+                left: CSizes.sm / 4,
+                right: CSizes.sm / 4,
               ),
               onTap: onTap,
               subtitle: Align(
