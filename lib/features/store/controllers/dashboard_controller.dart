@@ -12,15 +12,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_date_utils/in_date_utils.dart';
-import 'package:intl/intl.dart';
 
 class CDashboardController extends GetxController {
   static CDashboardController get instance => Get.find();
 
   /// -- variables --
   final carouselSliderIndex = 0.obs;
-  final dateRangeFieldController = TextEditingController();
+
   final invController = Get.put(CInventoryController());
+
+  final RxBool isLoading = false.obs;
 
   final RxBool showSummaryFilterField = false.obs;
   final RxDouble currentWeekSales = 0.0.obs;
@@ -30,15 +31,10 @@ class CDashboardController extends GetxController {
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
   final RxList<double> weeklySales = <double>[].obs;
 
-  final RxString filterEndDate = ''.obs;
-  final RxString filterStartDate = ''.obs;
-
   final txnsController = Get.put(CTxnsController());
 
   @override
   void onInit() async {
-    filterStartDate.value = '';
-    filterEndDate.value = '';
     showSummaryFilterField.value = false;
     weeklySalesHighestAmount.value = 1000.0;
     Future.delayed(Duration.zero, () {
@@ -218,28 +214,11 @@ class CDashboardController extends GetxController {
     carouselSliderIndex.value = index;
   }
 
-  /// -- set summary filter dates --
-  void setFilterDates(DateTime newDate) {
-    var formattedDate = DateFormat(
-      'yyyy-MM-dd',
-    ).format(newDate);
-
-    String returnString;
-    if (dateRangeFieldController.text.trim().isEmpty) {
-      filterStartDate.value = formattedDate;
-      returnString = '${filterStartDate.value} to ';
-    } else {
-      filterEndDate.value = formattedDate;
-      returnString = '${filterStartDate.value} to ${filterEndDate.value}';
-    }
-
-    dateRangeFieldController.text = returnString;
-  }
-
   toggleDateFieldVisibility() {
     showSummaryFilterField.value = !showSummaryFilterField.value;
     if (!showSummaryFilterField.value) {
-      dateRangeFieldController.text = '';
+      txnsController.dateRangeFieldController.text = '';
+      txnsController.initializeSalesSummaryValues();
     }
   }
 }

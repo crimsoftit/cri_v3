@@ -6,6 +6,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/store/controllers/date_range_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
@@ -37,6 +38,8 @@ class CTxnsController extends GetxController {
 
   /// -- variables --
   final localStorage = GetStorage();
+
+  final dateRangeFieldController = TextEditingController();
 
   DbHelper dbHelper = DbHelper.instance;
 
@@ -106,6 +109,8 @@ class CTxnsController extends GetxController {
   final RxDouble deposit = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
   final RxDouble customerBal = 0.0.obs;
+
+  /// -- controllers - classes --
 
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
@@ -200,7 +205,9 @@ class CTxnsController extends GetxController {
       }
 
       /// -- initialize sales summary values --
-      initializeSalesSummaryValues();
+      if (dateRangeFieldController.text == '') {
+        initializeSalesSummaryValues();
+      }
 
       // final values = {};
       // for (final item in sales) {
@@ -1090,76 +1097,90 @@ class CTxnsController extends GetxController {
                           await fetchSoldItems().then((result) async {
                             if (result.isNotEmpty) {
                               invController.fetchUserInventoryItems();
-                              var inventoryItem = invController.inventoryItems
-                                  .firstWhere(
+                              var invItemIndex = invController.inventoryItems
+                                  .indexWhere(
                                     (item) =>
                                         item.productId == soldItem.productId,
                                   );
-
-                              // -- update stock count & total sales for this inventory item --
-                              if (inventoryItem.productId! > 100) {
-                                inventoryItem.quantity += refundQty.value;
-                                inventoryItem.qtyRefunded += refundQty.value;
-                                inventoryItem.qtySold -= refundQty.value;
-                                inventoryItem.lastModified = DateFormat(
-                                  'yyyy-MM-dd @ kk:mm',
-                                ).format(clock.now());
-                                inventoryItem.syncAction =
-                                    inventoryItem.isSynced == 1
-                                    ? 'update'
-                                    : 'append';
-
-                                await dbHelper
-                                    .updateInventoryItem(
-                                      inventoryItem,
-                                      inventoryItem.productId!,
-                                    )
-                                    .then((result) async {
-                                      /// -- update receipt item --
-                                      var txnItem = sales.firstWhere(
-                                        (txnItem) =>
-                                            txnItem.productId ==
-                                            soldItem.productId,
-                                      );
-
-                                      txnItem.refundReason = txtRefundReason
-                                          .text
-                                          .trim();
-                                      txnItem.quantity -= refundQty.value;
-                                      txnItem.qtyRefunded += refundQty.value;
-                                      txnItem.totalAmount -=
-                                          refundQty.value *
-                                          txnItem.unitSellingPrice;
-                                      txnItem.lastModified = DateFormat(
-                                        'yyyy-MM-dd @ kk:mm',
-                                      ).format(clock.now());
-                                      txnItem.syncAction = txnItem.isSynced == 0
-                                          ? 'append'
-                                          : 'update';
-                                      //txnItem.txnStatus = 'refunded';
-
-                                      dbHelper
-                                          .updateReceiptItem(
-                                            txnItem,
-                                            txnItem.soldItemId!,
-                                          )
-                                          .then((_) {
-                                            fetchSoldItems();
-                                            refundDataUpdated.value = true;
-                                          });
-
-                                      Navigator.of(
-                                        Get.overlayContext!,
-                                      ).pop(true);
-                                    });
+                              if (invItemIndex == -1) {
+                                CPopupSnackBar.warningSnackBar(
+                                  message:
+                                      '${soldItem.productName} is no longer listed in your inventory',
+                                  title: 'item not found!',
+                                );
                               } else {
-                                if (kDebugMode) {
-                                  print('ERROR: INVENTORY ITEM IS NULL');
-                                  CPopupSnackBar.errorSnackBar(
-                                    title: 'inv item error!!',
-                                    message:
-                                        'ERROR: INVENTORY ITEM productId IS NULL!!',
-                                  );
+                                var inventoryItem = invController.inventoryItems
+                                    .firstWhere(
+                                      (item) =>
+                                          item.productId == soldItem.productId,
+                                    );
+
+                                // -- update stock count & total sales for this inventory item --
+                                if (inventoryItem.productId! > 100) {
+                                  inventoryItem.quantity += refundQty.value;
+                                  inventoryItem.qtyRefunded += refundQty.value;
+                                  inventoryItem.qtySold -= refundQty.value;
+                                  inventoryItem.lastModified = DateFormat(
+                                    'yyyy-MM-dd @ kk:mm',
+                                  ).format(clock.now());
+                                  inventoryItem.syncAction =
+                                      inventoryItem.isSynced == 1
+                                      ? 'update'
+                                      : 'append';
+
+                                  await dbHelper
+                                      .updateInventoryItem(
+                                        inventoryItem,
+                                        inventoryItem.productId!,
+                                      )
+                                      .then((result) async {
+                                        /// -- update receipt item --
+                                        var txnItem = sales.firstWhere(
+                                          (txnItem) =>
+                                              txnItem.productId ==
+                                              soldItem.productId,
+                                        );
+
+                                        txnItem.refundReason = txtRefundReason
+                                            .text
+                                            .trim();
+                                        txnItem.quantity -= refundQty.value;
+                                        txnItem.qtyRefunded += refundQty.value;
+                                        txnItem.totalAmount -=
+                                            refundQty.value *
+                                            txnItem.unitSellingPrice;
+                                        txnItem.lastModified = DateFormat(
+                                          'yyyy-MM-dd @ kk:mm',
+                                        ).format(clock.now());
+                                        txnItem.syncAction =
+                                            txnItem.isSynced == 0
+                                            ? 'append'
+                                            : 'update';
+                                        //txnItem.txnStatus = 'refunded';
+
+                                        dbHelper
+                                            .updateReceiptItem(
+                                              txnItem,
+                                              txnItem.soldItemId!,
+                                            )
+                                            .then((_) {
+                                              fetchSoldItems();
+                                              refundDataUpdated.value = true;
+                                            });
+
+                                        Navigator.of(
+                                          Get.overlayContext!,
+                                        ).pop(true);
+                                      });
+                                } else {
+                                  if (kDebugMode) {
+                                    print('ERROR: INVENTORY ITEM IS NULL');
+                                    CPopupSnackBar.errorSnackBar(
+                                      title: 'inv item error!!',
+                                      message:
+                                          'ERROR: INVENTORY ITEM productId IS NULL!!',
+                                    );
+                                  }
                                 }
                               }
                             } else {
@@ -1325,11 +1346,6 @@ class CTxnsController extends GetxController {
     }
   }
 
-  /// -- summarize sales data --
-  void summarizeSalesData() {
-    
-  }
-
   /// -- initialize sales summary values --
   void initializeSalesSummaryValues() {
     // -- compute total revenue --
@@ -1350,5 +1366,57 @@ class CTxnsController extends GetxController {
 
     // -- compute gross profit --
     totalProfit.value = totalRevenue.value - costOfSales.value;
+  }
+
+  /// -- summarize sales data --
+  void summarizeSalesData() {
+    try {
+      // -- start loader --
+      isLoading.value = true;
+
+      final dateRangeController = Get.put(CDateRangeController());
+
+      final rawDateRange = dateRangeController.selectedDateRange.value;
+
+      final formattedStartDate = DateTime.parse(
+        rawDateRange!.start.toLocal().toString().split(' ')[0],
+      );
+      var formattedEndDate = DateTime.parse(
+        rawDateRange.end.toLocal().toString().split(' ')[0],
+      );
+
+      // -- compute total revenue --
+      var filteredSales = sales
+          .where(
+            (soldItem) =>
+                DateTime.parse(
+                  soldItem.lastModified.replaceAll(' @', ''),
+                ).isAfter(formattedStartDate.subtract(Duration(days: 1))) &&
+                DateTime.parse(
+                  soldItem.lastModified.replaceAll(' @', ''),
+                ).isBefore(formattedEndDate.add(Duration(days: 1))),
+          )
+          .toList();
+
+      var tRevenue = filteredSales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+      );
+      totalRevenue.value = tRevenue;
+
+      // -- stop loader --
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader --
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error computing summary sales: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching sales summary: $e',
+          title: 'error fetching sales summary!',
+        );
+      }
+      rethrow;
+    }
   }
 }

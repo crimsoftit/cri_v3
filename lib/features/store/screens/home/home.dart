@@ -1,7 +1,7 @@
 import 'package:cri_v3/common/styles/shadows.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/dates/date_picker_widget.dart';
-import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
+import 'package:cri_v3/common/widgets/dates/date_range_picker_widget.dart';
+import 'package:cri_v3/common/widgets/dates/date_range_picker.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
@@ -80,17 +80,29 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: CSizes.defaultSpace / 4.0),
 
               /// -- dashboard header widget --
-              DashboardHeaderWidget(
-                actionsSection: SizedBox.shrink(),
-                appBarTitle: CTexts.homeAppbarTitle,
-                isHomeScreen: true,
-                screenTitle: '',
-                showAppBarTitle: false,
+              Obx(
+                () {
+                  return DashboardHeaderWidget(
+                    actionsSection:
+                        dashboardController.showSummaryFilterField.value
+                        ? SizedBox.shrink()
+                        : CAnimatedSearchBar(
+                            controller: txnsController.dateRangeFieldController,
+                            customTxtField: DateRangePicker(),
+                            forSearch: false,
+                            useCustomTxtField: true,
+                            hintTxt: '',
+                          ),
+                    appBarTitle: CTexts.homeAppbarTitle,
+                    isHomeScreen: true,
+                    screenTitle: 'dashboard',
+                    showAppBarTitle: false,
+                  );
+                },
               ),
 
               /// -- custom divider --
-              CCustomDivider(),
-
+              //CCustomDivider(),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 18.0,
@@ -123,22 +135,29 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: CAnimatedSearchBar(
-                                  controller: dashboardController
-                                      .dateRangeFieldController,
-                                  customTxtField: CDateRangePickerWidget(),
-                                  useCustomTxtField: true,
-                                  hintTxt: '',
+                              Visibility(
+                                visible: dashboardController
+                                    .showSummaryFilterField
+                                    .value,
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: CAnimatedSearchBar(
+                                    controller:
+                                        txnsController.dateRangeFieldController,
+                                    customTxtField: CDateRangePickerWidget(),
+                                    forSearch: false,
+                                    useCustomTxtField: true,
+                                    hintTxt: '',
+                                  ),
                                 ),
                               ),
                               //CDateRangePickerWidget(),
-                              const SizedBox(height: CSizes.defaultSpace / 4),
+                              const SizedBox(height: CSizes.defaultSpace / 6),
                               Obx(() {
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  //mainAxisSize: MainAxisSize.min,
                                   children: [
                                     CStoreSummaryCard(
                                       iconData: Iconsax.tag,
@@ -162,27 +181,27 @@ class HomeScreen extends StatelessWidget {
                                 );
                               }),
                               const SizedBox(height: CSizes.defaultSpace / 4),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.tag,
-                                    subTitleTxt: 'complete txns',
-                                    titleTxt: CFormatter.kSuffixFormatter(1000),
-                                  ),
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.money_send,
-                                    subTitleTxt: 'pending txns',
-                                    titleTxt: CFormatter.kSuffixFormatter(1500),
-                                  ),
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.money_tick,
-                                    subTitleTxt: 'expired items',
-                                    titleTxt: CFormatter.kSuffixFormatter(200),
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     CStoreSummaryCard(
+                              //       iconData: Iconsax.tag,
+                              //       subTitleTxt: 'complete txns',
+                              //       titleTxt: CFormatter.kSuffixFormatter(1000),
+                              //     ),
+                              //     CStoreSummaryCard(
+                              //       iconData: Iconsax.money_send,
+                              //       subTitleTxt: 'pending txns',
+                              //       titleTxt: CFormatter.kSuffixFormatter(1500),
+                              //     ),
+                              //     CStoreSummaryCard(
+                              //       iconData: Iconsax.money_tick,
+                              //       subTitleTxt: 'expired items',
+                              //       titleTxt: CFormatter.kSuffixFormatter(200),
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),

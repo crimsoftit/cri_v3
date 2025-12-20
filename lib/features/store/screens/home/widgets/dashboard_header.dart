@@ -18,7 +18,8 @@ class DashboardHeaderWidget extends StatelessWidget {
   });
 
   final Widget actionsSection;
-  final String appBarTitle, screenTitle;
+  final String appBarTitle;
+  final String screenTitle;
   final bool isHomeScreen, showAppBarTitle;
 
   @override
@@ -59,6 +60,7 @@ class DashboardHeaderWidget extends StatelessWidget {
                     userController.user.value.businessName == ''
                         ? userController.user.value.fullName
                         : userController.user.value.businessName,
+
                     style: Theme.of(context).textTheme.labelLarge!.apply(
                       color: isDarkTheme
                           ? CColors.darkGrey
@@ -72,6 +74,7 @@ class DashboardHeaderWidget extends StatelessWidget {
                       //     : CColors.rBrown,
                       fontSizeFactor: 2.5,
                       fontWeightDelta: -7,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 );
