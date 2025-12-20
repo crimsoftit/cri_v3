@@ -221,4 +221,13 @@ class CDashboardController extends GetxController {
       txnsController.initializeSalesSummaryValues();
     }
   }
+
+  @override
+  void dispose() {
+    txnsController.dateRangeFieldController
+        .dispose(); // Dispose of the controller
+    showSummaryFilterField.value = false;
+
+    super.dispose();
+  }
 }

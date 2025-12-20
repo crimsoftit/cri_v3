@@ -8,7 +8,14 @@ import 'package:get/get.dart';
 class CNavMenuController extends GetxController {
   static CNavMenuController get instance => Get.find();
 
+  //
   final Rx<int> selectedIndex = 0.obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
 
   final screens = [
     const HomeScreen(),

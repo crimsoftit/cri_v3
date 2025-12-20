@@ -25,6 +25,8 @@ class CExpandedSearchField extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final txnsController = Get.put(CTxnsController());
 
+    
+
     return Row(
       children: [
         Expanded(

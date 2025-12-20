@@ -120,9 +120,15 @@ class CTxnsController extends GetxController {
 
   @override
   void onInit() async {
+    dateRangeFieldController.text = '';
     dbHelper.openDb();
 
-    await StoreSheetsApi.initSpreadSheets();
+    /// TODO: tutareview hii maneno
+    if (await CNetworkManager.instance.isConnected() ||
+        CNetworkManager.instance.hasConnection.value) {
+      await StoreSheetsApi.initSpreadSheets();
+    }
+
     await fetchTopSellersFromSales();
 
     fetchSoldItems();
@@ -141,6 +147,13 @@ class CTxnsController extends GetxController {
       }
     });
     super.onInit();
+  }
+
+  @override
+  void dispose() {
+    dateRangeFieldController.dispose(); // Dispose of the controller
+
+    super.dispose();
   }
 
   /// -- initialize cloud sync --
@@ -1403,6 +1416,15 @@ class CTxnsController extends GetxController {
         (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
       );
       totalRevenue.value = tRevenue;
+
+      // -- compute cost of sales --
+      var cogs = filteredSales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.unitBP * sale.quantity),
+      );
+      costOfSales.value = cogs;
+
+      totalProfit.value = totalRevenue.value - costOfSales.value;
 
       // -- stop loader --
       isLoading.value = false;

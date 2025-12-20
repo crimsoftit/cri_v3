@@ -28,11 +28,13 @@ class CStoreSummaryCard extends StatelessWidget {
       children: [
         /// -- store summary widgets go here --
         Card(
+          color: CColors.white,
           elevation: 1.0,
           margin: EdgeInsets.all(1),
           child: CRoundedContainer(
             bgColor: CColors.transparent,
             borderRadius: CSizes.cardRadiusSm / 1.5,
+            padding: EdgeInsets.zero,
             width: containerWidth ?? CHelperFunctions.screenWidth() * 0.28,
             child: ListTile(
               contentPadding: EdgeInsets.only(
@@ -60,13 +62,17 @@ class CStoreSummaryCard extends StatelessWidget {
                     children: [
                       Text(
                         titleTxt,
-                        style: Theme.of(context).textTheme.titleMedium!.apply(
+                        style: Theme.of(context).textTheme.labelLarge!.apply(
                           color: CColors.rBrown,
-                          //fontSizeFactor: 1.1,
+                          fontSizeFactor: .9,
                           //fontWeightDelta: 2,
                         ),
                       ),
-                      Icon(iconData, color: CColors.rBrown, size: 20),
+                      Icon(
+                        iconData,
+                        color: CColors.rBrown,
+                        size: CSizes.iconSm,
+                      ),
                     ],
                   ),
                 ],

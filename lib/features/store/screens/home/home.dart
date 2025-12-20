@@ -1,7 +1,6 @@
-import 'package:cri_v3/common/styles/shadows.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/dates/date_range_picker_widget.dart';
-import 'package:cri_v3/common/widgets/dates/date_range_picker.dart';
+import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
@@ -46,6 +45,7 @@ class HomeScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final navController = Get.put(CNavMenuController());
+
     final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
     final userCurrency = CHelperFunctions.formatCurrency(
@@ -80,6 +80,19 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: CSizes.defaultSpace / 4.0),
 
               /// -- dashboard header widget --
+              // DashboardHeaderWidget(
+              //   actionsSection: CAnimatedSearchBar(
+              //     controller: txnsController.dateRangeFieldController,
+              //     customTxtField: CDateRangePickerWidget(),
+              //     forSearch: false,
+              //     useCustomTxtField: true,
+              //     hintTxt: '',
+              //   ),
+              //   appBarTitle: CTexts.homeAppbarTitle,
+              //   isHomeScreen: true,
+              //   screenTitle: 'dashboard',
+              //   showAppBarTitle: false,
+              // ),
               Obx(
                 () {
                   return DashboardHeaderWidget(
@@ -88,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                         ? SizedBox.shrink()
                         : CAnimatedSearchBar(
                             controller: txnsController.dateRangeFieldController,
-                            customTxtField: DateRangePicker(),
+                            customTxtField: CDateRangePickerWidget(),
                             forSearch: false,
                             useCustomTxtField: true,
                             hintTxt: '',
@@ -102,7 +115,7 @@ class HomeScreen extends StatelessWidget {
               ),
 
               /// -- custom divider --
-              //CCustomDivider(),
+              CCustomDivider(),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 18.0,
@@ -125,85 +138,56 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       if (txnsController.bestSellers.isNotEmpty)
                         /// -- store summary --
-                        CRoundedContainer(
-                          bgColor: CColors.transparent,
-                          borderColor: CColors.grey,
-                          borderRadius: CSizes.cardRadiusSm / 2.5,
-                          boxShadow: [CShadowStyle.verticalProductShadow],
-                          padding: const EdgeInsets.all(3.0),
-                          showBorder: true,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Visibility(
-                                visible: dashboardController
-                                    .showSummaryFilterField
-                                    .value,
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: CAnimatedSearchBar(
-                                    controller:
-                                        txnsController.dateRangeFieldController,
-                                    customTxtField: CDateRangePickerWidget(),
-                                    forSearch: false,
-                                    useCustomTxtField: true,
-                                    hintTxt: '',
-                                  ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Visibility(
+                              visible: dashboardController
+                                  .showSummaryFilterField
+                                  .value,
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: CAnimatedSearchBar(
+                                  controller:
+                                      txnsController.dateRangeFieldController,
+                                  customTxtField: CDateRangePickerWidget(),
+                                  forSearch: false,
+                                  useCustomTxtField: true,
+                                  hintTxt: '',
                                 ),
                               ),
-                              //CDateRangePickerWidget(),
-                              const SizedBox(height: CSizes.defaultSpace / 6),
-                              Obx(() {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  //mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.tag,
-                                      subTitleTxt: 'g.revenue',
-                                      titleTxt:
-                                          '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.totalRevenue.value..toStringAsFixed(1))}',
-                                    ),
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.money_send,
-                                      subTitleTxt: 'cost of sales',
-                                      titleTxt:
-                                          '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
-                                    ),
-                                    CStoreSummaryCard(
-                                      iconData: Iconsax.money_tick,
-                                      subTitleTxt: 'g. profit($userCurrency)',
-                                      titleTxt: txnsController.totalProfit.value
-                                          .toStringAsFixed(1),
-                                    ),
-                                  ],
-                                );
-                              }),
-                              const SizedBox(height: CSizes.defaultSpace / 4),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     CStoreSummaryCard(
-                              //       iconData: Iconsax.tag,
-                              //       subTitleTxt: 'complete txns',
-                              //       titleTxt: CFormatter.kSuffixFormatter(1000),
-                              //     ),
-                              //     CStoreSummaryCard(
-                              //       iconData: Iconsax.money_send,
-                              //       subTitleTxt: 'pending txns',
-                              //       titleTxt: CFormatter.kSuffixFormatter(1500),
-                              //     ),
-                              //     CStoreSummaryCard(
-                              //       iconData: Iconsax.money_tick,
-                              //       subTitleTxt: 'expired items',
-                              //       titleTxt: CFormatter.kSuffixFormatter(200),
-                              //     ),
-                              //   ],
-                              // ),
-                            ],
-                          ),
+                            ),
+                            //CDateRangePickerWidget(),
+                            const SizedBox(height: CSizes.defaultSpace / 6),
+                            Obx(() {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                //mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.tag,
+                                    subTitleTxt: 'g.revenue',
+                                    titleTxt:
+                                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.totalRevenue.value..toStringAsFixed(1))}',
+                                  ),
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.money_send,
+                                    subTitleTxt: 'cost of sales',
+                                    titleTxt:
+                                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
+                                  ),
+                                  CStoreSummaryCard(
+                                    iconData: Iconsax.money_tick,
+                                    subTitleTxt: 'g. profit($userCurrency)',
+                                    titleTxt: txnsController.totalProfit.value
+                                        .toStringAsFixed(1),
+                                  ),
+                                ],
+                              );
+                            }),
+                            const SizedBox(height: CSizes.defaultSpace / 4),
+                          ],
                         ),
 
                       // txnsController.bestSellers.isEmpty ||

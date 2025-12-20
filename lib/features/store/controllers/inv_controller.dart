@@ -43,7 +43,7 @@ class CInventoryController extends GetxController {
   final RxList<CInvDelsModel> dItems = <CInvDelsModel>[].obs;
   final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
-  final RxList<CInventoryModel> invTopSellers = <CInventoryModel>[].obs;
+  // final RxList<CInventoryModel> invTopSellers = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
@@ -178,14 +178,7 @@ class CInventoryController extends GetxController {
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
 
-      // fetch top sellers
-      var soldInvItems = inventoryItems
-          .where((soldItem) => soldItem.qtySold >= 1)
-          .toList();
-      soldInvItems.sort((a, b) => b.qtySold.compareTo(a.qtySold));
-      invTopSellers.assignAll(soldInvItems);
-
-      if (searchController.showSearchField.isTrue &&
+      if (searchController.showSearchField.value &&
           searchController.txtSearchField.text == '') {
         foundInventoryItems.assignAll(fetchedItems);
       }
@@ -1224,33 +1217,33 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch top sellers --
-  Future<List<CInventoryModel>> fetchTopSellersFromInventory() async {
-    try {
-      // start loader while products are fetched
-      isLoading.value = true;
+  // Future<List<CInventoryModel>> fetchTopSellersFromInventory() async {
+  //   try {
+  //     // start loader while products are fetched
+  //     isLoading.value = true;
 
-      await dbHelper.openDb();
+  //     await dbHelper.openDb();
 
-      final topSellers = await dbHelper.fetchTopSellers(
-        userController.user.value.email,
-      );
+  //     final topSellers = await dbHelper.fetchTopSellers(
+  //       userController.user.value.email,
+  //     );
 
-      // assign top sold items to a list
-      invTopSellers.assignAll(topSellers);
+  //     // assign top sold items to a list
+  //     //.assignAll(topSellers);
 
-      // stop loader
-      isLoading.value = false;
+  //     // stop loader
+  //     isLoading.value = false;
 
-      return invTopSellers;
-    } catch (e) {
-      isLoading.value = false;
-      if (kDebugMode) {
-        print(e.toString());
-        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
-      }
-      return [];
-    }
-  }
+  //     return invTopSellers;
+  //   } catch (e) {
+  //     isLoading.value = false;
+  //     if (kDebugMode) {
+  //       print(e.toString());
+  //       CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+  //     }
+  //     return [];
+  //   }
+  // }
 
   /// -- compute low stock threshold for alerts --
   computeLowStockThreshold(int qty) {

@@ -58,74 +58,86 @@ class CAnimatedSearchBar extends StatelessWidget {
                   dashboardController.showSummaryFilterField.value)
               ? useCustomTxtField!
                     ? customTxtField
-                    : CExpandedSearchField(
+                    : searchController.showSearchField.value
+                    ? CExpandedSearchField(
                         txtColor: CColors.rBrown,
                         controller: controller,
                       )
-              : Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(0),
-                      topRight: Radius.circular(32),
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(32),
-                    ),
-                    onTap: () {
-                      switch (forSearch) {
-                        case true:
-                          searchController.toggleSearchFieldVisibility();
-
-                          break;
-                        case false:
-                          dashboardController.toggleDateFieldVisibility();
-                          break;
-                        default:
-                          searchController.toggleSearchFieldVisibility();
-                          dashboardController.toggleDateFieldVisibility();
-                          break;
-                      }
-                      // invController.fetchUserInventoryItems();
-                      // txnsController.fetchSoldItems();
-                    },
-                    child: forSearch!
-                        ? const Icon(
-                            Iconsax.search_normal,
-                            color: CColors.rBrown,
-                            size: CSizes.iconMd,
-                          )
-                        : const Icon(
-                            //Iconsax.document_filter,
-                            Iconsax.setting_3,
-                            color: CColors.rBrown,
-                            size: CSizes.iconMd,
-                          ),
-                    // Row(
-                    //     children: [
-                    //       Text(
-                    //         'select date/period',
-                    //         style:
-                    //             Theme.of(
-                    //               context,
-                    //             ).textTheme.labelSmall!.apply(
-                    //               fontStyle: FontStyle.italic,
-                    //               fontSizeDelta: 1.2,
-                    //             ),
-                    //       ),
-                    //       const SizedBox(
-                    //         width: CSizes.spaceBtnItems * .5,
-                    //       ),
-                    //       const Icon(
-                    //         Iconsax.document_filter,
-                    //         color: CColors.rBrown,
-                    //         size: CSizes.iconSm,
-                    //       ),
-                    //     ],
-                    //   ),
-                  ),
-                ),
+                    : DefaultSearchWidget(forSearch: forSearch)
+              : DefaultSearchWidget(forSearch: forSearch),
         );
       },
+    );
+  }
+}
+
+class DefaultSearchWidget extends StatelessWidget {
+  const DefaultSearchWidget({
+    super.key,
+    required this.forSearch,
+  });
+
+  final bool? forSearch;
+
+  @override
+  Widget build(BuildContext context) {
+    final dashboardController = Get.put(CDashboardController());
+    // final invController = Get.put(CInventoryController());
+    // final txnsController = Get.put(CTxnsController());
+    final searchController = Get.put(CSearchBarController());
+
+    Future.delayed(
+      Duration(milliseconds: 200),
+      () {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            dashboardController.showSummaryFilterField.value = false;
+            searchController.showSearchField.value = false;
+          },
+        );
+      },
+    );
+
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(0),
+          topRight: Radius.circular(32),
+          bottomLeft: Radius.circular(0),
+          bottomRight: Radius.circular(32),
+        ),
+        onTap: () {
+          switch (forSearch) {
+            case true:
+              searchController.toggleSearchFieldVisibility();
+
+              break;
+            case false:
+              dashboardController.toggleDateFieldVisibility();
+              break;
+            default:
+              searchController.toggleSearchFieldVisibility();
+              dashboardController.toggleDateFieldVisibility();
+              break;
+          }
+          // invController.fetchUserInventoryItems();
+          // txnsController.fetchSoldItems();
+        },
+        child: forSearch!
+            ? const Icon(
+                Iconsax.search_normal,
+                color: CColors.rBrown,
+                size: CSizes.iconMd,
+              )
+            : const Icon(
+                //Iconsax.document_filter,
+                // Iconsax.setting_5,
+                Iconsax.setting_5,
+                color: CColors.rBrown,
+                size: CSizes.iconMd,
+              ),
+      ),
     );
   }
 }

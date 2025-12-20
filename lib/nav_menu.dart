@@ -1,8 +1,10 @@
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
+import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_counter_widget.dart';
+import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
@@ -16,11 +18,13 @@ class NavMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+    final dashboardController = Get.put(CDashboardController());
     final isDark = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
 
     final navController = Get.put(CNavMenuController());
     final notsController = Get.put(CNotificationsController());
+    final searchController = Get.put(CSearchBarController());
 
     Future.delayed(Duration(milliseconds: 200), () {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -60,6 +64,15 @@ class NavMenu extends StatelessWidget {
           selectedIndex: navController.selectedIndex.value,
           onDestinationSelected: (index) {
             navController.selectedIndex.value = index;
+            switch (navController.selectedIndex.value == 1) {
+              case true:
+                dashboardController.showSummaryFilterField.value = false;
+                break;
+              default:
+                dashboardController.showSummaryFilterField.value = false;
+                searchController.showSearchField.value = false;
+                break;
+            }
           },
           backgroundColor: isDark
               ? CNetworkManager.instance.hasConnection.value
