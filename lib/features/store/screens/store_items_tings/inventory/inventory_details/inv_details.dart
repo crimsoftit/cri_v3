@@ -203,7 +203,7 @@ class CInvDetails extends StatelessWidget {
                       CMenuTile(
                         icon: Iconsax.card_pos,
                         //title: '',
-                        title: '$currency.${(invItem.unitSellingPrice)}',
+                        title: '$currency.${(invItem.unitBp)}',
                         subTitle: '~ unit buying price',
                         onTap: () {
                           //Get.to(() => const OrdersScreen());

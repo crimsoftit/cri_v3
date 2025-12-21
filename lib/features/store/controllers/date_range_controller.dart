@@ -14,6 +14,7 @@ class CDateRangeController extends GetxController {
 
   @override
   void onInit() {
+    selectedDateRange.value = null;
     // TODO: implement onInit
     super.onInit();
   }

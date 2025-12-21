@@ -6,14 +6,19 @@ import 'package:flutter/material.dart';
 
 class CStoreSummaryCard extends StatelessWidget {
   const CStoreSummaryCard({
+    this.containerWidth,
     super.key,
     required this.titleTxt,
+    this.cardBgColor = CColors.white,
+    this.iconColor = CColors.rBrown,
     this.iconData,
     this.onTap,
     this.subTitleTxt,
-    this.containerWidth,
+    this.subTitleTxtColor = CColors.rBrown,
+    this.titleTxtColor = CColors.rBrown,
   });
 
+  final Color? cardBgColor, iconColor, subTitleTxtColor, titleTxtColor;
   final double? containerWidth;
   final IconData? iconData;
   final String? subTitleTxt;
@@ -28,7 +33,7 @@ class CStoreSummaryCard extends StatelessWidget {
       children: [
         /// -- store summary widgets go here --
         Card(
-          color: CColors.white,
+          color: cardBgColor,
           elevation: 1.0,
           margin: EdgeInsets.all(1),
           child: CRoundedContainer(
@@ -48,9 +53,12 @@ class CStoreSummaryCard extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: Text(
                   subTitleTxt ?? '',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall!.apply(color: CColors.rBrown),
+                  style:
+                      Theme.of(
+                        context,
+                      ).textTheme.labelSmall!.apply(
+                        color: subTitleTxtColor,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -63,14 +71,13 @@ class CStoreSummaryCard extends StatelessWidget {
                       Text(
                         titleTxt,
                         style: Theme.of(context).textTheme.labelLarge!.apply(
-                          color: CColors.rBrown,
+                          color: titleTxtColor,
                           fontSizeFactor: .9,
-                          //fontWeightDelta: 2,
                         ),
                       ),
                       Icon(
                         iconData,
-                        color: CColors.rBrown,
+                        color: iconColor,
                         size: CSizes.iconSm,
                       ),
                     ],

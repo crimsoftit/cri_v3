@@ -6,6 +6,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/date_range_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
@@ -38,7 +39,7 @@ class CTxnsController extends GetxController {
 
   /// -- variables --
   final localStorage = GetStorage();
-
+  final dateRangeController = Get.put(CDateRangeController());
   final dateRangeFieldController = TextEditingController();
 
   DbHelper dbHelper = DbHelper.instance;
@@ -85,8 +86,9 @@ class CTxnsController extends GetxController {
 
   /// -- summary variables --
   final RxDouble costOfSales = 0.0.obs;
+  final RxDouble grossRevenue = 0.0.obs;
+  final RxDouble moneyCollected = 0.0.obs;
   final RxDouble totalProfit = 0.0.obs;
-  final RxDouble totalRevenue = 0.0.obs;
 
   final txtAmountIssued = TextEditingController();
   final txtCustomerName = TextEditingController();
@@ -218,7 +220,10 @@ class CTxnsController extends GetxController {
       }
 
       /// -- initialize sales summary values --
-      if (dateRangeFieldController.text == '') {
+      ///
+      final dashboardController = Get.put(CDashboardController());
+      if (dateRangeFieldController.text == '' &&
+          !dashboardController.showSummaryFilterField.value) {
         initializeSalesSummaryValues();
       }
 
@@ -1362,10 +1367,11 @@ class CTxnsController extends GetxController {
   /// -- initialize sales summary values --
   void initializeSalesSummaryValues() {
     // -- compute total revenue --
-    totalRevenue.value = sales
+    moneyCollected.value = sales
         .where(
           (sale) =>
-              sale.quantity >= 1 && sale.txnStatus.toLowerCase() == 'complete',
+              sale.quantity >= 1 &&
+              sale.txnStatus.toLowerCase().contains('complete'),
         )
         .fold(
           0.0,
@@ -1377,8 +1383,13 @@ class CTxnsController extends GetxController {
         .where((sale) => sale.quantity >= 1)
         .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
 
+    grossRevenue.value = sales.fold(
+      0.0,
+      (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+    );
+
     // -- compute gross profit --
-    totalProfit.value = totalRevenue.value - costOfSales.value;
+    totalProfit.value = grossRevenue.value - costOfSales.value;
   }
 
   /// -- summarize sales data --
@@ -1387,10 +1398,14 @@ class CTxnsController extends GetxController {
       // -- start loader --
       isLoading.value = true;
 
-      final dateRangeController = Get.put(CDateRangeController());
-
       final rawDateRange = dateRangeController.selectedDateRange.value;
 
+      // final formattedStartDate = DateTime.parse(
+      //   rawDateRange!.start.toLocal().toString().split(' ')[0],
+      // );
+      // var formattedEndDate = DateTime.parse(
+      //   rawDateRange.end.toLocal().toString().split(' ')[0],
+      // );
       final formattedStartDate = DateTime.parse(
         rawDateRange!.start.toLocal().toString().split(' ')[0],
       );
@@ -1404,18 +1419,23 @@ class CTxnsController extends GetxController {
             (soldItem) =>
                 DateTime.parse(
                   soldItem.lastModified.replaceAll(' @', ''),
-                ).isAfter(formattedStartDate.subtract(Duration(days: 1))) &&
+                ).isAfter(formattedStartDate.subtract(Duration(days: 0))) &&
                 DateTime.parse(
                   soldItem.lastModified.replaceAll(' @', ''),
                 ).isBefore(formattedEndDate.add(Duration(days: 1))),
           )
           .toList();
-
-      var tRevenue = filteredSales.fold(
-        0.0,
-        (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
-      );
-      totalRevenue.value = tRevenue;
+      // var filteredSales = sales
+      //     .where(
+      //       (soldItem) =>
+      //           DateTime.parse(
+      //             soldItem.lastModified.replaceAll(' @', ''),
+      //           ).isAfter(formattedStartDate) &&
+      //           DateTime.parse(
+      //             soldItem.lastModified.replaceAll(' @', ''),
+      //           ).isBefore(formattedEndDate),
+      //     )
+      //     .toList();
 
       // -- compute cost of sales --
       var cogs = filteredSales.fold(
@@ -1424,7 +1444,23 @@ class CTxnsController extends GetxController {
       );
       costOfSales.value = cogs;
 
-      totalProfit.value = totalRevenue.value - costOfSales.value;
+      // -- compute money collected --
+      moneyCollected.value = filteredSales
+          .where((sale) => sale.txnStatus == 'complete')
+          .fold(
+            0.0,
+            (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+          );
+
+      // -- compute gross revenue --
+      var tRevenue = filteredSales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+      );
+      grossRevenue.value = tRevenue;
+
+      // -- compute gross profit --
+      totalProfit.value = grossRevenue.value - costOfSales.value;
 
       // -- stop loader --
       isLoading.value = false;

@@ -4,6 +4,7 @@ import 'package:cri_v3/features/personalization/controllers/notifications_contro
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/services/notification_services.dart';
@@ -36,6 +37,18 @@ class CInventoryController extends GetxController {
 
   final alertServices = Get.put(CNotificationServices());
   final cartController = Get.put(CCartController());
+
+  final RxBool isImportingInvCloudData = false.obs;
+  final RxBool itemExists = false.obs;
+  final RxBool gSheetInvItemExists = false.obs;
+  final RxBool includeExpiryDate = false.obs;
+  final RxBool includeSupplierDetails = false.obs;
+  final RxBool supplierDetailsExist = false.obs;
+  final RxBool syncingInvDeletions = false.obs;
+
+  final RxDouble unitBP = 0.0.obs;
+  final RxDouble totalInventoryValue = 0.0.obs;
+
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
@@ -50,17 +63,8 @@ class CInventoryController extends GetxController {
 
   final RxString scanResults = ''.obs;
 
-  final RxBool isImportingInvCloudData = false.obs;
-  final RxBool itemExists = false.obs;
-  final RxBool gSheetInvItemExists = false.obs;
-  final RxBool includeExpiryDate = false.obs;
-  final RxBool includeSupplierDetails = false.obs;
-  final RxBool supplierDetailsExist = false.obs;
-  final RxBool syncingInvDeletions = false.obs;
-
   final RxInt currentItemId = 0.obs;
 
-  final RxDouble unitBP = 0.0.obs;
   final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
   final txtNameController = TextEditingController();
@@ -198,6 +202,11 @@ class CInventoryController extends GetxController {
                 updateItem.syncAction.toLowerCase().contains('update'),
           )
           .toList();
+
+      // -- initialize inventory summary --
+      if (CTxnsController.instance.dateRangeFieldController.text == '') {
+        await initializeInventorySummary();
+      }
 
       List<CInventoryModel> returnItems;
       if (inventoryItems.isNotEmpty) {
@@ -1358,6 +1367,27 @@ class CInventoryController extends GetxController {
         message: 'unable to toggle favorite status, please try again later!',
       );
       rethrow;
+    }
+  }
+
+  /// -- initialize inventory summary --
+  Future<void> initializeInventorySummary() async {
+    try {
+      // -- compute total stock value --
+
+      if (inventoryItems.isNotEmpty) {
+        totalInventoryValue.value = inventoryItems
+            .where((invItem) => invItem.quantity >= 1)
+            .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error initializing inventory summary: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error initializing inventory summary: $e',
+          title: 'inventory summary init error!',
+        );
+      }
     }
   }
 }

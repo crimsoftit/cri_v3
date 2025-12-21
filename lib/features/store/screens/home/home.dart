@@ -14,14 +14,13 @@ import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/fresh_dashboard_screen_view.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/store_summary_card.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
-import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -53,7 +52,18 @@ class HomeScreen extends StatelessWidget {
     );
 
     Get.put(CDashboardController());
-    //Get.put(CTxnsController());
+    // Future.delayed(
+    //   Duration.zero,
+    //   () {
+    //     WidgetsBinding.instance.addPostFrameCallback(
+    //       (_) {
+    //         if (txnsController.sales.isNotEmpty) {
+    //           txnsController.fetchTopSellersFromSales();
+    //         }
+    //       },
+    //     );
+    //   },
+    // );
     txnsController.fetchTopSellersFromSales();
 
     return Container(
@@ -159,114 +169,98 @@ class HomeScreen extends StatelessWidget {
                             ),
                             //CDateRangePickerWidget(),
                             const SizedBox(height: CSizes.defaultSpace / 6),
-                            Obx(() {
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                //mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.tag,
-                                    subTitleTxt: 'g.revenue',
-                                    titleTxt:
-                                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.totalRevenue.value..toStringAsFixed(1))}',
-                                  ),
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.money_send,
-                                    subTitleTxt: 'cost of sales',
-                                    titleTxt:
-                                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
-                                  ),
-                                  CStoreSummaryCard(
-                                    iconData: Iconsax.money_tick,
-                                    subTitleTxt: 'g. profit($userCurrency)',
-                                    titleTxt: txnsController.totalProfit.value
-                                        .toStringAsFixed(1),
-                                  ),
-                                ],
-                              );
-                            }),
+                            CStoreSummary(),
+
+                            /// -- top sellers --
+                            CSectionHeading(
+                              showActionBtn: true,
+                              title: 'top sellers...',
+                              // txtColor: CColors.white,
+                              txtColor: isDarkTheme
+                                  ? CColors.darkGrey
+                                  : CColors.rBrown,
+                              btnTitle: 'view all',
+                              btnTxtColor: CColors.grey,
+                              editFontSize: true,
+                              fWeight: FontWeight.w400,
+                              onPressed: () {
+                                navController.selectedIndex.value = 1;
+                                Get.to(() => const NavMenu());
+                              },
+                            ),
+                            CTopSellers(),
+                            // Obx(
+                            //   () {
+                            //     return Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       //mainAxisSize: MainAxisSize.min,
+                            //       children: [
+                            //         CStoreSummaryCard(
+                            //           iconData: Iconsax.tag,
+                            //           subTitleTxt: 'g.revenue',
+                            //           titleTxt:
+                            //               '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.totalRevenue.value..toStringAsFixed(1))}',
+                            //         ),
+                            //         CStoreSummaryCard(
+                            //           iconData: Iconsax.money_send,
+                            //           subTitleTxt: 'cost of sales',
+                            //           titleTxt:
+                            //               '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
+                            //         ),
+                            //         CStoreSummaryCard(
+                            //           iconData: Iconsax.money_tick,
+                            //           subTitleTxt: 'g. profit($userCurrency)',
+                            //           titleTxt: txnsController.totalProfit.value
+                            //               .toStringAsFixed(1),
+                            //         ),
+                            //       ],
+                            //     );
+                            //   },
+                            // ),
                             const SizedBox(height: CSizes.defaultSpace / 4),
                           ],
                         ),
 
-                      // txnsController.bestSellers.isEmpty ||
-                      //         invController.inventoryItems.isEmpty
-                      txnsController.bestSellers.isEmpty
-                          ? Center(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: CSizes.defaultSpace),
+                      if (txnsController.sales.isEmpty)
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: CSizes.defaultSpace),
 
-                                  //CCarouselSlider(),
-                                  CAutoImgSlider(),
-                                  const SizedBox(
-                                    height: CSizes.defaultSpace / 1.5,
-                                  ),
-                                  Text(
-                                    'welcome aboard!!'.toUpperCase(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .apply(
-                                          // color: isDarkTheme
-                                          //     ? CColors.darkGrey
-                                          //     : CColors.rBrown,
-                                          color: CColors.rBrown,
-                                          fontSizeFactor: 1.3,
-                                          fontWeightDelta: -2,
-                                        ),
-                                  ),
-                                  const SizedBox(
-                                    height: CSizes.defaultSpace / 2,
-                                  ),
-                                  Text(
-                                    'your perfect dashboard is just a few sales away!'
-                                        .toUpperCase(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .apply(
-                                          color: isDarkTheme
-                                              ? CColors.darkGrey
-                                              : CColors.rBrown,
-                                        ),
-                                  ),
-
-                                  // Text(
-                                  //   'your perfect dashboard is just a few sales away.\n \nstart adding products/items to your inventory and make your first sale today!'
-                                  //       .toUpperCase(),
-                                  //   style: Theme.of(
-                                  //     context,
-                                  //   ).textTheme.labelMedium!.apply(),
-                                  // ),
-                                ],
+                              //CCarouselSlider(),
+                              CAutoImgSlider(),
+                              const SizedBox(
+                                height: CSizes.defaultSpace / 1.5,
                               ),
-                            )
-                          : Column(
-                              children: [
-                                /// -- top sellers --
-                                CSectionHeading(
-                                  showActionBtn: true,
-                                  title: 'top sellers...',
-                                  // txtColor: CColors.white,
-                                  txtColor: isDarkTheme
-                                      ? CColors.darkGrey
-                                      : CColors.rBrown,
-                                  btnTitle: 'view all',
-                                  btnTxtColor: CColors.grey,
-                                  editFontSize: true,
-                                  fWeight: FontWeight.w400,
-                                  onPressed: () {
-                                    navController.selectedIndex.value = 1;
-                                    Get.to(() => const NavMenu());
-                                  },
-                                ),
-                                CTopSellers(),
-                              ],
-                            ),
-
-                      //if (txnsController.bestSellers.isNotEmpty)
+                              Text(
+                                'welcome aboard!!'.toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .apply(
+                                      // color: isDarkTheme
+                                      //     ? CColors.darkGrey
+                                      //     : CColors.rBrown,
+                                      color: CColors.rBrown,
+                                      fontSizeFactor: 1.3,
+                                      fontWeightDelta: -2,
+                                    ),
+                              ),
+                              const SizedBox(
+                                height: CSizes.defaultSpace / 2,
+                              ),
+                              Text(
+                                'your perfect dashboard is just a few sales away!'
+                                    .toUpperCase(),
+                                style: Theme.of(context).textTheme.labelMedium!
+                                    .apply(
+                                      color: isDarkTheme
+                                          ? CColors.darkGrey
+                                          : CColors.rBrown,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
 
                       /// -- weekly sales bar graph --
                       Obx(() {

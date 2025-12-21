@@ -1,3 +1,4 @@
+import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -23,18 +24,18 @@ class CPopupSnackBar extends GetxController {
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
-        elevation: 1,
+        //elevation: 1,
         duration: const Duration(seconds: 4),
         backgroundColor: Colors.transparent,
-        content: Container(
+        content: CRoundedContainer(
+          bgColor: isDarkTheme
+              ? CColors.darkGrey.withValues(alpha: 0.9)
+              : CColors.grey.withValues(alpha: 0.9),
+          borderRadius: 20.0,
           padding: const EdgeInsets.all(10.0),
+
           margin: const EdgeInsets.symmetric(horizontal: 20.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            color: isDarkTheme
-                ? CColors.darkGrey.withValues(alpha: 0.9)
-                : CColors.grey.withValues(alpha: 0.9),
-          ),
+
           child: Center(
             child: forInternetConnectivityStatus
                 ? Row(
