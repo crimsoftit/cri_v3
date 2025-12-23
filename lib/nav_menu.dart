@@ -30,6 +30,8 @@ class NavMenu extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Get.put(CInventoryController());
         Get.put(CCartController());
+        dashboardController.calculateLastWeekSales();
+        dashboardController.calculateCurrentWeekSales();
       });
     });
 

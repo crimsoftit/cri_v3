@@ -79,11 +79,10 @@ class CStoreSummary extends StatelessWidget {
                         '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.grossRevenue.value..toStringAsFixed(1))}',
                   ),
                   CStoreSummaryCard(
-                    iconData: Iconsax.money_tick,
-                    subTitleTxt: 'g. profit($userCurrency)',
-                    titleTxt: txnsController.totalProfit.value.toStringAsFixed(
-                      1,
-                    ),
+                    iconData: Iconsax.money_time,
+                    subTitleTxt: 'credit',
+                    titleTxt:
+                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
                   ),
                 ],
               ),

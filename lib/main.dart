@@ -30,34 +30,10 @@ Future<void> main() async {
   // if (CNetworkManager.instance.hasConnection.value) {
   //   await StoreSheetsApi.initSpreadSheets();
   // }
+  //await StoreSheetsApi.initSpreadSheets();
 
   /// -- initialize awesome notifications --
   await CNotificationServices.initializeNotifications();
-
-  // AwesomeNotifications().initialize(
-  //   // set the icon to null if you want to use the default app icon
-  //   null,
-  //   [
-  //     NotificationChannel(
-  //       channelGroupKey: 'basic_channel_group',
-  //       channelKey: 'basic_channel',
-  //       channelName: 'Basic notifications',
-  //       channelDescription: 'Notification channel for basic tests',
-  //       defaultColor: CColors.rBrown,
-  //       enableLights: true,
-  //       enableVibration: true,
-  //       ledColor: CColors.rBrown,
-  //     ),
-  //   ],
-  //   // Channel groups are only visual and are not required
-  //   channelGroups: [
-  //     NotificationChannelGroup(
-  //       channelGroupKey: 'basic_channel_group',
-  //       channelGroupName: 'Basic group',
-  //     ),
-  //   ],
-  //   debug: true,
-  // );
 
   /// -- init local storage (GetX Local Storage) --
   await GetStorage.init();
@@ -69,19 +45,6 @@ Future<void> main() async {
 
   /// -- todo: await native splash --
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
-  /// -- initialize spreadsheets --
-  // final networkManager = Get.put(CNetworkManager());
-  // final isConnectedToInternet = networkManager.hasConnection.value;
-  // if (isConnectedToInternet) {
-  //   await StoreSheetsApi.initSpreadSheets();
-  // } else {
-  //   if (kDebugMode) {
-  //     print(
-  //       'error initializing google spreadsheets; internet connection is required!!',
-  //     );
-  //   }
-  // }
 
   /// -- todo: load all the material design, themes, localizations, bindings, etc. --
   runApp(const App());

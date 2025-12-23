@@ -10,12 +10,15 @@ import 'package:cri_v3/features/personalization/screens/settings/app_settings_sc
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/nav_menu.dart';
+import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/exceptions/firebase_auth_exceptions.dart';
 import 'package:cri_v3/utils/exceptions/firebase_exceptions.dart';
 import 'package:cri_v3/utils/exceptions/format_exceptions.dart';
 import 'package:cri_v3/utils/exceptions/platform_exceptions.dart';
+import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/local_storage/storage_utility.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,11 +81,14 @@ class AuthRepo extends GetxController {
           );
         } else {
           /// -- initialize spreadsheets --
-          StoreSheetsApi.initSpreadSheets();
+          if (await CNetworkManager.instance.isConnected() ||
+              CNetworkManager.instance.hasConnection.value) {
+            await StoreSheetsApi.initSpreadSheets();
+          }
 
-          //DbHelper dbHelper = DbHelper.instance;
+          DbHelper dbHelper = DbHelper.instance;
+          await dbHelper.openDb();
           final invController = Get.put(CInventoryController());
-          //final navController = Get.put(CNavMenuController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
@@ -93,7 +99,9 @@ class AuthRepo extends GetxController {
             await txnsController.initTxnsSync();
             Get.put(CCheckoutController());
 
-            //navController.selectedIndex.value = 1;
+            final navController = Get.put(CNavMenuController());
+
+            navController.selectedIndex.value = 1;
             Future.delayed(const Duration(milliseconds: 100), () {
               //Get.to(() => const NavMenu());
               Get.offAll(() => const NavMenu());

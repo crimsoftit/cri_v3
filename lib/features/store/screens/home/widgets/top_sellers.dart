@@ -19,8 +19,6 @@ class CTopSellers extends StatelessWidget {
     final txnsController = Get.put(CTxnsController());
 
     return Obx(() {
-      /// -- compute sum of quantities for each productId --
-      txnsController.fetchTopSellersFromSales();
 
       return SizedBox(
         height: 40.0,

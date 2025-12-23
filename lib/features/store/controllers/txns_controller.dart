@@ -87,6 +87,7 @@ class CTxnsController extends GetxController {
   /// -- summary variables --
   final RxDouble costOfSales = 0.0.obs;
   final RxDouble grossRevenue = 0.0.obs;
+  final RxDouble invoicesValue = 0.0.obs;
   final RxDouble moneyCollected = 0.0.obs;
   final RxDouble totalProfit = 0.0.obs;
 
@@ -126,16 +127,16 @@ class CTxnsController extends GetxController {
     dbHelper.openDb();
 
     /// TODO: tutareview hii maneno
-    if (await CNetworkManager.instance.isConnected() ||
-        CNetworkManager.instance.hasConnection.value) {
-      await StoreSheetsApi.initSpreadSheets();
+    if (await CNetworkManager.instance.isConnected()) {
+      StoreSheetsApi.initSpreadSheets();
     }
 
-    await fetchTopSellersFromSales();
+    //await StoreSheetsApi.initSpreadSheets();
 
     fetchSoldItems();
     fetchTxns();
     initTxnsSync();
+    fetchTopSellersFromSales();
 
     showAmountIssuedField.value = true;
     refundQty.value = 0;
@@ -164,6 +165,8 @@ class CTxnsController extends GetxController {
       await importTxnsFromCloud();
       if (await importTxnsFromCloud()) {
         localStorage.write('SyncTxnsDataWithCloud', false);
+      } else {
+        localStorage.write('SyncTxnsDataWithCloud', true);
       }
 
       await fetchSoldItems();
@@ -789,7 +792,7 @@ class CTxnsController extends GetxController {
                 .toList();
 
             // -- save sales data to cloud --
-            //StoreSheetsApi.initSpreadSheets();
+            StoreSheetsApi.initSpreadSheets();
             StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends).then((
               result,
             ) async {
@@ -1366,12 +1369,11 @@ class CTxnsController extends GetxController {
 
   /// -- initialize sales summary values --
   void initializeSalesSummaryValues() {
-    // -- compute total revenue --
-    moneyCollected.value = sales
+    // -- compute value of goods sold on credit --
+    invoicesValue.value = sales
         .where(
-          (sale) =>
-              sale.quantity >= 1 &&
-              sale.txnStatus.toLowerCase().contains('complete'),
+          (creditSale) =>
+              creditSale.txnStatus.toLowerCase().contains('invoiced'),
         )
         .fold(
           0.0,
@@ -1387,6 +1389,18 @@ class CTxnsController extends GetxController {
       0.0,
       (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
     );
+
+    // -- compute total revenue --
+    moneyCollected.value = sales
+        .where(
+          (sale) =>
+              sale.quantity >= 1 &&
+              sale.txnStatus.toLowerCase().contains('complete'),
+        )
+        .fold(
+          0.0,
+          (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+        );
 
     // -- compute gross profit --
     totalProfit.value = grossRevenue.value - costOfSales.value;
@@ -1450,6 +1464,14 @@ class CTxnsController extends GetxController {
           .fold(
             0.0,
             (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+          );
+
+      // -- compute value of items sold on credit --
+      invoicesValue.value = filteredSales
+          .where((sale) => sale.txnStatus.toLowerCase().contains('invoiced'))
+          .fold(
+            0.0,
+            (sum, credit) => sum + (credit.unitSellingPrice * credit.quantity),
           );
 
       // -- compute gross revenue --

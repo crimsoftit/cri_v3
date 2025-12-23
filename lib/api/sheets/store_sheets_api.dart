@@ -2,7 +2,6 @@ import 'package:cri_v3/api/sheets/creds/gsheets_creds.dart';
 import 'package:cri_v3/features/store/models/gsheet_models/inv_sheet_fields.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/models/txns_model.dart';
-import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -22,11 +21,7 @@ class StoreSheetsApi extends GetxController {
   void onInit() async {
     deletingInvItems.value = false;
 
-    /// TODO: tutareview hii maneno
-    if (await CNetworkManager.instance.isConnected() ||
-        CNetworkManager.instance.hasConnection.value) {
-      await initSpreadSheets();
-    }
+    await initSpreadSheets();
     //initSpreadSheets();
     super.onInit();
   }

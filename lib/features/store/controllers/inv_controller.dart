@@ -112,9 +112,11 @@ class CInventoryController extends GetxController {
     //final isConnected = await CNetworkManager.instance.isConnected();
 
     if (localStorage.read('SyncInvDataWithCloud') == true) {
-      importInvDataFromCloud();
+      await importInvDataFromCloud();
       if (await importInvDataFromCloud()) {
         localStorage.write('SyncInvDataWithCloud', false);
+      } else {
+        localStorage.write('SyncInvDataWithCloud', true);
       }
 
       fetchUserInventoryItems();
@@ -153,17 +155,7 @@ class CInventoryController extends GetxController {
     // }
   }
 
-  void printLatestFieldValue() {
-    final text = txtNameController.text;
-    if (kDebugMode) {
-      final output = '2nd txt: $text (${text.characters.length})';
-      print(output);
-      CPopupSnackBar.customToast(
-        message: output,
-        forInternetConnectivityStatus: false,
-      );
-    }
-  }
+  
 
   /// -- fetch list of inventory items from sqflite db --
   Future<List<CInventoryModel>> fetchUserInventoryItems() async {
@@ -1187,10 +1179,8 @@ class CInventoryController extends GetxController {
       await fetchInvDels();
 
       // -- check internet connectivity
-      final isConnectedToInternet = await CNetworkManager.instance
-          .isConnected();
 
-      if (isConnectedToInternet) {
+      if (await CNetworkManager.instance.isConnected()) {
         /// -- initialize spreadsheets --
         await StoreSheetsApi.initSpreadSheets();
         await syncInvDelsAndNotForUpdates();

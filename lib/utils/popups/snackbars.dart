@@ -24,7 +24,7 @@ class CPopupSnackBar extends GetxController {
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
-        //elevation: 1,
+        elevation: 0,
         duration: const Duration(seconds: 4),
         backgroundColor: Colors.transparent,
         content: CRoundedContainer(
@@ -130,7 +130,10 @@ class CPopupSnackBar extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 10),
       margin: const EdgeInsets.all(20.0),
-      icon: const Icon(Iconsax.warning_2, color: CColors.white),
+      icon: const Icon(
+        Iconsax.warning_2,
+        color: CColors.white,
+      ),
     );
   }
 

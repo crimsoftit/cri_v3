@@ -1,8 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/dates/date_range_picker_widget.dart';
-import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
-import 'package:cri_v3/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
@@ -11,7 +8,6 @@ import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -26,8 +22,8 @@ import 'package:iconsax/iconsax.dart';
 
 /// -- TODO: set widget for a freshly registered account -with no sales --
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreenRaw extends StatelessWidget {
+  const HomeScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +40,8 @@ class HomeScreen extends StatelessWidget {
     final userCurrency = CHelperFunctions.formatCurrency(
       userController.user.value.currencyCode,
     );
+
+    Get.put(CDashboardController());
 
     return Container(
       color: isDarkTheme ? CColors.transparent : CColors.white,
@@ -80,29 +78,13 @@ class HomeScreen extends StatelessWidget {
               ),
 
               /// -- dashboard header widget --
-              Obx(
-                () {
-                  return DashboardHeaderWidget(
-                    actionsSection:
-                        dashboardController.showSummaryFilterField.value
-                        ? SizedBox.shrink()
-                        : CAnimatedSearchBar(
-                            controller: txnsController.dateRangeFieldController,
-                            customTxtField: CDateRangePickerWidget(),
-                            forSearch: false,
-                            useCustomTxtField: true,
-                            hintTxt: '',
-                          ),
-                    appBarTitle: CTexts.homeAppbarTitle,
-                    isHomeScreen: true,
-                    screenTitle: 'dashboard',
-                    showAppBarTitle: false,
-                  );
-                },
+              DashboardHeaderWidget(
+                actionsSection: SizedBox.shrink(),
+                appBarTitle: CTexts.homeAppbarTitle,
+                isHomeScreen: true,
+                screenTitle: '',
+                showAppBarTitle: false,
               ),
-
-              /// -- custom divider --
-              CCustomDivider(),
 
               Padding(
                 padding: const EdgeInsets.only(
@@ -112,69 +94,37 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Obx(
                   () {
-                    if ((invController.inventoryItems.isEmpty &&
-                            !invController.isLoading.value) ||
-                        (txnsController.sales.isEmpty &&
-                            !txnsController.isLoading.value)) {
+                    if (invController.inventoryItems.isEmpty &&
+                        !invController.isLoading.value) {
                       invController.fetchUserInventoryItems();
-                      txnsController.fetchTopSellersFromSales();
                     }
                     if (invController.isLoading.value &&
-                            invController.inventoryItems.isNotEmpty ||
-                        (txnsController.sales.isNotEmpty &&
-                            txnsController.isLoading.value)) {
+                        invController.inventoryItems.isNotEmpty) {
                       return CHorizontalProductShimmer();
                     }
 
+                    /// -- top sellers --
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// -- store summary --
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: CSizes.defaultSpace / 6),
-                            Visibility(
-                              visible: dashboardController
-                                  .showSummaryFilterField
-                                  .value,
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: CAnimatedSearchBar(
-                                  controller:
-                                      txnsController.dateRangeFieldController,
-                                  customTxtField: CDateRangePickerWidget(),
-                                  forSearch: false,
-                                  useCustomTxtField: true,
-                                  hintTxt: '',
-                                ),
-                              ),
-                            ),
-                            //CDateRangePickerWidget(),
-                            const SizedBox(height: CSizes.defaultSpace / 6),
-                            CStoreSummary(),
-
-                            /// -- top sellers --
-                            CSectionHeading(
-                              showActionBtn: true,
-                              title: 'top sellers...',
-                              // txtColor: CColors.white,
-                              txtColor: isDarkTheme
-                                  ? CColors.darkGrey
-                                  : CColors.rBrown,
-                              btnTitle: 'view all',
-                              btnTxtColor: CColors.grey,
-                              editFontSize: true,
-                              fWeight: FontWeight.w400,
-                              onPressed: () {
-                                navController.selectedIndex.value = 1;
-                                Get.to(() => const NavMenu());
-                              },
-                            ),
-                            CTopSellers(),
-                            const SizedBox(height: CSizes.defaultSpace / 4),
-                          ],
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'top sellers...',
+                          // txtColor: CColors.white,
+                          txtColor: CColors.rBrown,
+                          btnTitle: 'view all',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            navController.selectedIndex.value = 1;
+                            Get.to(() => const NavMenu());
+                          },
                         ),
+                        txnsController.bestSellers.isEmpty
+                            ? Text(
+                                'we are excited to have you!!',
+                              )
+                            : CTopSellers(),
 
                         CSectionHeading(
                           showActionBtn: true,
@@ -202,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                             return CRoundedContainer(
                               // bgColor:
                               //     isDarkTheme ? CColors.darkGrey : CColors.grey,
-                              bgColor: CColors.white,
+                              bgColor: CColors.grey,
                               borderRadius: CSizes.cardRadiusSm,
                               padding: const EdgeInsets.only(
                                 top: 15.0,
