@@ -46,6 +46,17 @@ class CDashboardController extends GetxController {
       });
     });
 
+    Future.delayed(
+      Duration.zero,
+      () {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) async {
+            await txnsController.fetchTopSellersFromSales();
+          },
+        );
+      },
+    );
+
     super.onInit();
   }
 

@@ -117,7 +117,6 @@ class HomeScreen extends StatelessWidget {
                         (txnsController.sales.isEmpty &&
                             !txnsController.isLoading.value)) {
                       invController.fetchUserInventoryItems();
-                      txnsController.fetchTopSellersFromSales();
                     }
                     if (invController.isLoading.value &&
                             invController.inventoryItems.isNotEmpty ||

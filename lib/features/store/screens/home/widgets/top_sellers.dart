@@ -19,6 +19,7 @@ class CTopSellers extends StatelessWidget {
     final txnsController = Get.put(CTxnsController());
 
     return Obx(() {
+      
 
       return SizedBox(
         height: 40.0,
