@@ -433,6 +433,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- fetch top sellers grouped by product id --
+  /// -- TODO: fetch top sellers by user's email address --
   Future<List<CBestSellersModel>> fetchTopSellersFromSales() async {
     try {
       // -- start loader while top sellers are fetched --

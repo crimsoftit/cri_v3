@@ -11,11 +11,6 @@ class CNavMenuController extends GetxController {
   //
   final Rx<int> selectedIndex = 0.obs;
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
 
   final screens = [
     const HomeScreen(),
