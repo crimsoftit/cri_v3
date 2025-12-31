@@ -13,7 +13,6 @@ import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/nav_menu.dart';
-import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/exceptions/firebase_auth_exceptions.dart';
 import 'package:cri_v3/utils/exceptions/firebase_exceptions.dart';
 import 'package:cri_v3/utils/exceptions/format_exceptions.dart';
@@ -86,8 +85,8 @@ class AuthRepo extends GetxController {
             await StoreSheetsApi.initSpreadSheets();
           }
 
-          DbHelper dbHelper = DbHelper.instance;
-          await dbHelper.openDb();
+          // DbHelper dbHelper = DbHelper.instance;
+          // await dbHelper.openDb();
           final invController = Get.put(CInventoryController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status

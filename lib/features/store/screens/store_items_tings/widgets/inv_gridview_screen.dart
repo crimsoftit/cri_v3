@@ -230,7 +230,7 @@ class CInvGridviewScreen extends StatelessWidget {
 
               return CProductCardVertical(
                 bp: bp.toString(),
-                containerHeight: 175.0,
+                containerHeight: 185.0,
                 deleteAction: syncController.processingSync.value
                     ? null
                     : () {

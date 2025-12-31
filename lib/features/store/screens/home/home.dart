@@ -17,6 +17,7 @@ import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
+import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -149,12 +150,13 @@ class HomeScreen extends StatelessWidget {
                             CSectionHeading(
                               showActionBtn: true,
                               title: 'top sellers...',
-                              // txtColor: CColors.white,
-                              txtColor: isDarkTheme
-                                  ? CColors.darkGrey
-                                  : CColors.rBrown,
+                              txtColor:
+                                  CNetworkManager.instance.hasConnection.value
+                                  ? CColors.rBrown
+                                  : CColors.darkGrey,
+
                               btnTitle: 'view all',
-                              btnTxtColor: CColors.grey,
+                              btnTxtColor: CColors.rBrown,
                               editFontSize: true,
                               fWeight: FontWeight.w400,
                               onPressed: () {

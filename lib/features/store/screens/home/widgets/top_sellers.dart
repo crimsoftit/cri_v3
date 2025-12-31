@@ -1,9 +1,12 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/products/circle_avatar.dart';
+import 'package:cri_v3/common/widgets/shimmers/horizontal_items_shimmer.dart';
+import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +20,16 @@ class CTopSellers extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
     final txnsController = Get.put(CTxnsController());
+    final userController = Get.put(CUserController());
+    final userCurrency = CHelperFunctions.formatCurrency(
+      userController.user.value.currencyCode,
+    );
 
     return Obx(() {
-      
+      if (txnsController.isLoading.value &&
+          txnsController.bestSellers.isNotEmpty) {
+        return const CHorizontalProductShimmer();
+      }
 
       return SizedBox(
         height: 40.0,
@@ -67,7 +77,7 @@ class CTopSellers extends StatelessWidget {
                   CRoundedContainer(
                     bgColor: CColors.transparent,
                     showBorder: false,
-                    width: 90.0,
+                    width: 120.0,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -83,11 +93,11 @@ class CTopSellers extends StatelessWidget {
                           maxLines: 1,
                         ),
                         Text(
-                          '${txnsController.bestSellers[index].totalSales} sold',
+                          '${txnsController.bestSellers[index].totalSales} sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             color: CColors.darkGrey,
                           ),
-                          overflow: TextOverflow.fade,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ],

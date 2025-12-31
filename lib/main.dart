@@ -3,6 +3,7 @@ import 'package:cri_v3/app.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
 import 'package:cri_v3/firebase_options.dart';
 import 'package:cri_v3/services/notification_services.dart';
+import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -45,6 +46,10 @@ Future<void> main() async {
 
   /// -- todo: await native splash --
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // -- init sqflite db --
+  DbHelper dbHelper = DbHelper.instance;
+  await dbHelper.openDb();
 
   /// -- todo: load all the material design, themes, localizations, bindings, etc. --
   runApp(const App());

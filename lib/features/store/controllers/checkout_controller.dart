@@ -51,7 +51,7 @@ class CCheckoutController extends GetxController {
 
   @override
   void onInit() async {
-    await dbHelper.openDb();
+    //await dbHelper.openDb();
 
     amtIssuedFieldController.text = '';
     customerContactsFieldController.text = '';

@@ -88,7 +88,7 @@ class CInventoryController extends GetxController {
 
   @override
   void onInit() async {
-    dbHelper.openDb();
+    //dbHelper.openDb();
 
     await fetchUserInventoryItems();
 
@@ -164,7 +164,7 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
       foundInventoryItems.clear();
 
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
 
       // fetch items from sqflite db
       final fetchedItems = await dbHelper.fetchInventoryItems(
@@ -1030,7 +1030,7 @@ class CInventoryController extends GetxController {
 
   Future<List<CInvDelsModel>> fetchInvDels() async {
     try {
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
 
       final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
@@ -1059,7 +1059,7 @@ class CInventoryController extends GetxController {
       // -- start loader --
       syncingInvDeletions.value = true;
 
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
       // -- check internet connectivity
       final isConnectedToInternet = await CNetworkManager.instance
           .isConnected();
@@ -1101,7 +1101,7 @@ class CInventoryController extends GetxController {
   /// -- fetch items with pending updates --
   Future<List<CInvDelsModel>> fetchInvUpdates() async {
     try {
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
 
       final pUpdates = await dbHelper.fetchAllInvUpdates();
       pendingUpdates.assignAll(pUpdates);

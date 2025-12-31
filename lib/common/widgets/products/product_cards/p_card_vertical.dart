@@ -187,7 +187,7 @@ class CProductCardVertical extends StatelessWidget {
                             //         invController.inventoryItems.isNotEmpty
                             //     ? 60.0
                             //     : 40.0,
-                            left: 50.0,
+                            left: 60.0,
                             child:
                                 invController.isLoading.value &&
                                     invController.inventoryItems.isNotEmpty

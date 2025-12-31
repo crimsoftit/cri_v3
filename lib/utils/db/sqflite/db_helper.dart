@@ -483,7 +483,7 @@ class DbHelper extends GetxController {
       final db = _db;
 
       final topSellers = await db!.rawQuery(
-        'SELECT productId, productName, SUM(quantity) as totalSales FROM $txnsTable WHERE userEmail = ? GROUP BY productId ORDER BY totalSales DESC LIMIT 20',
+        'SELECT productId, productName, SUM(quantity) as totalSales, unitSellingPrice FROM $txnsTable WHERE userEmail = ? GROUP BY productId ORDER BY totalSales DESC LIMIT 20',
         [email],
       );
 

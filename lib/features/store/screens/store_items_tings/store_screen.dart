@@ -123,7 +123,7 @@ class CStoreScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: [
                 /// -- inventory list items --
-                CInvGridviewScreen(mainAxisExtent: 184.2),
+                CInvGridviewScreen(mainAxisExtent: 190.2),
 
                 // -- almost obsolete --
                 // CItemsListView(

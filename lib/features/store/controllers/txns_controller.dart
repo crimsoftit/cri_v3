@@ -124,19 +124,16 @@ class CTxnsController extends GetxController {
   @override
   void onInit() async {
     dateRangeFieldController.text = '';
-    dbHelper.openDb();
+    //dbHelper.openDb();
 
-    /// TODO: tutareview hii maneno
+    
     if (await CNetworkManager.instance.isConnected()) {
       StoreSheetsApi.initSpreadSheets();
     }
 
-    //await StoreSheetsApi.initSpreadSheets();
-
     fetchSoldItems();
     fetchTxns();
     initTxnsSync();
-    fetchTopSellersFromSales();
 
     showAmountIssuedField.value = true;
     refundQty.value = 0;
@@ -180,7 +177,6 @@ class CTxnsController extends GetxController {
       isLoading.value = true;
       foundSales.clear();
       foundRefunds.clear();
-      await dbHelper.openDb();
 
       // fetch sales from local db
       final soldItems = await dbHelper.fetchAllSoldItems(
@@ -230,21 +226,6 @@ class CTxnsController extends GetxController {
         initializeSalesSummaryValues();
       }
 
-      // final values = {};
-      // for (final item in sales) {
-      //   final itemName = item.productName;
-      //   final qty = item.quantity;
-      //   final previousValue = values.containsKey(itemName)
-      //       ? values[itemName]!
-      //       : 0;
-      //   values[itemName] = previousValue + qty;
-      // }
-
-      // final result = values.values.toList();
-      // if (kDebugMode) {
-      //   print('result: $result');
-      // }
-
       // stop loader
       isLoading.value = false;
       soldItemsFetched.value = true;
@@ -268,7 +249,7 @@ class CTxnsController extends GetxController {
     try {
       // start loader while txns are fetched
       isLoading.value = true;
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
       await fetchSoldItems();
 
       // fetch txns from sqflite db
@@ -433,13 +414,12 @@ class CTxnsController extends GetxController {
   }
 
   /// -- fetch top sellers grouped by product id --
-  /// -- TODO: fetch top sellers by user's email address --
   Future<List<CBestSellersModel>> fetchTopSellersFromSales() async {
     try {
       // -- start loader while top sellers are fetched --
       isLoading.value = true;
 
-      await dbHelper.openDb();
+      //await dbHelper.openDb();
 
       final topSales = await dbHelper
           .fetchTopSellersFromSalesGroupedByProductId(
@@ -1369,42 +1349,62 @@ class CTxnsController extends GetxController {
   }
 
   /// -- initialize sales summary values --
-  void initializeSalesSummaryValues() {
-    // -- compute value of goods sold on credit --
-    invoicesValue.value = sales
-        .where(
-          (creditSale) =>
-              creditSale.txnStatus.toLowerCase().contains('invoiced'),
-        )
-        .fold(
-          0.0,
-          (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+  Future<void> initializeSalesSummaryValues() async {
+    try {
+      // -- start loader --
+      isLoading.value = true;
+      // -- compute value of goods sold on credit --
+      invoicesValue.value = sales
+          .where(
+            (creditSale) =>
+                creditSale.txnStatus.toLowerCase().contains('invoiced'),
+          )
+          .fold(
+            0.0,
+            (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+          );
+
+      // -- compute cost of sales --
+      costOfSales.value = sales
+          .where((sale) => sale.quantity >= 1)
+          .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
+
+      grossRevenue.value = sales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+      );
+
+      // -- compute total revenue --
+      moneyCollected.value = sales
+          .where(
+            (sale) =>
+                sale.quantity >= 1 &&
+                sale.txnStatus.toLowerCase().contains('complete'),
+          )
+          .fold(
+            0.0,
+            (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+          );
+
+      // -- compute gross profit --
+      totalProfit.value = grossRevenue.value - costOfSales.value;
+
+      await fetchTopSellersFromSales();
+
+      // -- stop loader
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error summarizing sales: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error summarizing sales: $e',
+          title: 'sales summary error',
         );
-
-    // -- compute cost of sales --
-    costOfSales.value = sales
-        .where((sale) => sale.quantity >= 1)
-        .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
-
-    grossRevenue.value = sales.fold(
-      0.0,
-      (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
-    );
-
-    // -- compute total revenue --
-    moneyCollected.value = sales
-        .where(
-          (sale) =>
-              sale.quantity >= 1 &&
-              sale.txnStatus.toLowerCase().contains('complete'),
-        )
-        .fold(
-          0.0,
-          (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
-        );
-
-    // -- compute gross profit --
-    totalProfit.value = grossRevenue.value - costOfSales.value;
+      }
+      rethrow;
+    }
   }
 
   /// -- summarize sales data --
