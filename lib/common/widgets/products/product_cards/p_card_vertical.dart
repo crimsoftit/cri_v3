@@ -76,319 +76,227 @@ class CProductCardVertical extends StatelessWidget {
     return GestureDetector(
       onDoubleTap: onDoubleTapAction,
       onTap: onTapAction,
-      child: Container(
+      child: CRoundedContainer(
+        bgColor: isDarkTheme
+            ? CColors.rBrown.withValues(alpha: 0.3)
+            : CColors.lightGrey,
         width: 170,
-        //height: 200.0,
+        height: double.infinity,
         padding: EdgeInsets.all(1.0),
-        decoration: BoxDecoration(
-          boxShadow: [],
-          borderRadius: BorderRadius.circular(CSizes.borderRadiusSm * 4.0),
-          color: CColors.transparent,
-        ),
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: CSizes.spaceBtnInputFields / 5),
-            CRoundedContainer(
-              bgColor: isDarkTheme
-                  ? CColors.rBrown.withValues(alpha: 0.3)
-                  : CColors.lightGrey,
-              borderRadius: CSizes.pImgRadius - 4,
-              //height: 182.0,
-              height: containerHeight,
-              padding: const EdgeInsets.only(left: CSizes.sm / 4),
-              width: CHelperFunctions.screenWidth() * 0.46,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CRoundedContainer(
-                    width: CHelperFunctions.screenWidth() * 0.45,
-                    height: 53.0,
-                    bgColor: const Color.fromRGBO(0, 0, 0, 0),
-                    boxShadow: [],
-                    child: Obx(() {
-                      return Stack(
-                        children: [
-                          /// -- favorite item tag --
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child:
-                                // (invController.isLoading.value ||
-                                //         syncController.processingSync.value) &&
-                                //     invController.inventoryItems.isNotEmpty
-                                invController.isLoading.value &&
-                                    invController.inventoryItems.isNotEmpty
-                                ? CShimmerEffect(
-                                    width: 30,
-                                    height: 30.0,
-                                    radius: 30.0,
-                                  )
-                                : CCircularIconBtn(
-                                    // bgColor:
-                                    //     favIconColor ??
-                                    //     (isDarkTheme
-                                    //         ? CColors.transparent
-                                    //         : CColors.white),
-                                    bgColor: isDarkTheme
-                                        ? CColors.transparent
-                                        : CColors.rBrown.withValues(alpha: 0.2),
-                                    iconColor:
-                                        favIconColor ??
-                                        (isDarkTheme
-                                            ? CColors.white
-                                            : CColors.rBrown),
-                                    icon: favIconData ?? Iconsax.heart5,
-                                    iconSize: CSizes.md,
-                                    height: 33.0,
-                                    onPressed: onFavoriteIconTap,
-                                    width: 33.0,
-                                  ),
-                          ),
 
-                          /// -- delete item iconButton --
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child:
-                                invController.isLoading.value &&
-                                    invController.inventoryItems.isNotEmpty
-                                ? CShimmerEffect(
-                                    width: 30,
-                                    height: 30.0,
-                                    radius: 30.0,
-                                  )
-                                : CCircularIconBtn(
-                                    iconColor: isDarkTheme
-                                        ? CColors.white
-                                        : Colors.red,
-                                    icon: Icons.delete,
-                                    iconSize: CSizes.md,
-                                    height: 33.0,
-                                    width: 33.0,
-                                    // bgColor: isDarkTheme
-                                    //     ? CColors.transparent
-                                    //     : CColors.white,
-                                    bgColor: isDarkTheme
-                                        ? CColors.transparent
-                                        : CColors.rBrown.withValues(alpha: 0.2),
-                                    //  CColors.transparent,
-                                    onPressed: deleteAction,
-                                  ),
-                          ),
+            /// -- avatar, favorite item, and delete btns --
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                invController.isLoading.value &&
+                        invController.inventoryItems.isNotEmpty
+                    ? CShimmerEffect(
+                        width: 30,
+                        height: 30.0,
+                        radius: 30.0,
+                      )
+                    : CCircularIconBtn(
+                        bgColor: isDarkTheme
+                            ? CColors.transparent
+                            : CColors.rBrown.withValues(alpha: 0.2),
+                        iconColor:
+                            favIconColor ??
+                            (isDarkTheme ? CColors.white : CColors.rBrown),
+                        icon: favIconData ?? Iconsax.heart5,
+                        iconSize: CSizes.md,
+                        height: 33.0,
+                        onPressed: onFavoriteIconTap,
+                        width: 33.0,
+                      ),
+                invController.isLoading.value &&
+                        invController.inventoryItems.isNotEmpty
+                    ? CShimmerEffect(
+                        width: 40,
+                        height: 40.0,
+                        radius: 40.0,
+                      )
+                    : CCircleAvatar(
+                        avatarInitial: itemAvatar!,
+                        // bgColor: int.parse(qtyAvailable!) <
+                        //         lowStockNotifierLimit!
+                        //     ? Colors.red
+                        //     : CColors.rBrown,
+                        bgColor: CColors.transparent,
+                        editIconColor:
+                            int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            ? Colors.red
+                            : isDarkTheme
+                            ? CColors.white
+                            : CColors.rBrown,
+                        includeEditBtn: true,
+                        onEdit: onAvatarIconTap,
+                        txtColor:
+                            int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            ? Colors.red
+                            : isDarkTheme
+                            ? CColors.white
+                            : CColors.rBrown,
+                      ),
 
-                          /// -- avatar, date, and(or) edit iconButton --
-                          Positioned(
-                            top: 2,
-                            // left:
-                            //     invController.isLoading.value &&
-                            //         invController.inventoryItems.isNotEmpty
-                            //     ? 60.0
-                            //     : 40.0,
-                            left: 60.0,
-                            child:
-                                invController.isLoading.value &&
-                                    invController.inventoryItems.isNotEmpty
-                                ? CShimmerEffect(
-                                    width: 40,
-                                    height: 40.0,
-                                    radius: 40.0,
-                                  )
-                                : Align(
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        CCircleAvatar(
-                                          avatarInitial: itemAvatar!,
-                                          // bgColor: int.parse(qtyAvailable!) <
-                                          //         lowStockNotifierLimit!
-                                          //     ? Colors.red
-                                          //     : CColors.rBrown,
-                                          bgColor: CColors.transparent,
-                                          editIconColor:
-                                              int.parse(qtyAvailable!) <
-                                                  lowStockNotifierLimit!
-                                              ? Colors.red
-                                              : isDarkTheme
-                                              ? CColors.white
-                                              : CColors.rBrown,
-                                          includeEditBtn: true,
-                                          onEdit: onAvatarIconTap,
-                                          txtColor:
-                                              int.parse(qtyAvailable!) <
-                                                  lowStockNotifierLimit!
-                                              ? Colors.red
-                                              : isDarkTheme
-                                              ? CColors.white
-                                              : CColors.rBrown,
-                                        ),
-                                        const SizedBox(
-                                          height:
-                                              CSizes.spaceBtnInputFields / 2.0,
-                                        ),
-                                        Text(
-                                          CFormatter.formatTimeRangeFromNow(
-                                                lastModified!.replaceAll(
-                                                  '@ ',
-                                                  '',
-                                                ),
-                                              ).contains('just now')
-                                              ? 'modified: ${CFormatter.formatTimeRangeFromNow(lastModified!.replaceAll('@ ', ''))}'
-                                              : CFormatter.formatTimeRangeFromNow(
-                                                  lastModified!.replaceAll(
-                                                    '@ ',
-                                                    '',
-                                                  ),
-                                                ),
-                                          //lastModified!,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelSmall!
-                                              .apply(
-                                                color: isDarkTheme
-                                                    ? CColors.grey
-                                                    : CColors.darkGrey,
-                                                fontSizeFactor: 0.9,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CProductTitleText(
-                          //smallSize: true,
-                          title:
-                              "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
-                          txtColor:
-                              int.parse(qtyAvailable!) < lowStockNotifierLimit!
-                              ? Colors.red
-                              : isDarkTheme
-                              ? CColors.white
-                              : CColors.rBrown,
-                          maxLines: 2,
-                        ),
+                invController.isLoading.value &&
+                        invController.inventoryItems.isNotEmpty
+                    ? CShimmerEffect(
+                        width: 30,
+                        height: 30.0,
+                        radius: 30.0,
+                      )
+                    : CCircularIconBtn(
+                        iconColor: isDarkTheme ? CColors.white : Colors.red,
+                        icon: Icons.delete,
+                        iconSize: CSizes.md,
+                        height: 33.0,
+                        width: 33.0,
+                        // bgColor: isDarkTheme
+                        //     ? CColors.transparent
+                        //     : CColors.white,
+                        bgColor: isDarkTheme
+                            ? CColors.transparent
+                            : CColors.rBrown.withValues(alpha: 0.2),
+                        //  CColors.transparent,
+                        onPressed: deleteAction,
+                      ),
+              ],
+            ),
+            const SizedBox(
+              height: CSizes.spaceBtnInputFields / 4.0,
+            ),
 
-                        Text(
-                          '($qtyRefunded unit(s) refunded)',
-                          style: Theme.of(context).textTheme.labelSmall!.apply(
-                            color: isDarkTheme
-                                ? CColors.white
-                                : CColors.darkGrey,
-                          ),
-                        ),
-                        Text(
-                          'sku: $pCode lsn: $lowStockNotifierLimit',
-                          style: Theme.of(context).textTheme.labelSmall!.apply(
-                            color: isDarkTheme
-                                ? CColors.white
-                                : CColors.darkGrey,
-                          ),
-                        ),
-                        Visibility(
-                          visible: false,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'isSynced: $isSynced, syncAction: $syncAction',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .apply(
-                                      color: isDarkTheme
-                                          ? CColors.white
-                                          : CColors.darkGrey,
-                                    ),
+            /// -- date/last modified --
+            invController.isLoading.value &&
+                    invController.inventoryItems.isNotEmpty
+                ? Center(
+                    child: CShimmerEffect(
+                      width: 150,
+                      height: 10.0,
+                      radius: 10.0,
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      CFormatter.formatTimeRangeFromNow(
+                            lastModified!.replaceAll(
+                              '@ ',
+                              '',
+                            ),
+                          ).contains('just now')
+                          ? 'modified: ${CFormatter.formatTimeRangeFromNow(lastModified!.replaceAll('@ ', ''))}'
+                          : CFormatter.formatTimeRangeFromNow(
+                              lastModified!.replaceAll(
+                                '@ ',
+                                '',
                               ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          'expiry date: $expiryDate',
-                          style: Theme.of(context).textTheme.labelSmall!.apply(
-                            color:
-                                expiryColor ??
-                                (isDarkTheme ? CColors.white : CColors.rBrown),
-                          ),
-                        ),
-                        CProductPriceTxt(
-                          priceCategory: 'bp: ',
-                          price: bp!,
-                          maxLines: 1,
-                          isLarge: true,
-                          txtColor: isDarkTheme
-                              ? CColors.white
-                              : CColors.darkGrey,
-                          fSizeFactor: 0.7,
-                        ),
-
-                        SizedBox(
-                          /// -- TODO:
-                          // chora cart item usp * qtyInCart
-                          // also catch socketexception when syncing data
-                          width: CHelperFunctions.screenWidth(),
-                          height: 33.0,
-                          child: Obx(() {
-                            return Stack(
-                              children: [
-                                Positioned(
-                                  bottom: 0,
-                                  child: CProductPriceTxt(
-                                    // priceCategory: 'price: ',
-                                    priceCategory: '@',
-                                    price: usp!,
-                                    maxLines: 1,
-                                    isLarge: true,
-                                    txtColor: isDarkTheme
-                                        ? CColors.white
-                                        : CColors.rBrown,
-                                    fSizeFactor: 0.9,
-                                  ),
-                                ),
-
-                                /// -- add item to cart button --
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child:
-                                      (invController.isLoading.value ||
-                                              txnsController.isLoading.value) &&
-                                          invController
-                                              .inventoryItems
-                                              .isNotEmpty
-                                      ? CShimmerEffect(
-                                          width: 32.0,
-                                          height: 32.0,
-                                          radius: 8.0,
-                                        )
-                                      : CAddToCartBtn(pId: pId),
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
-
-                        // ),
-                      ],
+                            ),
+                      //lastModified!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelSmall!.apply(
+                        color: isDarkTheme ? CColors.grey : CColors.darkGrey,
+                        fontSizeFactor: 0.9,
+                      ),
                     ),
                   ),
-                ],
+
+            CProductTitleText(
+              //smallSize: true,
+              title:
+                  "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
+              txtColor: int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                  ? Colors.red
+                  : isDarkTheme
+                  ? CColors.white
+                  : CColors.rBrown,
+              maxLines: 2,
+            ),
+
+            Text(
+              '($qtyRefunded unit(s) refunded)',
+              style: Theme.of(context).textTheme.labelSmall!.apply(
+                color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),
+            ),
+            Text(
+              'sku: $pCode lsn: $lowStockNotifierLimit',
+              style: Theme.of(context).textTheme.labelSmall!.apply(
+                color: isDarkTheme ? CColors.white : CColors.darkGrey,
+              ),
+            ),
+            Visibility(
+              visible: false,
+              child: Text(
+                'isSynced: $isSynced, syncAction: $syncAction',
+                style: Theme.of(context).textTheme.labelSmall!.apply(
+                  color: isDarkTheme ? CColors.white : CColors.darkGrey,
+                ),
+              ),
+            ),
+            Text(
+              'expiry date: $expiryDate',
+              style: Theme.of(context).textTheme.labelSmall!.apply(
+                color:
+                    expiryColor ??
+                    (isDarkTheme ? CColors.white : CColors.rBrown),
+              ),
+            ),
+            CProductPriceTxt(
+              priceCategory: 'bp: ',
+              price: bp!,
+              maxLines: 1,
+              isLarge: true,
+              txtColor: isDarkTheme ? CColors.white : CColors.darkGrey,
+              fSizeFactor: 0.7,
+            ),
+
+            /// -- base buttons --
+            SizedBox(
+              /// -- TODO:
+              // chora cart item usp * qtyInCart
+              // also catch socketexception when syncing data
+              width: CHelperFunctions.screenWidth(),
+              height: 43.0,
+              child: Obx(() {
+                return Stack(
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      child: CProductPriceTxt(
+                        // priceCategory: 'price: ',
+                        priceCategory: '@',
+                        price: usp!,
+                        maxLines: 1,
+                        isLarge: true,
+                        txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
+                        fSizeFactor: 0.9,
+                      ),
+                    ),
+
+                    /// -- add item to cart button --
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child:
+                          (invController.isLoading.value ||
+                                  txnsController.isLoading.value) &&
+                              invController.inventoryItems.isNotEmpty
+                          ? CShimmerEffect(
+                              width: 32.0,
+                              height: 32.0,
+                              radius: 8.0,
+                            )
+                          : CAddToCartBtn(pId: pId),
+                    ),
+                  ],
+                );
+              }),
             ),
           ],
         ),

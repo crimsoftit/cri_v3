@@ -19,7 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CInvGridviewScreen extends StatelessWidget {
-  const CInvGridviewScreen({super.key, this.mainAxisExtent = 166.0});
+  const CInvGridviewScreen({
+    super.key,
+    this.mainAxisExtent = 176.0,
+    //this.mainAxisExtent = double.infinity,
+  });
 
   final double? mainAxisExtent;
 
@@ -106,8 +110,8 @@ class CInvGridviewScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: CSizes.gridViewSpacing / 12,
-              crossAxisSpacing: CSizes.gridViewSpacing / 12,
+              mainAxisSpacing: CSizes.gridViewSpacing / 2,
+              crossAxisSpacing: CSizes.gridViewSpacing / 2,
               mainAxisExtent: mainAxisExtent,
             ),
             itemBuilder: (context, index) {
@@ -230,7 +234,8 @@ class CInvGridviewScreen extends StatelessWidget {
 
               return CProductCardVertical(
                 bp: bp.toString(),
-                containerHeight: 185.0,
+                containerHeight: 195.0,
+                //containerHeight: double.infinity,
                 deleteAction: syncController.processingSync.value
                     ? null
                     : () {

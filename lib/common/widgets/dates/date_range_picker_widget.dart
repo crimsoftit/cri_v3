@@ -1,5 +1,5 @@
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
-import 'package:cri_v3/features/store/controllers/date_range_controller.dart';
+import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -16,7 +16,7 @@ class CDateRangePickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
-    final CDateRangeController controller = Get.put(CDateRangeController());
+    final CDateController controller = Get.put(CDateController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
 
@@ -37,14 +37,13 @@ class CDateRangePickerWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(17.0),
             borderSide: BorderSide.none,
           ),
-          //disabledBorder: InputBorder.none,
-          //errorBorder: InputBorder.none,
           filled: true,
-          fillColor: isDarkTheme ? CColors.transparent : CColors.lightGrey,
 
-          //labelText: 'select period',
+          fillColor: isDarkTheme
+              ? CColors.rBrown.withValues(alpha: .3)
+              : CColors.lightGrey,
+
           hintText: 'pick date range',
-          //labelStyle: textStyle,
           prefixIcon: Icon(
             Iconsax.calendar,
             color: CColors.darkGrey,

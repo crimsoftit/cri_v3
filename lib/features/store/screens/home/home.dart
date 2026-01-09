@@ -29,7 +29,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final cartController = Get.put(CCartController());
     final dashboardController = Get.put(CDashboardController());
 
     final invController = Get.put(CInventoryController());

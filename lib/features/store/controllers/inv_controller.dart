@@ -155,8 +155,6 @@ class CInventoryController extends GetxController {
     // }
   }
 
-  
-
   /// -- fetch list of inventory items from sqflite db --
   Future<List<CInventoryModel>> fetchUserInventoryItems() async {
     try {
@@ -1259,10 +1257,17 @@ class CInventoryController extends GetxController {
 
   toggleSupplierDetsFieldsVisibility(value) {
     includeSupplierDetails.value = value;
+    if (!includeSupplierDetails.value) {
+      txtSupplierName.text = '';
+      txtSupplierContacts.text = '';
+    }
   }
 
   toggleExpiryDateFieldVisibility(value) {
     includeExpiryDate.value = value;
+    if (!includeExpiryDate.value) {
+      txtExpiryDatePicker.text = '';
+    }
   }
 
   /// -- reset fields --

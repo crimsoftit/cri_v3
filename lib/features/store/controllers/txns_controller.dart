@@ -7,7 +7,7 @@ import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
-import 'package:cri_v3/features/store/controllers/date_range_controller.dart';
+import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
@@ -39,7 +39,7 @@ class CTxnsController extends GetxController {
 
   /// -- variables --
   final localStorage = GetStorage();
-  final dateRangeController = Get.put(CDateRangeController());
+  final dateRangeController = Get.put(CDateController());
   final dateRangeFieldController = TextEditingController();
 
   DbHelper dbHelper = DbHelper.instance;

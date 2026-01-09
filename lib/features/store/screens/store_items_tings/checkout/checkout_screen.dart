@@ -126,7 +126,7 @@ class CCheckoutScreen extends StatelessWidget {
                     ],
                   );
                 }),
-                // CDivider(endIndent: 200, startIndent: 0),
+
                 /// -- custom divider --
                 CCustomDivider(leftPadding: 2.0),
                 const SizedBox(height: CSizes.defaultSpace),
@@ -139,8 +139,6 @@ class CCheckoutScreen extends StatelessWidget {
                     animation: CImages.emptyCartLottie,
                     onActionBtnPressed: () {
                       navController.selectedIndex.value = 1;
-                      //AuthRepo.instance.screenRedirect();
-                      //Get.to(() => const NavMenu());
                       Get.back();
                     },
                   );
@@ -148,15 +146,10 @@ class CCheckoutScreen extends StatelessWidget {
                   if (txnsController.isLoading.value ||
                       invController.isLoading.value ||
                       invController.syncIsLoading.value) {
-                    //return const DefaultLoaderScreen();
                     return const CVerticalProductShimmer(itemCount: 7);
                   }
 
-                  // if (cartController.cartItems.isEmpty &&
-                  //     !cartController.cartItemsLoading.value) {
-                  //   cartController.fetchCartItems();
-                  // }
-
+               
                   if (cartController.cartItems.isEmpty &&
                       !cartController.cartItemsLoading.value) {
                     return noDataWidget;
@@ -434,7 +427,8 @@ class CCheckoutScreen extends StatelessWidget {
                                                           width: 32.0,
                                                           height: 32.0,
                                                           iconSize: CSizes.md,
-                                                          iconColor: CColors.white,
+                                                          iconColor:
+                                                              CColors.white,
                                                           bgColor:
                                                               CColors.rBrown,
                                                           onPressed: () {
@@ -738,10 +732,11 @@ class CCheckoutScreen extends StatelessWidget {
                         checkoutController.onCheckoutBtnPressed();
                       },
                       label: SizedBox(
-                        height: 34.1,
+                        height: 38.2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               'CHECKOUT',

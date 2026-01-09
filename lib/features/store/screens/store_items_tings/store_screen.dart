@@ -181,7 +181,7 @@ class CStoreScreen extends StatelessWidget {
                           containerWidth: 14.0,
                           counterBgColor: CColors.white,
                           counterTxtColor: CColors.rBrown,
-                          rightPosition: 75.0,
+                          rightPosition: 70.0,
                           topPosition: 12.0,
                         ),
                       ],

@@ -1,4 +1,5 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
@@ -29,7 +30,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //AddUpdateItemDialog dialog = AddUpdateItemDialog();
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final navController = Get.put(CNavMenuController());
 
@@ -498,8 +498,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           ),
                         ),
                         onTap: () async {
-                          invController.pickExpiryDate();
+                          //invController.pickExpiryDate();
+                          final dateController = Get.put(
+                            CDateController(),
+                          );
+                          dateController.showCustomSizedCupertinoDialog(
+                            Get.overlayContext!,
+                          );
                         },
+                        readOnly: true,
                         style: const TextStyle(fontWeight: FontWeight.normal),
                         // validator: (value) {
                         //   return CValidator.validateEmptyText('expiry date', value);
@@ -541,23 +548,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               .validate()) {
                             return;
                           }
-                          // if (invController.txtUnitSP.text.isNotEmpty &&
-                          //     invController.unitBP.value > 0) {
-                          //   if (invController.unitBP.value >
-                          //       double.parse(invController.txtUnitSP.text)) {
-                          //     invController.confirmInvalidUspModal(context);
-                          //     return;
-                          //   }
-                          // }
+                     
 
                           if (invController.unitBP.value >
-                              double.parse(invController.txtUnitSP.text.trim())) {
+                              double.parse(
+                                invController.txtUnitSP.text.trim(),
+                              )) {
                             invController.confirmInvalidUspModal(context);
                             return;
                           }
-
-                          // invController
-                          //     .addOrUpdateInventoryItem(inventoryItem);
 
                           if (await invController.addOrUpdateInventoryItem(
                             inventoryItem,
@@ -590,7 +589,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       icon: const Icon(
                         Iconsax.undo,
                         size: CSizes.iconSm,
-                        color: CColors.rBrown,
+                        color: CColors.error,
                       ),
                       label: Text(
                         'back',

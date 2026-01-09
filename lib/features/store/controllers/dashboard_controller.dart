@@ -64,7 +64,7 @@ class CDashboardController extends GetxController {
   void calculateCurrentWeekSales() async {
     // reset weeklySales values to zero
     weeklySales.value = List<double>.filled(7, 0.0);
-    //currentWeekSales.value = 0.0;
+    currentWeekSales.value = 0.0;
 
     txnsController.fetchSoldItems().then((result) {
       if (result.isNotEmpty) {

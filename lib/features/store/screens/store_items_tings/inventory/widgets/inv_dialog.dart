@@ -71,80 +71,44 @@ class AddUpdateItemDialog {
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
                   size: CSizes.iconLg * 1.5,
                 ),
-                // const SizedBox(
-                //   width: CSizes.spaceBtnInputFields / 2,
-                // ),
-                Obx(() {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // -- toggle entry for supplier details --
-                      CCustomSwitch(
-                        label: 'supplier details',
-                        labelColor: isDarkTheme
-                            ? CColors.darkGrey
-                            : CColors.rBrown,
-                        onValueChanged: (value) {
-                          invController.toggleSupplierDetsFieldsVisibility(
-                            value,
-                          );
-                        },
-                        switchValue: invController.includeSupplierDetails.value,
-                      ),
+                Obx(
+                  () {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // -- toggle entry for supplier details --
+                        CCustomSwitch(
+                          label: 'supplier details',
+                          labelColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown,
+                          onValueChanged: (value) {
+                            invController.toggleSupplierDetsFieldsVisibility(
+                              value,
+                            );
+                          },
+                          switchValue:
+                              invController.includeSupplierDetails.value,
+                        ),
 
-                      // -- toggle entry for expiry date --
-                      CCustomSwitch(
-                        label: 'expiry date',
-                        labelColor: isDarkTheme
-                            ? CColors.darkGrey
-                            : CColors.rBrown,
-                        onValueChanged: (value) {
-                          invController.toggleExpiryDateFieldVisibility(value);
-                        },
-                        switchValue: invController.includeExpiryDate.value,
-                      ),
-                    ],
-                  );
-                }),
-                // Visibility(
-                //   visible: invController.supplierDetailsExist.value
-                //       ? false
-                //       : true,
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       CMenuTile(
-                //         displayLeadingIcon: false,
-
-                //         title: 'supplier details',
-                //         trailing: Obx(() {
-                //           return Switch(
-                //             value: invController.includeSupplierDetails.value,
-                //             activeThumbColor: CColors.rBrown,
-                //             onChanged: (value) {
-                //               invController.toggleSupplierDetsFieldsVisibility();
-                //             },
-                //           );
-                //         }),
-                //       ),
-                //     ],
-                //   ),
-
-                //   // TextButton(
-                //   //   onPressed: () {
-                //   //     invController.toggleSupplierDetsFieldsVisibility();
-                //   //   },
-                //   //   child: Text(
-                //   //     invController.includeSupplierDetails.value
-                //   //         ? 'exclude supplier details?'
-                //   //         : 'include supplier details?',
-                //   //     style: Theme.of(
-                //   //       context,
-                //   //     ).textTheme.labelMedium!.apply(color: CColors.rBrown),
-                //   //   ),
-                //   // ),
-                // ),
+                        // -- toggle entry for expiry date --
+                        CCustomSwitch(
+                          label: 'expiry date',
+                          labelColor: isDarkTheme
+                              ? CColors.darkGrey
+                              : CColors.rBrown,
+                          onValueChanged: (value) {
+                            invController.toggleExpiryDateFieldVisibility(
+                              value,
+                            );
+                          },
+                          switchValue: invController.includeExpiryDate.value,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ],
             ),
           ),
