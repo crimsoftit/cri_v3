@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
@@ -6,11 +8,12 @@ import 'package:cri_v3/common/widgets/success_screen/txn_success.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
@@ -51,8 +54,6 @@ class CCheckoutController extends GetxController {
 
   @override
   void onInit() async {
-    //await dbHelper.openDb();
-
     amtIssuedFieldController.text = '';
     customerContactsFieldController.text = '';
     customerNameFieldController.text = '';
@@ -90,8 +91,8 @@ class CCheckoutController extends GetxController {
   final cartController = Get.put(CCartController());
   final invController = Get.put(CInventoryController());
   final navController = Get.put(CNavMenuController());
-  final notificationsController = Get.put(CNotificationsController());
-  final notServices = Get.put(CNotificationServices());
+  final notificationsController = Get.put(CLocalNotificationsController());
+  final awesomeNotificationServices = Get.put(CAwesomeNotificationServices());
   final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 
@@ -162,7 +163,6 @@ class CCheckoutController extends GetxController {
         }
 
         for (var cartItem in itemsInCart) {
-
           var saleItemUnitBP = invController.inventoryItems
               .firstWhere(
                 (item) => item.productId == cartItem.productId,
@@ -248,8 +248,14 @@ class CCheckoutController extends GetxController {
                     break;
 
                   case >= 1:
-                    alertBody =
-                        'only ${invItem.quantity} item(s) of ${invItem.name} is (are) left!!';
+                    if (invItem.quantity == 1) {
+                      alertBody =
+                          'only ${invItem.quantity} item/unit of ${invItem.name} is left!!';
+                    } else {
+                      alertBody =
+                          'only ${invItem.quantity} items/units of ${invItem.name} are left!!';
+                    }
+
                     break;
                   default:
                     alertBody = '';
@@ -258,43 +264,47 @@ class CCheckoutController extends GetxController {
                 await notificationsController.fetchUserNotifications().then((
                   _,
                 ) async {
-                  var previousAlertId =
-                      notificationsController.allNotifications.isNotEmpty
-                      ? notificationsController.allNotifications.fold(
-                          notificationsController
-                              .allNotifications
-                              .first
-                              .notificationId!,
-                          (max, element) {
-                            return element.notificationId! > max
-                                ? element.notificationId!
-                                : max;
-                          },
-                        )
-                      : 0;
-                  var thisAlertId = previousAlertId + 1;
-                  await CNotificationServices.notify(
-                    alertLayout: NotificationLayout.Inbox,
-                    notificationId: thisAlertId,
-                    body: alertBody,
-                    payload: {
-                      'notification_id': thisAlertId.toString(),
-                      'product_id': invItem.productId.toString(),
-                    },
-                    summary: 'low-stock alert!',
+                  // var previousAlertId =
+                  //     notificationsController.allNotifications.isNotEmpty
+                  //     ? notificationsController.allNotifications.fold(
+                  //         notificationsController
+                  //             .allNotifications
+                  //             .first
+                  //             .notificationId!,
+                  //         (max, element) {
+                  //           return element.notificationId! > max
+                  //               ? element.notificationId!
+                  //               : max;
+                  //         },
+                  //       )
+                  //     : 0;
+                  var thisAlertId = await notificationsController
+                      .generateNotificationId();
+                  // await CAwesomeNotificationServices.notify(
+                  //   alertLayout: NotificationLayout.Inbox,
+                  //   notificationId: thisAlertId,
+                  //   body: alertBody,
+                  //   payload: {
+                  //     'notification_id': thisAlertId.toString(),
+                  //     'product_id': invItem.productId.toString(),
+                  //   },
+                  //   summary: 'low-stock alert!',
+                  //   title: 'restocking is due!',
+                  // );
+
+                  var payloadData = {
+                    'notification_id': thisAlertId.toString(),
+                    'notification_title': 'restocking is due!',
+                    'notification_body': alertBody,
+                    'product_id': invItem.productId.toString(),
+                  };
+
+                  await CLocalNotificationsController.displaySimpleAlert(
                     title: 'restocking is due!',
+                    body: alertBody,
+                    payload: jsonEncode(payloadData),
                   );
                 });
-
-                // var alertItem = CNotificationsModel(
-                //   0,
-                //   'low stock alert',
-                //   alertBody,
-                //   0,
-                //   invItem.productId ?? 0,
-                //   userController.user.value.email,
-                //   DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
-                // );
               }
             } else {
               result = 'ERROR ADDING SALE ITEM';

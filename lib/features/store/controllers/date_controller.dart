@@ -48,83 +48,8 @@ class CDateController extends GetxController {
   }
 
   /// -- use cupertino date picker to pick dates --
-  void triggerCupertinoDatePickerRaw() {
-    final firstDate = DateTime(2010, 1);
-    final invController = Get.put(CInventoryController());
-    final lastDate = DateTime(2100, 1);
-    showCupertinoModalPopup(
-      context: Get.overlayContext!,
-      builder: (context) {
-        return CRoundedContainer(
-          bgColor: CupertinoColors.systemBackground.resolveFrom(context),
-          height: CHelperFunctions.screenHeight() * .3,
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          padding: const EdgeInsets.only(
-            top: 6,
-          ),
-          child: CupertinoDatePicker(
-            initialDateTime: DateTime.now(),
-            maximumDate: lastDate,
-            minimumDate: firstDate,
-            mode: CupertinoDatePickerMode.date,
-            onDateTimeChanged: (DateTime pickedDate) {
-              String formattedDate = DateFormat(
-                "yyyy-MM-dd",
-              ).format(pickedDate);
-              invController.txtExpiryDatePicker.text = formattedDate;
-            },
-            showDayOfWeek: true,
-            use24hFormat: true,
-          ),
-        );
-      },
-    );
-  }
 
-  void triggerCupertinoDatePicker() {
-    final firstDate = DateTime(2010, 1);
-    final invController = Get.put(CInventoryController());
-    final lastDate = DateTime(2100, 1);
-    showDialog<void>(
-      context: Get.overlayContext!,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return CRoundedContainer(
-          bgColor: CupertinoColors.systemBackground.resolveFrom(context),
-
-          height: CHelperFunctions.screenHeight() * .3,
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          padding: const EdgeInsets.only(
-            top: 6,
-          ),
-
-          child: CupertinoAlertDialog(
-            title: Text('Success!'),
-            content: CupertinoDatePicker(
-              initialDateTime: DateTime.now(),
-              maximumDate: lastDate,
-              minimumDate: firstDate,
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (DateTime pickedDate) {
-                String formattedDate = DateFormat(
-                  "yyyy-MM-dd",
-                ).format(pickedDate);
-                invController.txtExpiryDatePicker.text = formattedDate;
-              },
-              showDayOfWeek: true,
-              use24hFormat: true,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void showCustomSizedCupertinoDialog(BuildContext context) {
+  void triggerCupertinoDatePicker(BuildContext context) {
     final firstDate = DateTime(2010, 1);
     final invController = Get.put(CInventoryController());
     final lastDate = DateTime(2100, 1);
@@ -146,12 +71,12 @@ class CDateController extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CupertinoButton(
-                    child: const Text('select'),
+                  IconButton(
+                    icon: const Icon(Icons.check),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  CupertinoButton(
-                    child: const Text('cancel'),
+                  IconButton(
+                    icon: const Icon(Icons.cancel),
                     onPressed: () {
                       invController.txtExpiryDatePicker.text = '';
                       Navigator.of(context).pop();
@@ -169,7 +94,7 @@ class CDateController extends GetxController {
                 mode: CupertinoDatePickerMode.date,
                 onDateTimeChanged: (DateTime pickedDate) {
                   String formattedDate = DateFormat(
-                    "yyyy-MM-dd",
+                    "yyyy-MM-dd @ kk:mm",
                   ).format(pickedDate);
                   invController.txtExpiryDatePicker.text = formattedDate;
                 },

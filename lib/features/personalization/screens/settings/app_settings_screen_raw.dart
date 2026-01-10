@@ -24,14 +24,14 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CAppSettingsScreen extends StatefulWidget {
-  const CAppSettingsScreen({super.key});
+class CAppSettingsScreenRaw extends StatefulWidget {
+  const CAppSettingsScreenRaw({super.key});
 
   @override
-  State<CAppSettingsScreen> createState() => _CAppSettingsScreenState();
+  State<CAppSettingsScreenRaw> createState() => _CAppSettingsScreenState();
 }
 
-class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
+class _CAppSettingsScreenState extends State<CAppSettingsScreenRaw> {
   /// -- variables --
   final CAppSettingsController appSettingsController =
       Get.put<CAppSettingsController>(CAppSettingsController());

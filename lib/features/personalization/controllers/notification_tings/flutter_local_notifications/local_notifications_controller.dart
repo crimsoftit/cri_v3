@@ -1,0 +1,282 @@
+import 'dart:convert';
+
+import 'package:clock/clock.dart' show clock;
+import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/models/notification_model.dart';
+import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+class CLocalNotificationsController extends GetxController {
+  /// -- constructor --
+  static CLocalNotificationsController get instance => Get.find();
+
+  @override
+  void onInit() async {
+    await fetchUserNotifications();
+    // TODO: implement onInit
+    super.onInit();
+  }
+
+  /// -- variables --
+  DbHelper dbHelper = DbHelper.instance;
+  final isLoading = false.obs;
+  final RxBool notificationsEnabled = false.obs;
+  final RxList<CNotificationsModel> allNotifications =
+      <CNotificationsModel>[].obs;
+  final RxList<CNotificationsModel> pendingAlerts = <CNotificationsModel>[].obs;
+  final RxList<CNotificationsModel> readNotifications =
+      <CNotificationsModel>[].obs;
+  final RxList<CNotificationsModel> unreadNotifications =
+      <CNotificationsModel>[].obs;
+
+  final userController = Get.put(CUserController());
+  static final FlutterLocalNotificationsPlugin
+  _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  static final onNotificationClicked = BehaviorSubject<String>();
+
+  /// -- initialize the local notifications plugin. app_icon needs to be added as a drawable resource to the android head project --
+  static Future initLocalNotifications() async {
+    const AndroidInitializationSettings androidInitSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final DarwinInitializationSettings darwinInitializationSettings =
+        DarwinInitializationSettings();
+
+    final LinuxInitializationSettings linuxInitSettings =
+        LinuxInitializationSettings(defaultActionName: 'open notification');
+
+    final InitializationSettings initSettings = InitializationSettings(
+      android: androidInitSettings,
+      iOS: darwinInitializationSettings,
+      linux: linuxInitSettings,
+    );
+
+    _flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: onNotificationTap,
+      onDidReceiveBackgroundNotificationResponse: onNotificationTap,
+    );
+  }
+
+  /// -- display a simple/basic notification --
+  static Future displaySimpleAlert({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+          'channelId',
+          'channelName',
+          channelDescription: 'simple notification',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
+
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
+    await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      notificationDetails,
+      payload: payload,
+    );
+  }
+
+  /// -- display periodic notification at regular intervals --
+  static Future displayPeriodicNotification({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+          'channel2_Id',
+          'channel2_Name',
+          channelDescription: 'simple notification',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
+
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
+    await _flutterLocalNotificationsPlugin.periodicallyShow(
+      1,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      title,
+      body,
+      RepeatInterval.everyMinute,
+      notificationDetails,
+      payload: payload,
+    );
+  }
+
+  /// -- trigger a scheduled local notification --
+  static Future triggerScheduledNotification({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    tz.initializeTimeZones();
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      3,
+      title,
+      body,
+      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'channel 3',
+          'channelName',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: payload,
+    );
+  }
+
+  /// -- cancel/close a specific channel notification --
+  static Future closeNotification(int id) async {
+    await _flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  /// -- cancel/close all notifications --
+  static Future closeAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  /// -- what ought to happen when a notification is clicked --
+  static Future<void> onNotificationTap(
+    NotificationResponse alertResponse,
+  ) async {
+    try {
+      onNotificationClicked.add(alertResponse.payload!);
+
+      if (alertResponse.payload != null) {
+        // -- decode payload --
+        Map<String, dynamic> payloadData = jsonDecode(alertResponse.payload!);
+        final userController = Get.put(CUserController());
+
+        var notificationItem = CNotificationsModel.withId(
+          payloadData['notification_id'] != null
+              ? int.parse(payloadData['notification_id'])
+              : 0,
+          1,
+          payloadData['notification_title'],
+          payloadData['notification_body'],
+
+          1,
+          payloadData['product_id'] != null ? int.parse(payloadData['product_id']) : 0,
+          userController.user.value.email,
+          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+        );
+
+        // -- insert notification item into sqflite db --
+        await DbHelper.instance.addNotificationItem(notificationItem);
+
+        // -- refresh list --
+      }
+
+      if (kDebugMode) {
+        print('notification payload: ${alertResponse.payload}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error handling notification tap: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error handling notification tap!',
+          message: 'error handling notification tap: $e',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  /// -- fetch user notifications from local db --
+  Future<List<CNotificationsModel>> fetchUserNotifications() async {
+    try {
+      // -- start loader --
+      isLoading.value = true;
+
+      // -- query local db for notifications --
+      var fetchedNotifications = await dbHelper.fetchUserNotifications(
+        userController.user.value.email,
+      );
+
+      // -- assign fetchedNotifications to allNotifications list --
+      allNotifications.assignAll(fetchedNotifications);
+
+      // -- assign read notifications to readNotifications list
+      var readNots = allNotifications
+          .where((readNotification) => readNotification.notificationIsRead == 1)
+          .toList();
+
+      readNotifications.assignAll(readNots);
+
+      // -- assign read notifications to readNotifications list
+      var unreadNots = allNotifications
+          .where(
+            (unreadNotification) => unreadNotification.notificationIsRead == 0,
+          )
+          .toList();
+
+      unreadNotifications.assignAll(unreadNots);
+
+      // -- assign pending notifications --
+      var pendingNots = allNotifications
+          .where((pendingNot) => pendingNot.alertCreated == 0)
+          .toList();
+      pendingAlerts.assignAll(pendingNots);
+
+      // -- stop loader --
+      isLoading.value = false;
+
+      return allNotifications;
+    } catch (e) {
+      // -- stop loader --
+      isLoading.value = false;
+
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+      }
+
+      rethrow;
+    }
+  }
+
+  /// -- generate notification id --
+  Future<int> generateNotificationId() async {
+    
+    var previousAlertId = allNotifications.isNotEmpty
+        ? allNotifications.fold(allNotifications.first.notificationId!, (
+            max,
+            element,
+          ) {
+            return element.notificationId! > max
+                ? element.notificationId!
+                : max;
+          })
+        : 0;
+    var thisAlertId = previousAlertId + 1;
+    return thisAlertId;
+  }
+}

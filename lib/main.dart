@@ -1,8 +1,8 @@
 import 'package:cri_v3/api/mpesa_tings/creds/mpesa_api_creds.dart';
 import 'package:cri_v3/app.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/firebase_options.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +27,12 @@ Future<void> main() async {
   MpesaFlutterPlugin.setConsumerKey(CMpesaApiCreds.consumerKey);
   MpesaFlutterPlugin.setConsumerSecret(CMpesaApiCreds.consumerSecret);
 
-  /// -- initialize spreadsheets --
-  // if (CNetworkManager.instance.hasConnection.value) {
-  //   await StoreSheetsApi.initSpreadSheets();
-  // }
-  //await StoreSheetsApi.initSpreadSheets();
-
+ 
   /// -- initialize awesome notifications --
-  await CNotificationServices.initializeNotifications();
+  //await CAwesomeNotificationServices.initializeNotifications();
+
+  /// -- initialize flutter local notifications plugin --
+  CLocalNotificationsController.initLocalNotifications();
 
   /// -- init local storage (GetX Local Storage) --
   await GetStorage.init();

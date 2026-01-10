@@ -22,6 +22,7 @@ import 'package:cri_v3/utils/local_storage/storage_utility.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -85,8 +86,6 @@ class AuthRepo extends GetxController {
             await StoreSheetsApi.initSpreadSheets();
           }
 
-          // DbHelper dbHelper = DbHelper.instance;
-          // await dbHelper.openDb();
           final invController = Get.put(CInventoryController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status
@@ -101,10 +100,17 @@ class AuthRepo extends GetxController {
             final navController = Get.put(CNavMenuController());
 
             navController.selectedIndex.value = 1;
-            Future.delayed(const Duration(milliseconds: 100), () {
-              //Get.to(() => const NavMenu());
-              Get.offAll(() => const NavMenu());
-            });
+            Future.delayed(
+              Duration.zero,
+              () {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    Get.offAll(() => const NavMenu());
+                  },
+                );
+              },
+            );
+            //Get.offAll(() => const NavMenu());
           } else {
             if (kDebugMode) {
               print('error fetching user details!!');

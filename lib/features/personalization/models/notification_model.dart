@@ -45,6 +45,10 @@ class CNotificationsModel {
   String get userEmail => _userEmail;
   String get date => _date;
 
+  set notificationId(int? newId) {
+    _notificationId = newId;
+  }
+
   set alertCreated(int newAlertCreated) {
     _alertCreated = newAlertCreated;
   }

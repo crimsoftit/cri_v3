@@ -138,6 +138,7 @@ dependencies:
   logger: any
   lottie: any
   path_provider: any
+  rxdart: ^0.28.0
   syncfusion_flutter_datepicker: ^31.2.18
   timezone: any
   url_launcher: any

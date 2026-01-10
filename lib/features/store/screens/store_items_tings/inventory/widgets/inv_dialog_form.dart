@@ -498,19 +498,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           ),
                         ),
                         onTap: () async {
-                          //invController.pickExpiryDate();
                           final dateController = Get.put(
                             CDateController(),
                           );
-                          dateController.showCustomSizedCupertinoDialog(
+                          dateController.triggerCupertinoDatePicker(
                             Get.overlayContext!,
                           );
                         },
                         readOnly: true,
                         style: const TextStyle(fontWeight: FontWeight.normal),
-                        // validator: (value) {
-                        //   return CValidator.validateEmptyText('expiry date', value);
-                        // },
                       ),
                     ),
                   ],

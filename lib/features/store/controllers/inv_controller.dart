@@ -1,6 +1,6 @@
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
@@ -35,7 +35,7 @@ class CInventoryController extends GetxController {
 
   DbHelper dbHelper = DbHelper.instance;
 
-  final alertServices = Get.put(CNotificationServices());
+  final alertServices = Get.put(CAwesomeNotificationServices());
   final cartController = Get.put(CCartController());
 
   final RxBool isImportingInvCloudData = false.obs;
@@ -88,8 +88,6 @@ class CInventoryController extends GetxController {
 
   @override
   void onInit() async {
-    //dbHelper.openDb();
-
     await fetchUserInventoryItems();
 
     fetchInvDels();
@@ -161,9 +159,6 @@ class CInventoryController extends GetxController {
       // start loader while products are fetched
       isLoading.value = true;
       foundInventoryItems.clear();
-
-      //await dbHelper.openDb();
-
       // fetch items from sqflite db
       final fetchedItems = await dbHelper.fetchInventoryItems(
         userController.user.value.email,
@@ -1028,16 +1023,9 @@ class CInventoryController extends GetxController {
 
   Future<List<CInvDelsModel>> fetchInvDels() async {
     try {
-      //await dbHelper.openDb();
-
       final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
 
-      // if (dItems.isEmpty) {
-      //   return {[]};
-      // } else {
-      //   return dItems;
-      // }
       return dItems.toList();
     } catch (e) {
       if (kDebugMode) {
@@ -1057,7 +1045,6 @@ class CInventoryController extends GetxController {
       // -- start loader --
       syncingInvDeletions.value = true;
 
-      //await dbHelper.openDb();
       // -- check internet connectivity
       final isConnectedToInternet = await CNetworkManager.instance
           .isConnected();
@@ -1099,8 +1086,6 @@ class CInventoryController extends GetxController {
   /// -- fetch items with pending updates --
   Future<List<CInvDelsModel>> fetchInvUpdates() async {
     try {
-      //await dbHelper.openDb();
-
       final pUpdates = await dbHelper.fetchAllInvUpdates();
       pendingUpdates.assignAll(pUpdates);
 

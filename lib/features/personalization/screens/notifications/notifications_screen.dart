@@ -1,9 +1,10 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'dart:convert';
+
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -21,23 +22,23 @@ class CNotificationsScreen extends StatefulWidget {
 class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   void initState() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      } else {
-        Get.put<CNotificationServices>(CNotificationServices());
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     // This is just a basic example. For real apps, you must show some
+    //     // friendly dialog box before call the request method.
+    //     // This is very important to not harm the user experience
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   } else {
+    //     Get.put<CNotificationServices>(CNotificationServices());
+    //   }
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    //final notsController = Get.put(CNotificationsController());
+    final notsController = Get.put(CLocalNotificationsController());
     // final notServices = Get.put(CNotificationServices());
     final userController = Get.put(CUserController());
 
@@ -124,6 +125,29 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                 //   },
                 //   child: Text('instant notifications'),
                 // ),
+                FilledButton(
+                  onPressed: () async {
+                    await notsController.fetchUserNotifications().then(
+                      (_) async {
+                        var thisAlertId = await notsController
+                            .generateNotificationId();
+
+                        var payloadData = {
+                          'notification_id': thisAlertId.toString(),
+                          'notification_title': 'notification title',
+                          'notification_body': 'notification body',
+                          'product_id': '102456',
+                        };
+                        await CLocalNotificationsController.displaySimpleAlert(
+                          body: 'body',
+                          payload: jsonEncode(payloadData),
+                          title: 'basic notification',
+                        );
+                      },
+                    );
+                  },
+                  child: Text('basic local notification'),
+                ),
               ],
             ),
           ),

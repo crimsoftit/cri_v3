@@ -1,4 +1,4 @@
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';

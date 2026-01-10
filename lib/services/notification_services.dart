@@ -1,5 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cri_v3/features/personalization/controllers/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
@@ -11,9 +11,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CNotificationServices extends GetxController {
-  static CNotificationServices get instance =>
-      Get.find<CNotificationServices>();
+class CAwesomeNotificationServices extends GetxController {
+  static CAwesomeNotificationServices get instance =>
+      Get.find<CAwesomeNotificationServices>();
 
   /// -- variables --
 
