@@ -1,5 +1,5 @@
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/screens/no_data/no_data_screen.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
@@ -18,7 +18,7 @@ class CAlertsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
-    final notsController = Get.put(CNotificationsController());
+    final notsController = Get.put(CLocalNotificationsController());
 
     var items = notsController.allNotifications;
 

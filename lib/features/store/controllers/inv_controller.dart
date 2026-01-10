@@ -1,6 +1,6 @@
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
@@ -78,7 +78,7 @@ class CInventoryController extends GetxController {
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
-  final notificationsController = Get.put(CNotificationsController());
+  final notificationsController = Get.put(CLocalNotificationsController());
   final isLoading = false.obs;
   final syncIsLoading = false.obs;
 

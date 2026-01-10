@@ -248,45 +248,6 @@ class CNotificationsController extends GetxController {
     }
   }
 
-  onDeleteBtnPressed(CNotificationsModel item) async {
-    deleteNotification(item);
-  }
-
-  /// -- delete notification from from local db --
-  Future<void> deleteNotification(CNotificationsModel item) async {
-    try {
-      // -- start loader
-      isLoading.value = true;
-
-      // -- delete entry
-      await dbHelper.deleteNotification(item);
-
-      // -- refresh notifications list
-      fetchUserNotifications();
-
-      // -- stop loader
-      isLoading.value = false;
-    } catch (e) {
-      // -- stop loader
-      isLoading.value = false;
-      if (kDebugMode) {
-        print(e.toString());
-        CPopupSnackBar.errorSnackBar(
-          title: 'error deleting notification!',
-          message: e.toString(),
-        );
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'error deleting notification!',
-          message:
-              'an unknown error occurred while deleting this notification... please try again later!',
-        );
-      }
-
-      rethrow;
-    }
-  }
-
   /// -- request notification permissions --
   Future<void> requestNotificationPermissions(bool value) async {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {

@@ -1,8 +1,8 @@
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_counter_widget.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -23,7 +23,7 @@ class NavMenu extends StatelessWidget {
     final invController = Get.put(CInventoryController());
 
     final navController = Get.put(CNavMenuController());
-    final notsController = Get.put(CNotificationsController());
+    final notsController = Get.put(CLocalNotificationsController());
     final searchController = Get.put(CSearchBarController());
 
     Future.delayed(Duration(milliseconds: 200), () {

@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:clock/clock.dart' show clock;
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
+import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
+import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -27,6 +30,7 @@ class CLocalNotificationsController extends GetxController {
   /// -- variables --
   DbHelper dbHelper = DbHelper.instance;
   final isLoading = false.obs;
+
   final RxBool notificationsEnabled = false.obs;
   final RxList<CNotificationsModel> allNotifications =
       <CNotificationsModel>[].obs;
@@ -184,7 +188,9 @@ class CLocalNotificationsController extends GetxController {
           payloadData['notification_body'],
 
           1,
-          payloadData['product_id'] != null ? int.parse(payloadData['product_id']) : 0,
+          payloadData['product_id'] != null
+              ? int.parse(payloadData['product_id'])
+              : 0,
           userController.user.value.email,
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
         );
@@ -192,7 +198,11 @@ class CLocalNotificationsController extends GetxController {
         // -- insert notification item into sqflite db --
         await DbHelper.instance.addNotificationItem(notificationItem);
 
-        // -- refresh list --
+        // -- redirect screens accrodingly --
+
+        final navController = Get.put(CNavMenuController());
+        navController.selectedIndex.value = 4;
+        Get.offAll(() => const NavMenu());
       }
 
       if (kDebugMode) {
@@ -265,7 +275,6 @@ class CLocalNotificationsController extends GetxController {
 
   /// -- generate notification id --
   Future<int> generateNotificationId() async {
-    
     var previousAlertId = allNotifications.isNotEmpty
         ? allNotifications.fold(allNotifications.first.notificationId!, (
             max,
@@ -278,5 +287,59 @@ class CLocalNotificationsController extends GetxController {
         : 0;
     var thisAlertId = previousAlertId + 1;
     return thisAlertId;
+  }
+
+  onDeleteBtnPressed(CNotificationsModel item) async {
+    deleteNotification(item);
+  }
+
+  /// -- delete notification from from local db --
+  Future<void> deleteNotification(CNotificationsModel item) async {
+    try {
+      // -- start loader
+      isLoading.value = true;
+
+      // -- delete entry
+      await dbHelper.deleteNotification(item);
+
+      // -- refresh notifications list
+      fetchUserNotifications();
+
+      // -- stop loader
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader
+      isLoading.value = false;
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting notification!',
+          message: e.toString(),
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting notification!',
+          message:
+              'an unknown error occurred while deleting this notification... please try again later!',
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  Future<void> requestNotificationPermissions(bool value) async {
+    final PermissionStatus status = await Permission.notification.request();
+
+    if (value) {
+      if (status.isGranted) {
+        // Notification permissions granted
+      } else if (status.isDenied) {
+        // Notification permissions denied
+      } else if (status.isPermanentlyDenied) {
+        // Notification permissions permanently denied, open app settings
+        await openAppSettings();
+      }
+    }
   }
 }

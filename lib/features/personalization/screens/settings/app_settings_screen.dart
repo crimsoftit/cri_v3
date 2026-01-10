@@ -6,7 +6,7 @@ import 'package:cri_v3/data/repos/auth/auth_repo.dart';
 import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/camera_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/screens/location_tings/widgets/device_settings_btn.dart';
 import 'package:cri_v3/main.dart';
 import 'package:cri_v3/services/location_services.dart';
@@ -43,8 +43,8 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
   final CLocationController locationController = Get.put<CLocationController>(
     CLocationController(),
   );
-  final notificationsController = Get.put<CNotificationsController>(
-    CNotificationsController(),
+  final notificationsController = Get.put<CLocalNotificationsController>(
+    CLocalNotificationsController(),
   );
 
   @override

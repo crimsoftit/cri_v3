@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -13,7 +12,6 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
@@ -261,50 +259,25 @@ class CCheckoutController extends GetxController {
                     alertBody = '';
                 }
 
-                await notificationsController.fetchUserNotifications().then((
-                  _,
-                ) async {
-                  // var previousAlertId =
-                  //     notificationsController.allNotifications.isNotEmpty
-                  //     ? notificationsController.allNotifications.fold(
-                  //         notificationsController
-                  //             .allNotifications
-                  //             .first
-                  //             .notificationId!,
-                  //         (max, element) {
-                  //           return element.notificationId! > max
-                  //               ? element.notificationId!
-                  //               : max;
-                  //         },
-                  //       )
-                  //     : 0;
-                  var thisAlertId = await notificationsController
-                      .generateNotificationId();
-                  // await CAwesomeNotificationServices.notify(
-                  //   alertLayout: NotificationLayout.Inbox,
-                  //   notificationId: thisAlertId,
-                  //   body: alertBody,
-                  //   payload: {
-                  //     'notification_id': thisAlertId.toString(),
-                  //     'product_id': invItem.productId.toString(),
-                  //   },
-                  //   summary: 'low-stock alert!',
-                  //   title: 'restocking is due!',
-                  // );
+                await notificationsController.fetchUserNotifications().then(
+                  (_) async {
+                    var thisAlertId = await notificationsController
+                        .generateNotificationId();
 
-                  var payloadData = {
-                    'notification_id': thisAlertId.toString(),
-                    'notification_title': 'restocking is due!',
-                    'notification_body': alertBody,
-                    'product_id': invItem.productId.toString(),
-                  };
+                    var payloadData = {
+                      'notification_id': thisAlertId.toString(),
+                      'notification_title': 'restocking is due!',
+                      'notification_body': alertBody,
+                      'product_id': invItem.productId.toString(),
+                    };
 
-                  await CLocalNotificationsController.displaySimpleAlert(
-                    title: 'restocking is due!',
-                    body: alertBody,
-                    payload: jsonEncode(payloadData),
-                  );
-                });
+                    await CLocalNotificationsController.displaySimpleAlert(
+                      title: 'restocking is due!',
+                      body: alertBody,
+                      payload: jsonEncode(payloadData),
+                    );
+                  },
+                );
               }
             } else {
               result = 'ERROR ADDING SALE ITEM';
@@ -329,7 +302,6 @@ class CCheckoutController extends GetxController {
 
               if (internetIsConnected &&
                   appSettingsController.dataSyncIsOn.value) {
-                //await syncController.processSync();
                 if (await syncController.processSync()) {
                   await txnsController.fetchSoldItems();
                   await invController.fetchUserInventoryItems();
@@ -340,15 +312,6 @@ class CCheckoutController extends GetxController {
                     await syncController.processSync();
                   }
                 }
-                // else {
-                //   if (kDebugMode) {
-                //     print('error processing cloud sync on checkout!');
-                //     CPopupSnackBar.errorSnackBar(
-                //       title: 'error processing cloud sync on checkout!',
-                //       message: 'error processing cloud sync on checkout!',
-                //     );
-                //   }
-                // }
               } else {
                 if (!internetIsConnected &&
                     appSettingsController.dataSyncIsOn.value) {
@@ -358,13 +321,6 @@ class CCheckoutController extends GetxController {
                     forInternetConnectivityStatus: true,
                   );
                 }
-                // else {
-                //   CPopupSnackBar.warningSnackBar(
-                //     title: 'auto-sync is off',
-                //     message:
-                //         'data auto-synchronization is turned off in you account settings!',
-                //   );
-                // }
               }
               refreshData();
             },

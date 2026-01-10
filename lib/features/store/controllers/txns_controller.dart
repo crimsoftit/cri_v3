@@ -4,7 +4,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/awesome_notifications/notifications_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/date_controller.dart';
@@ -118,7 +118,7 @@ class CTxnsController extends GetxController {
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
   final invController = Get.put(CInventoryController());
-  final notsController = Get.put(CNotificationsController());
+  final notsController = Get.put(CLocalNotificationsController());
   final txnsFormKey = GlobalKey<FormState>();
 
   @override
