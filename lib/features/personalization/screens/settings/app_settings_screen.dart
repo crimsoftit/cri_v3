@@ -10,7 +10,6 @@ import 'package:cri_v3/features/personalization/controllers/notification_tings/f
 import 'package:cri_v3/features/personalization/screens/location_tings/widgets/device_settings_btn.dart';
 import 'package:cri_v3/main.dart';
 import 'package:cri_v3/services/location_services.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/services/permission_provider.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -51,7 +50,6 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
   void initState() {
     super.initState();
 
-    Get.put<CAwesomeNotificationServices>(CAwesomeNotificationServices());
     _permissionStatusStream = StreamController<PermissionStatus>();
     _appCycleStateStream = StreamController<AppLifecycleState>();
     _listener = AppLifecycleListener(

@@ -26,14 +26,20 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
     return Column(
       children: [
         CSectionHeading(
-          showActionBtn: true,
+          showActionBtn: false,
           title: 'weekly sales...',
-          // txtColor: CColors.white,
-          txtColor: CColors.rBrown,
+          txtColor: CNetworkManager.instance.hasConnection.value
+              ? CColors.rBrown
+              : CColors.darkGrey,
+
           btnTitle: '',
-          btnTxtColor: CColors.grey,
+          btnTxtColor: CColors.rBrown,
           editFontSize: true,
+          fWeight: FontWeight.w400,
           onPressed: () {},
+        ),
+        const SizedBox(
+          height: CSizes.defaultSpace / 2,
         ),
 
         Obx(
@@ -51,6 +57,7 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
               padding: const EdgeInsets.only(
                 top: 15.0,
               ),
+              //width: CHelperFunctions.screenWidth() * .5,
               child: Column(
                 children: [
                   SizedBox(
@@ -58,70 +65,6 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                     height: 55.0,
                     child: Stack(
                       children: [
-                        // dashboardController.currentWeekSales.value > 0 &&
-                        //         dashboardController.lastWeekSales.value > 0
-                        //     ? Column(
-                        //         children: [
-                        //           Positioned(
-                        //             right: 0,
-                        //             top: 10.0,
-                        //             child:
-                        //                 dashboardController
-                        //                         .weeklyPercentageChange
-                        //                         .value >=
-                        //                     0.0
-                        //                 ? Icon(
-                        //                     Iconsax.trend_up,
-                        //                     color: Colors.green,
-                        //                     size: CSizes.iconMd,
-                        //                   )
-                        //                 : Icon(
-                        //                     Iconsax.trend_down,
-                        //                     color: Colors.red,
-                        //                     size: CSizes.iconMd,
-                        //                   ),
-                        //           ),
-                        //           Positioned(
-                        //             top: 0,
-                        //             right: 27.0,
-                        //             child: Text(
-                        //               'trend:${dashboardController.weeklyPercentageChange.value.toStringAsFixed(2)}%',
-                        //               style: Theme.of(context)
-                        //                   .textTheme
-                        //                   .labelMedium!
-                        //                   .apply(
-                        //                     color:
-                        //                         dashboardController
-                        //                                 .weeklyPercentageChange
-                        //                                 .value <
-                        //                             0
-                        //                         ? Colors.redAccent
-                        //                         : dashboardController
-                        //                                   .weeklyPercentageChange
-                        //                                   .value ==
-                        //                               0.0
-                        //                         ? CColors.rBrown
-                        //                         : Colors.green,
-                        //                   ),
-                        //             ),
-                        //           ),
-                        //           Positioned(
-                        //             top: 15.0,
-                        //             right: 27.0,
-                        //             child: Text(
-                        //               '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
-                        //               style: Theme.of(context)
-                        //                   .textTheme
-                        //                   .labelSmall!
-                        //                   .apply(
-                        //                     color: CColors.rBrown,
-                        //                     fontStyle: FontStyle.italic,
-                        //                   ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       )
-                        //     : SizedBox.shrink(),
                         Positioned(
                           top:
                               dashboardController.currentWeekSales.value > 0 &&
@@ -179,6 +122,7 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
+                    //width: CHelperFunctions.screenWidth() * .5,
                     height: 200.0,
                     child: BarChart(
                       BarChartData(
@@ -192,9 +136,9 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                         ),
                         gridData: FlGridData(
                           show: true,
-                          drawHorizontalLine: true,
+                          drawHorizontalLine: false,
                           drawVerticalLine: false,
-                          horizontalInterval: 200,
+                          horizontalInterval: 100,
                         ),
                         barGroups: dashboardController.weeklySales
                             .asMap()
@@ -204,13 +148,13 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                                 x: entry.key,
                                 barRods: [
                                   BarChartRodData(
-                                    width: 25.0,
+                                    width: 10.0,
                                     toY: entry.value,
                                     color: isConnectedToInternet
                                         ? CColors.rBrown
                                         : CColors.darkerGrey,
                                     borderRadius: BorderRadius.circular(
-                                      CSizes.sm,
+                                      CSizes.sm / 4,
                                     ),
                                   ),
                                 ],

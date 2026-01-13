@@ -7,7 +7,6 @@ import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
@@ -35,7 +34,7 @@ class CInventoryController extends GetxController {
 
   DbHelper dbHelper = DbHelper.instance;
 
-  final alertServices = Get.put(CAwesomeNotificationServices());
+  //final alertServices = Get.put(CAwesomeNotificationServices());
   final cartController = Get.put(CCartController());
 
   final RxBool isImportingInvCloudData = false.obs;
@@ -46,16 +45,24 @@ class CInventoryController extends GetxController {
   final RxBool supplierDetailsExist = false.obs;
   final RxBool syncingInvDeletions = false.obs;
 
+  // -- double values --
+  final RxDouble lowStockItemsValue = 0.0.obs;
   final RxDouble unitBP = 0.0.obs;
   final RxDouble totalInventoryValue = 0.0.obs;
+  
 
-  final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
-  final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
-
-  final RxList<CInvDelsModel> dItems = <CInvDelsModel>[].obs;
-  final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
+  // -- lists --
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
+  final RxList<CInvDelsModel> dItems = <CInvDelsModel>[].obs;
+  final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> lowStockItems = <CInventoryModel>[].obs;
+  
+
+  
+  final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
+  
   // final RxList<CInventoryModel> invTopSellers = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
@@ -63,8 +70,11 @@ class CInventoryController extends GetxController {
 
   final RxString scanResults = ''.obs;
 
+  // -- integers --
   final RxInt currentItemId = 0.obs;
+  final RxInt lowStockItemsCount = 0.obs;
 
+  // -- text controllers --
   final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
   final txtNameController = TextEditingController();
@@ -121,36 +131,7 @@ class CInventoryController extends GetxController {
     }
 
     /// TODO:-- schedule notifications for items nearing expiry date (NOT HERE - CAUSES SYSTEM CRASH) --
-    // var itemsWithShelfLife = inventoryItems
-    //     .where(
-    //       (item) =>
-    //           item.expiryDate != '' &&
-    //           CFormatter.formatTimeRangeFromNow(
-    //             item.expiryDate.replaceAll('@ ', ''),
-    //           ).toString().contains('in'),
-    //     )
-    //     .toList();
-
-    // for (var item in itemsWithShelfLife) {
-    //   alertServices.createScheduledNotification(
-    //     id: await notificationsController.generateNotificationId(),
-    //     title: '',
-    //     body:
-    //         '${item.name} is nearing its expiry date! Please check your inventory to take necessary action.',
-    //     expiryDate: item.expiryDate.toString().contains('@')
-    //         ? DateTime.parse(item.expiryDate.replaceAll(' @ ', ' '))
-    //         : DateTime.parse(item.expiryDate),
-    //     notificationTimeInDays: int.fromEnvironment(
-    //       'NOTIFICATION_TIME_INTERVAL_IN_DAYS',
-    //       defaultValue: 4,
-    //     ),
-    //   );
-    //   if (kDebugMode) {
-    //     print(
-    //       'scheduling notification for item: ${item.name} with expiry date: ${item.expiryDate}',
-    //     );
-    //   }
-    // }
+   
   }
 
   /// -- fetch list of inventory items from sqflite db --
@@ -185,6 +166,13 @@ class CInventoryController extends GetxController {
           .where(
             (updateItem) =>
                 updateItem.syncAction.toLowerCase().contains('update'),
+          )
+          .toList();
+      
+      // -- assign low stock items --
+      lowStockItems.value = inventoryItems
+          .where(
+            (item) => item.quantity <= item.lowStockNotifierLimit,
           )
           .toList();
 
@@ -518,14 +506,7 @@ class CInventoryController extends GetxController {
       // -- stop loader
       isLoading.value = false;
 
-      // -- success message
-      // CPopupSnackBar.successSnackBar(
-      //   title: 'update success',
-      //   message: '${inventoryItem.name} updated successfully...',
-      // );
-
-      // -- stop loader
-      //isLoading.value = false;
+      
     } catch (e) {
       // -- stop loader
       isLoading.value = false;
@@ -595,70 +576,6 @@ class CInventoryController extends GetxController {
       rethrow;
     }
   }
-
-  // /// -- delete inventory item entry --
-  // Future<void> deleteInventoryItem(CInventoryModel inventoryItem) async {
-  //   try {
-  //     // -- start loader
-  //     isLoading.value = true;
-
-  //     // -- delete entry
-  //     await dbHelper.deleteInventoryItem(inventoryItem).then((result) async {
-  //       if (result == 1) {
-  //         var cartItemsToDelete = cartController.cartItems
-  //             .where(
-  //               (cartItem) =>
-  //                   cartItem.productId == inventoryItem.productId,
-  //             )
-  //             .toList();
-  //         if (cartItemsToDelete.isNotEmpty) {
-  //           cartController.cartItems.removeAt(inventoryItem[index]);
-  //       qtyFieldControllers.removeAt(itemIndex);
-  //           Future.delayed(Duration.zero, () {
-  //             WidgetsBinding.instance.addPostFrameCallback((_) {
-  //               cartController.updateCartTotals();
-  //               cartController.fetchCartItems();
-  //             });
-  //           });
-
-  //         }
-
-  //         // -- refresh inventory list
-  //     fetchUserInventoryItems();
-
-  //     searchController.txtSearchField.text = '';
-
-  //     // -- stop loader
-  //     isLoading.value = false;
-
-  //       }
-  //     });
-
-  //     // -- success message
-  //     CPopupSnackBar.successSnackBar(
-  //       title: 'delete success',
-  //       message: '${inventoryItem.name} deleted successfully...',
-  //     );
-  //   } catch (e) {
-  //     // -- stop loader
-  //     isLoading.value = false;
-
-  //     if (kDebugMode) {
-  //       print(e.toString());
-  //       CPopupSnackBar.errorSnackBar(
-  //         title: 'error deleting data',
-  //         message: e.toString(),
-  //       );
-  //     } else {
-  //       CPopupSnackBar.errorSnackBar(
-  //         title: 'error deleting data',
-  //         message: 'unable to delete this item... please try again later!',
-  //       );
-  //     }
-
-  //     rethrow;
-  //   }
-  // }
 
   /// -- add or update inventory item using sqflite
   Future<bool> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
@@ -930,15 +847,6 @@ class CInventoryController extends GetxController {
       if (kDebugMode) {
         print("----------\n\n $userGSheetData \n\n ----------");
       }
-      // } else {
-      //   if (kDebugMode) {
-      //     print('internet connection required for inventory cloud sync');
-      //     CPopupSnackBar.customToast(
-      //       message: 'internet connection required for inventory cloud sync',
-      //       forInternetConnectivityStatus: false,
-      //     );
-      //   }
-      // }
       isImportingInvCloudData.value = false;
       return true;
     } catch (e) {
@@ -953,74 +861,8 @@ class CInventoryController extends GetxController {
       throw e.toString();
     }
   }
-  // Future<bool> importInvDataFromCloud() async {
-  //   try {
-  //     isImportingInvCloudData.value = true;
 
-  //     // -- check internet connectivity
-
-  //     if (await CNetworkManager.instance.isConnected()) {
-  //       await fetchUserInvSheetData();
-  //       if (userGSheetData.isNotEmpty) {
-  //         for (var element in userGSheetData) {
-  //           var dbData = CInventoryModel.withID(
-  //             element.productId,
-  //             element.userId,
-  //             element.userEmail,
-  //             element.userName,
-  //             element.pCode,
-  //             element.name,
-  //             element.markedAsFavorite,
-  //             element.quantity,
-  //             element.qtySold,
-  //             element.qtyRefunded,
-  //             element.buyingPrice,
-  //             element.unitBp,
-  //             element.unitSellingPrice,
-  //             element.lowStockNotifierLimit,
-  //             element.supplierName,
-  //             element.supplierContacts,
-  //             element.dateAdded,
-  //             element.lastModified,
-  //             element.isSynced,
-  //             element.syncAction,
-  //           );
-
-  //           // -- save imported data to local sqflite database --
-  //           dbHelper.addInventoryItem(dbData);
-
-  //           // -- fetch inventory items --
-  //           await fetchUserInventoryItems();
-  //         }
-  //       }
-
-  //       if (kDebugMode) {
-  //         print("----------\n\n $userGSheetData \n\n ----------");
-  //       }
-  //     } else {
-  //       if (kDebugMode) {
-  //         print('internet connection required for inventory cloud sync');
-  //         CPopupSnackBar.customToast(
-  //           message: 'internet connection required for inventory cloud sync',
-  //           forInternetConnectivityStatus: false,
-  //         );
-  //       }
-  //     }
-  //     isImportingInvCloudData.value = false;
-  //     return true;
-  //   } catch (e) {
-  //     isImportingInvCloudData.value = false;
-  //     if (kDebugMode) {
-  //       print('ERROR IMPORTING inventory DATA FROM CLOUD: $e');
-  //       CPopupSnackBar.errorSnackBar(
-  //         title: 'ERROR IMPORTING inventory DATA FROM CLOUD!',
-  //         message: e.toString(),
-  //       );
-  //     }
-  //     throw e.toString();
-  //   }
-  // }
-
+  /// -- fetch items with pending deletions --
   Future<List<CInvDelsModel>> fetchInvDels() async {
     try {
       final dels = await dbHelper.fetchAllInvDels();
@@ -1353,13 +1195,21 @@ class CInventoryController extends GetxController {
   /// -- initialize inventory summary --
   Future<void> initializeInventorySummary() async {
     try {
-      // -- compute total stock value --
-
       if (inventoryItems.isNotEmpty) {
+
+        // -- total value of items in inventory --
         totalInventoryValue.value = inventoryItems
             .where((invItem) => invItem.quantity >= 1)
             .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+
+        // -- total count and value of low stock items in inventory --
+        lowStockItemsCount.value = lowStockItems.length;
+        lowStockItemsValue.value = lowStockItems
+            .where((item) => item.quantity >= 1)
+            .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
       }
+
+      
     } catch (e) {
       if (kDebugMode) {
         print('error initializing inventory summary: $e');

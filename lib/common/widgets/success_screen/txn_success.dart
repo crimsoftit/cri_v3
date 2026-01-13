@@ -31,7 +31,6 @@ class CTxnSuccessScreen extends StatelessWidget {
     final syncController = Get.put(CSyncController());
     final userController = Get.put(CUserController());
 
-
     return Obx(() {
       return Scaffold(
         appBar: CVersion2AppBar(autoImplyLeading: false),
@@ -123,18 +122,25 @@ class CTxnSuccessScreen extends StatelessWidget {
                   //         ),
                   //       ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Obx(() {
-                    return CCustomSwitch(
-                      label: 'auto-sync data',
-                      onValueChanged: (syncValue) {
-                        appSettingsController.toggleSyncSettings(syncValue);
-                      },
-                      switchValue: appSettingsController.dataSyncIsOn.value,
-                    );
-                  }),
-                ),
+                syncController.processingSync.value
+                    ? const SizedBox.shrink()
+                    : Align(
+                        alignment: Alignment.bottomRight,
+                        child: Obx(
+                          () {
+                            return CCustomSwitch(
+                              label: 'auto-sync data',
+                              onValueChanged: (syncValue) {
+                                appSettingsController.toggleSyncSettings(
+                                  syncValue,
+                                );
+                              },
+                              switchValue:
+                                  appSettingsController.dataSyncIsOn.value,
+                            );
+                          },
+                        ),
+                      ),
               ],
             ),
           ),

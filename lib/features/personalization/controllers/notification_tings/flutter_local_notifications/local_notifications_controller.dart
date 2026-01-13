@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:clock/clock.dart' show clock;
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
@@ -10,7 +9,6 @@ import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -171,14 +169,15 @@ class CLocalNotificationsController extends GetxController {
   static Future<void> onNotificationTap(
     NotificationResponse alertResponse,
   ) async {
+    final userController = Get.put(CUserController());
     try {
       onNotificationClicked.add(alertResponse.payload!);
 
       if (alertResponse.payload != null) {
         // -- decode payload --
         Map<String, dynamic> payloadData = jsonDecode(alertResponse.payload!);
-        final userController = Get.put(CUserController());
 
+        
         var notificationItem = CNotificationsModel.withId(
           payloadData['notification_id'] != null
               ? int.parse(payloadData['notification_id'])
@@ -192,11 +191,12 @@ class CLocalNotificationsController extends GetxController {
               ? int.parse(payloadData['product_id'])
               : 0,
           userController.user.value.email,
-          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+          payloadData['date'],
         );
 
         // -- insert notification item into sqflite db --
-        await DbHelper.instance.addNotificationItem(notificationItem);
+        await DbHelper.instance.updateNotificationItem(notificationItem);
+        
 
         // -- redirect screens accrodingly --
 

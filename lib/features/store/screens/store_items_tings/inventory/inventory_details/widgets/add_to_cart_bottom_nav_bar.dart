@@ -136,21 +136,22 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                       cartController.fetchCartItems();
 
                       /// -- check if item has expired before adding it to cart --
-                      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
-                        inventoryItem.expiryDate.replaceAll('@ ', ''),
-                      );
-                      if (itemExpiry <= 0) {
-                        CPopupSnackBar.warningSnackBar(
-                          title: 'item is stale/expired',
-                          message: '${inventoryItem.name} has expired!',
+                      if (inventoryItem.expiryDate != '') {
+                        var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+                          inventoryItem.expiryDate.replaceAll('@ ', ''),
                         );
-                        return;
-                      } else {
-                        cartController.addToCart(inventoryItem);
-                        cartController.fetchCartItems();
-                        if (fromCheckoutScreen) {
-                          Navigator.pop(context);
+                        if (itemExpiry <= 0) {
+                          CPopupSnackBar.warningSnackBar(
+                            title: 'item is stale/expired',
+                            message: '${inventoryItem.name} has expired!',
+                          );
+                          return;
                         }
+                      }
+                      cartController.addToCart(inventoryItem);
+                      cartController.fetchCartItems();
+                      if (fromCheckoutScreen) {
+                        Navigator.pop(context);
                       }
                     },
               style: ElevatedButton.styleFrom(

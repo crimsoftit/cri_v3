@@ -9,6 +9,7 @@ import 'package:cri_v3/features/personalization/controllers/app_settings_control
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
@@ -25,7 +26,6 @@ import 'package:cri_v3/features/store/screens/store_items_tings/inventory/invent
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/nav_menu.dart';
 import 'package:cri_v3/services/location_services.dart';
-import 'package:cri_v3/services/notification_services.dart';
 import 'package:cri_v3/services/pdf_services.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
@@ -90,7 +90,7 @@ class CCheckoutController extends GetxController {
   final invController = Get.put(CInventoryController());
   final navController = Get.put(CNavMenuController());
   final notificationsController = Get.put(CLocalNotificationsController());
-  final awesomeNotificationServices = Get.put(CAwesomeNotificationServices());
+  //final awesomeNotificationServices = Get.put(CAwesomeNotificationServices());
   final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 
@@ -265,9 +265,12 @@ class CCheckoutController extends GetxController {
                         .generateNotificationId();
 
                     var payloadData = {
+                      'date': DateFormat(
+                        'yyyy-MM-dd @ kk:mm',
+                      ).format(clock.now()),
+                      'notification_body': alertBody,
                       'notification_id': thisAlertId.toString(),
                       'notification_title': 'restocking is due!',
-                      'notification_body': alertBody,
                       'product_id': invItem.productId.toString(),
                     };
 
@@ -275,6 +278,23 @@ class CCheckoutController extends GetxController {
                       title: 'restocking is due!',
                       body: alertBody,
                       payload: jsonEncode(payloadData),
+                    );
+
+                    // TODO: -- add notification details to sqflite db --
+                    var notificationItem = CNotificationsModel(
+                      1,
+                      'restocking is due!',
+                      alertBody,
+
+                      0,
+                      invItem.productId,
+                      userController.user.value.email,
+                      DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+                    );
+
+                    // -- insert notification item into sqflite db --
+                    await DbHelper.instance.addNotificationItem(
+                      notificationItem,
                     );
                   },
                 );

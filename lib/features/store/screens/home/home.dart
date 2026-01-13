@@ -38,8 +38,7 @@ class HomeScreen extends StatelessWidget {
     final navController = Get.put(CNavMenuController());
     final txnsController = Get.put(CTxnsController());
 
-    if (invController.inventoryItems.isEmpty ||
-        txnsController.sales.isEmpty) {
+    if (invController.inventoryItems.isEmpty || txnsController.sales.isEmpty) {
       return const CFreshDashboardScreen();
     }
 

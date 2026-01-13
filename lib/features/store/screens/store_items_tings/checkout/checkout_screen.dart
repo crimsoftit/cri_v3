@@ -149,7 +149,6 @@ class CCheckoutScreen extends StatelessWidget {
                     return const CVerticalProductShimmer(itemCount: 7);
                   }
 
-               
                   if (cartController.cartItems.isEmpty &&
                       !cartController.cartItemsLoading.value) {
                     return noDataWidget;
@@ -764,10 +763,6 @@ class CCheckoutScreen extends StatelessWidget {
                   ),
             );
           } else {
-            // if (kDebugMode) {
-            //   print('no cart items found for checkout');
-            // }
-
             return SizedBox.shrink();
           }
         }),

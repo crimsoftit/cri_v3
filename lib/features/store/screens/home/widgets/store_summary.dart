@@ -90,6 +90,51 @@ class CStoreSummary extends StatelessWidget {
                   ),
                 ],
               ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CStoreSummaryCard(
+                    // cardBgColor: invController.lowStockItemsCount.value > 0
+                    //     ? CColors.warning.withValues(
+                    //         alpha: .1,
+                    //       )
+                    //     : CColors.white,
+                    iconColor: invController.lowStockItemsCount.value > 0
+                        ? CColors.warning
+                        : CColors.rBrown,
+                    iconData: invController.lowStockItemsCount.value > 0
+                        ? Iconsax.warning_2
+                        : Iconsax.tick_circle,
+                    subTitleTxt:
+                        'low-stock items(${invController.lowStockItemsCount.value})',
+                    subTitleTxtColor: invController.lowStockItemsCount.value > 0
+                        ? CColors.warning
+                        : CColors.rBrown,
+                    titleTxt: invController.lowStockItemsValue.value
+                        .toStringAsFixed(1),
+                    titleTxtColor: invController.lowStockItemsCount.value > 0
+                        ? CColors.warning
+                        : CColors.rBrown,
+                    // titleTxt:
+                    //     '$userCurrency.${invController.totalInventoryValue.value..toStringAsFixed(1)}',
+                  ),
+                  CStoreSummaryCard(
+                    //iconColor: Colors.redAccent,
+                    iconData: Iconsax.user_add,
+                    subTitleTxt: 'new customers',
+                    //subTitleTxtColor: CColors.warning,
+                    titleTxt: '0',
+                  ),
+                  CStoreSummaryCard(
+                    iconData: Iconsax.danger,
+                    subTitleTxt: 'expired items',
+                    // titleTxt:
+                    //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
+                    titleTxt: '0',
+                  ),
+                ],
+              ),
             ],
             options: CarouselOptions(
               aspectRatio: 16 / 9,
@@ -103,7 +148,7 @@ class CStoreSummary extends StatelessWidget {
               ),
               enableInfiniteScroll: true,
               enlargeCenterPage: true,
-              height: 78.001,
+              height: 90.001,
 
               viewportFraction: 1.0,
             ),

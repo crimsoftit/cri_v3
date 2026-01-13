@@ -4,6 +4,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
@@ -162,6 +163,11 @@ class CDashboardController extends GetxController {
 
   FlTitlesData buildFlTitlesData() {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
+    final userController = Get.put(CUserController());
+    final userCurrency = CHelperFunctions.formatCurrency(
+      userController.user.value.currencyCode,
+    );
     return FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -169,7 +175,7 @@ class CDashboardController extends GetxController {
           showTitles: true,
           getTitlesWidget: (value, meta) {
             // map index to the desired day of the week
-            final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            final days = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'];
 
             // calculate the index and ensure it wraps around the corresponding day of the week
             final index = value.toInt() % days.length;
@@ -198,12 +204,11 @@ class CDashboardController extends GetxController {
           interval: weeklySalesHighestAmount.value,
           reservedSize: 70.0,
           getTitlesWidget: (value, meta) {
-            final userController = Get.put(CUserController());
             return SideTitleWidget(
               space: 0,
               axisSide: AxisSide.bottom,
               child: Text(
-                '${userController.user.value.currencyCode}.$value',
+                '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
                 style: TextStyle(
                   color: isConnectedToInternet
                       ? CColors.rBrown
