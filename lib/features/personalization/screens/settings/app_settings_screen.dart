@@ -272,7 +272,7 @@ class _CAppSettingsScreenState extends State<CAppSettingsScreen> {
                                       activeThumbColor: CColors.rBrown,
                                       onChanged: (value) {
                                         notificationsController
-                                            .requestNotificationPermissions(
+                                            .handleNotificationPermissions(
                                               value,
                                             );
                                       },

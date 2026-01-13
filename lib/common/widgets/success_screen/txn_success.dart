@@ -31,7 +31,6 @@ class CTxnSuccessScreen extends StatelessWidget {
     final syncController = Get.put(CSyncController());
     final userController = Get.put(CUserController());
 
-    // TODO: clear cart if home button is pressed while on this screen
 
     return Obx(() {
       return Scaffold(

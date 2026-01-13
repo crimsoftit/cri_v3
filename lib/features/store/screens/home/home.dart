@@ -8,6 +8,7 @@ import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
+import 'package:cri_v3/features/store/screens/home/fresh_dashboard.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/graphs/weekly_sales_bar_graph.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
@@ -36,6 +37,11 @@ class HomeScreen extends StatelessWidget {
 
     final navController = Get.put(CNavMenuController());
     final txnsController = Get.put(CTxnsController());
+
+    if (invController.inventoryItems.isEmpty ||
+        txnsController.sales.isEmpty) {
+      return const CFreshDashboardScreen();
+    }
 
     return Container(
       color: isDarkTheme ? CColors.transparent : CColors.white,

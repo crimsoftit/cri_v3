@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CPermissionProvider {
+  /// -- variables --
   static PermissionStatus locationPermission = PermissionStatus.denied;
   static bool locationServiceIsOn = false;
+  static bool notificationsAllowed = false;
+
   static DialogRoute? permissionDialogRoute;
 
+  /// -- handle location services permission --
   static Future<void> handleLocationPermission() async {
     locationServiceIsOn = await Permission.location.serviceStatus.isEnabled;
     locationPermission = await Permission.location.status;
@@ -62,6 +66,28 @@ class CPermissionProvider {
       Navigator.of(
         globalNavigatorKey.currentContext!,
       ).push(permissionDialogRoute!);
+    }
+  }
+
+  static Future<bool> handleNotificationsPermission(bool value) async {
+    final status = await Permission.notification.status;
+    if (value) {
+      if (!status.isGranted) {
+        final result = await Permission.notification.request();
+        if (result.isGranted) {
+          notificationsAllowed = true;
+          return true;
+        } else {
+          notificationsAllowed = false;
+          return false;
+        }
+      } else {
+        notificationsAllowed = true;
+        return true;
+      }
+    } else {
+      notificationsAllowed = false;
+      return false;
     }
   }
 }

@@ -18,30 +18,32 @@ class CFreshDashboardScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CRoundedContainer(
-      width: CHelperFunctions.screenWidth() * .45,
-      child: Column(
-        children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(CSizes.defaultSpace / 3),
-            onTap: onTap,
-            subtitle: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                //'add your first item to get started!'.toUpperCase(),
-                label.toUpperCase(),
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium!.apply(color: CColors.rBrown),
-                textAlign: TextAlign.center,
+    return Center(
+      child: CRoundedContainer(
+        width: CHelperFunctions.screenWidth() * .45,
+        child: Column(
+          children: [
+            ListTile(
+              contentPadding: const EdgeInsets.all(CSizes.defaultSpace / 3),
+              onTap: onTap,
+              subtitle: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  //'add your first item to get started!'.toUpperCase(),
+                  label.toUpperCase(),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelMedium!.apply(color: CColors.rBrown),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            title: Icon(iconData, color: CColors.rBrown),
+              title: Icon(iconData, color: CColors.rBrown),
 
-            //trailing: Icon(Icons.more_vert),
-          ),
-          const SizedBox(),
-        ],
+              //trailing: Icon(Icons.more_vert),
+            ),
+            const SizedBox(),
+          ],
+        ),
       ),
     );
   }

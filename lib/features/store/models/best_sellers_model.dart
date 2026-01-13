@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 class CBestSellersModel {
   int _productId = 0;
   int _totalSales = 0;

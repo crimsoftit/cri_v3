@@ -39,15 +39,17 @@ class CStoreSummary extends StatelessWidget {
                 children: [
                   CStoreSummaryCard(
                     iconData: Iconsax.money_recive,
-                    subTitleTxt: 'money collected',
+                    subTitleTxt: 'money collected($userCurrency)',
                     titleTxt:
-                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.moneyCollected.value..toStringAsFixed(1))}',
+                        '${txnsController.moneyCollected.value..toStringAsFixed(1)}',
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_send,
-                    subTitleTxt: 'cost of sales',
+                    subTitleTxt: 'cost of sales($userCurrency)',
+                    // titleTxt:
+                    //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
                     titleTxt:
-                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
+                        '${txnsController.costOfSales.value..toStringAsFixed(1)}',
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_tick,
@@ -73,16 +75,18 @@ class CStoreSummary extends StatelessWidget {
                   CStoreSummaryCard(
                     //iconColor: Colors.redAccent,
                     iconData: Iconsax.money_time,
-                    subTitleTxt: 'gross revenue',
+                    subTitleTxt: 'gross revenue($userCurrency)',
                     //subTitleTxtColor: CColors.warning,
                     titleTxt:
-                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.grossRevenue.value..toStringAsFixed(1))}',
+                        '${txnsController.grossRevenue.value..toStringAsFixed(1)}',
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_time,
-                    subTitleTxt: 'credit',
+                    subTitleTxt: 'credit($userCurrency)',
+                    // titleTxt:
+                    //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
                     titleTxt:
-                        '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
+                        '${txnsController.invoicesValue.value..toStringAsFixed(1)}',
                   ),
                 ],
               ),
@@ -98,7 +102,7 @@ class CStoreSummary extends StatelessWidget {
                 seconds: 5,
               ),
               enableInfiniteScroll: true,
-              enlargeCenterPage: false,
+              enlargeCenterPage: true,
               height: 78.001,
 
               viewportFraction: 1.0,

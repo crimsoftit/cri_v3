@@ -328,18 +328,20 @@ class CLocalNotificationsController extends GetxController {
     }
   }
 
-  Future<void> requestNotificationPermissions(bool value) async {
+  Future<void> handleNotificationPermissions(bool value) async {
     final PermissionStatus status = await Permission.notification.request();
 
     if (value) {
       if (status.isGranted) {
-        // Notification permissions granted
+        notificationsEnabled.value = true;
       } else if (status.isDenied) {
-        // Notification permissions denied
+        notificationsEnabled.value = false;
       } else if (status.isPermanentlyDenied) {
         // Notification permissions permanently denied, open app settings
         await openAppSettings();
       }
+    } else {
+      notificationsEnabled.value = false;
     }
-  }
+  } 
 }

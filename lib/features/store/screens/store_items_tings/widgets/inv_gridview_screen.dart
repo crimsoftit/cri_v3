@@ -98,7 +98,11 @@ class CInvGridviewScreen extends StatelessWidget {
       }
 
       return ListView(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+        padding: const EdgeInsets.only(
+          left: 5.0,
+          right: 5.0,
+          top: 10.0,
+        ),
         shrinkWrap: true,
         children: [
           GridView.builder(
