@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -104,8 +104,10 @@ class CHelperFunctions {
     return MediaQuery.of(Get.context!).size.width;
   }
 
-  static String getFormattedDate(DateTime date,
-      {String format = 'dd MMM yyyy'}) {
+  static String getFormattedDate(
+    DateTime date, {
+    String format = 'dd MMM yyyy',
+  }) {
     return DateFormat(format).format(date);
   }
 
@@ -117,10 +119,14 @@ class CHelperFunctions {
     final wrappedList = <Widget>[];
     for (var i = 0; i < widgets.length; i += rowSize) {
       final rowChildren = widgets.sublist(
-          i, i + rowSize > widgets.length ? widgets.length : i + rowSize);
-      wrappedList.add(Row(
-        children: rowChildren,
-      ));
+        i,
+        i + rowSize > widgets.length ? widgets.length : i + rowSize,
+      );
+      wrappedList.add(
+        Row(
+          children: rowChildren,
+        ),
+      );
     }
     return wrappedList;
   }
@@ -162,5 +168,18 @@ class CHelperFunctions {
     var pCode = codeString.substring(codeString.length - 7);
     var productCode = 'rI-$pCode';
     return productCode;
+  }
+
+  static bool txtExceedsTwoLines(String txt, TextStyle style) {
+    final txtSpan = TextSpan(text: txt, style: style);
+    final txtPainter = TextPainter(
+      text: txtSpan,
+      maxLines: 2,
+      textDirection: ui.TextDirection.ltr,
+    );
+    txtPainter.layout(
+      maxWidth: double.infinity,
+    ); // Use actual container width if known
+    return txtPainter.didExceedMaxLines;
   }
 }

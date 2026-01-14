@@ -209,7 +209,12 @@ class CProductCardVertical extends StatelessWidget {
             CProductTitleText(
               //smallSize: true,
               title:
-                  "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
+                  CHelperFunctions.txtExceedsTwoLines(
+                    "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
+                    Theme.of(context).textTheme.labelSmall!,
+                  )
+                  ? "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)"
+                  : "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold item(s) sold)",
               txtColor: int.parse(qtyAvailable!) < lowStockNotifierLimit!
                   ? Colors.red
                   : isDarkTheme
