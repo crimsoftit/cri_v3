@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
 
-//CHECK OUT THE GOOGLE APPS SCRIPT APPROACH -- FROM A PUBLISHED SHEET
+
 class StoreSheetsApi extends GetxController {
   /// -- variables --
   static const gsheetCredentials = GsheetsCreds.credentials;

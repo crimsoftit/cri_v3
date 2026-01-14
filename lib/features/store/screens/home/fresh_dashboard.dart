@@ -58,7 +58,7 @@ class CFreshDashboardScreen extends StatelessWidget {
           child: Obx(
             () {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
                     height: CSizes.defaultSpace / 4.0,
@@ -84,6 +84,38 @@ class CFreshDashboardScreen extends StatelessWidget {
 
                   const SizedBox(
                     height: CSizes.defaultSpace * 2.5,
+                  ),
+                  Text(
+                    'welcome aboard!!'.toUpperCase(),
+                    style: Theme.of(context).textTheme.bodyLarge!.apply(
+                      // color: isDarkTheme
+                      //     ? CColors.darkGrey
+                      //     : CColors.rBrown,
+                      color: CColors.rBrown,
+                      fontSizeFactor: 1.3,
+                      fontWeightDelta: -2,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: CSizes.defaultSpace / 4,
+                  ),
+                  Text(
+                    'your perfect dashboard is just a few sales away!'
+                        .toUpperCase(),
+                    style: Theme.of(context).textTheme.labelMedium!.apply(
+                      color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                    ),
+                  ),
+
+                  Text(
+                    'your consummate brand awaits!'.toUpperCase(),
+                    style: Theme.of(context).textTheme.labelMedium!.apply(
+                      color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: CSizes.defaultSpace,
                   ),
 
                   invController.inventoryItems.isEmpty
