@@ -1,3 +1,4 @@
+import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
@@ -14,8 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class AddUpdateInventoryForm extends StatelessWidget {
-  const AddUpdateInventoryForm({
+class AddUpdateInventoryFormRaw extends StatelessWidget {
+  const AddUpdateInventoryFormRaw({
     super.key,
     required this.invController,
     required this.textStyle,
@@ -32,7 +33,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final navController = Get.put(CNavMenuController());
-    //final notsController = Get.put(CLocalNotificationsController());
+    final notsController = Get.put(CLocalNotificationsController());
 
     return Column(
       children: <Widget>[
@@ -552,6 +553,24 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               )) {
                             invController.confirmInvalidUspModal(context);
                             return;
+                          }
+
+                          /// -- schedule expiry notification --
+                          if ((invController.txtExpiryDatePicker.text != '' ||
+                                  invController
+                                      .txtExpiryDatePicker
+                                      .text
+                                      .isNotEmpty) &&
+                              invController.includeExpiryDate.value) {
+                            notsController.scheduleExpiryNotification(
+                              alertId: await notsController
+                                  .generateNotificationId(),
+                              expiryDate: DateTime.parse(
+                                invController.txtExpiryDatePicker.text
+                                    .replaceAll(' @', ''),
+                              ),
+                              itemName: inventoryItem.name,
+                            );
                           }
 
                           if (await invController.addOrUpdateInventoryItem(

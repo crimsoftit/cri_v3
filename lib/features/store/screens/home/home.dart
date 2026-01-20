@@ -10,7 +10,8 @@ import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/fresh_dashboard.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/graphs/weekly_sales_bar_graph.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/cutom_line_chart.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/weekly_sales_bar_graph.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/nav_menu.dart';
@@ -19,6 +20,7 @@ import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/constants/txt_strings.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -147,7 +149,9 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             //CDateRangePickerWidget(),
-                            const SizedBox(height: CSizes.defaultSpace / 6),
+                            const SizedBox(
+                              height: CSizes.defaultSpace / 6,
+                            ),
                             CStoreSummary(),
 
                             /// -- top sellers --
@@ -173,8 +177,22 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
 
+                        const SizedBox(
+                          height: CSizes.defaultSpace * .5,
+                        ),
+
+                        /// -- peak sales hours line chart --
+                        peakSalesHoursLineChart(),
+                        const SizedBox(
+                          height: CSizes.defaultSpace * .5,
+                        ),
+
                         /// -- weekly sales bar graph --
                         WeeklySalesBarGraphWidget(),
+
+                        const SizedBox(
+                          height: CSizes.defaultSpace * .5,
+                        ),
                       ],
                     );
                   },
@@ -184,6 +202,50 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// -- peak sales hours line chart --
+  Widget peakSalesHoursLineChart() {
+    final dashboardController = Get.put(CDashboardController());
+
+    return Column(
+      children: [
+        CSectionHeading(
+          showActionBtn: false,
+          title: 'peak hour sales traffic...',
+          txtColor: CNetworkManager.instance.hasConnection.value
+              ? CColors.rBrown
+              : CColors.darkGrey,
+
+          btnTitle: '',
+          btnTxtColor: CColors.rBrown,
+          editFontSize: true,
+          fWeight: FontWeight.w400,
+          onPressed: () {},
+        ),
+        const SizedBox(
+          height: CSizes.defaultSpace / 2,
+        ),
+        Obx(
+          () {
+            return CCutomLineChart(
+              chartHeight: 200.0,
+              chartWidth: CHelperFunctions.screenWidth(),
+              lineChartData: [
+                FlSpot(3, dashboardController.salesBtn3to6.value),
+                FlSpot(6, dashboardController.salesBtn6to9.value),
+                FlSpot(9, dashboardController.salesBtn9to12.value),
+                FlSpot(12, dashboardController.salesBtn12to15.value),
+                FlSpot(15, dashboardController.salesBtn15to18.value),
+                FlSpot(18, dashboardController.salesBtn18to21.value),
+                FlSpot(21, dashboardController.salesBtn21toMidnight.value),
+                FlSpot(24, dashboardController.salesBtnMidnightTo3.value),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 }

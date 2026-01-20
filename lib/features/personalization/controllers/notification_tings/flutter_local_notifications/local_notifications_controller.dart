@@ -79,6 +79,7 @@ class CLocalNotificationsController extends GetxController {
           'channelId',
           'channelName',
           channelDescription: 'simple notification',
+          channelShowBadge: true,
           importance: Importance.max,
           priority: Priority.high,
           ticker: 'ticker',
@@ -150,8 +151,70 @@ class CLocalNotificationsController extends GetxController {
           ticker: 'ticker',
         ),
       ),
+      // androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: payload,
+    );
+  }
+
+  Future<void> scheduleExpiryNotification({
+    required int alertId,
+    required DateTime expiryDate,
+    required String itemName,
+  }) async {
+    final triggerDate = expiryDate.subtract(const Duration(days: 2));
+
+    if (triggerDate.isBefore(DateTime.now())) {
+      if (kDebugMode) {
+        print('expiry reminder date is in the past.');
+        CPopupSnackBar.warningSnackBar(
+          title: 'expiry date reached..',
+          message: 'expiry reminder date is in the past.',
+        );
+      }
+      return;
+    }
+
+    if (kDebugMode) {
+      print("*********");
+      print("*TRIGGER DATE: $triggerDate");
+      print("*********");
+      CPopupSnackBar.customToast(
+        message: triggerDate,
+        forInternetConnectivityStatus: false,
+      );
+    }
+
+    final tz.TZDateTime scheduledDate = tz.TZDateTime.from(
+      triggerDate,
+      tz.local,
+    );
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'expiry_reminder_channel',
+          'Expiry Reminder',
+          channelShowBadge: true,
+          importance: Importance.max,
+          priority: Priority.max,
+        );
+
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
+        DarwinNotificationDetails();
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      alertId,
+      'expiry alert: ${itemName.toUpperCase()}',
+      '$itemName expires in 2 days!!',
+      scheduledDate,
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
 
@@ -177,7 +240,6 @@ class CLocalNotificationsController extends GetxController {
         // -- decode payload --
         Map<String, dynamic> payloadData = jsonDecode(alertResponse.payload!);
 
-        
         var notificationItem = CNotificationsModel.withId(
           payloadData['notification_id'] != null
               ? int.parse(payloadData['notification_id'])
@@ -196,7 +258,6 @@ class CLocalNotificationsController extends GetxController {
 
         // -- insert notification item into sqflite db --
         await DbHelper.instance.updateNotificationItem(notificationItem);
-        
 
         // -- redirect screens accrodingly --
 
@@ -338,10 +399,53 @@ class CLocalNotificationsController extends GetxController {
         notificationsEnabled.value = false;
       } else if (status.isPermanentlyDenied) {
         // Notification permissions permanently denied, open app settings
+        notificationsEnabled.value = false;
         await openAppSettings();
       }
     } else {
       notificationsEnabled.value = false;
     }
-  } 
+  }
+
+  static Future<void> scheduleExpiryNotificationRaw({
+    required String productName,
+    required DateTime expiryDate,
+    required int id,
+  }) async {
+    final scheduledDate = DateTime(
+      expiryDate.year,
+      expiryDate.month,
+      expiryDate.day,
+      24,
+      0,
+    ); // midnight
+    if (scheduledDate.isBefore(DateTime.now())) return;
+
+    final tz.TZDateTime zonedDate = tz.TZDateTime.from(scheduledDate, tz.local);
+
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+          'expiry_channel',
+          'Expiry Alerts',
+          importance: Importance.high,
+          priority: Priority.high,
+          playSound: true,
+        );
+
+    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
+    final NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      'Expiry Alert: $productName',
+      'This item expires today!',
+      zonedDate,
+      platformDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
+    );
+  }
 }

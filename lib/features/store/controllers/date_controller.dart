@@ -72,15 +72,15 @@ class CDateController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.check),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  IconButton(
                     icon: const Icon(Icons.cancel),
                     onPressed: () {
                       invController.txtExpiryDatePicker.text = '';
                       Navigator.of(context).pop();
                     },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
               ),
@@ -88,7 +88,14 @@ class CDateController extends GetxController {
             SizedBox(
               height: CHelperFunctions.screenHeight() * .3,
               child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
+                initialDateTime: invController.txtExpiryDatePicker.text != ''
+                    ? DateTime.parse(
+                        invController.txtExpiryDatePicker.text.replaceAll(
+                          '@ ',
+                          '',
+                        ),
+                      )
+                    : DateTime.now(),
                 maximumDate: lastDate,
                 minimumDate: firstDate,
                 mode: CupertinoDatePickerMode.date,

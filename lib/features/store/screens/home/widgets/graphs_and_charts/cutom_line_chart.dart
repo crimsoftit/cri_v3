@@ -1,0 +1,130 @@
+import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+
+class CCutomLineChart extends StatelessWidget {
+  const CCutomLineChart({
+    super.key,
+    required this.chartHeight,
+    required this.chartWidth,
+    required this.lineChartData,
+  });
+
+  final double? chartHeight, chartWidth;
+  final List<FlSpot> lineChartData;
+
+  @override
+  Widget build(BuildContext context) {
+    return CRoundedContainer(
+      height: chartHeight,
+      width: chartWidth,
+      child: SizedBox.expand(
+        child: Padding(
+          padding: const EdgeInsets.all(
+            15.0,
+          ),
+          child: LineChart(
+            LineChartData(
+              borderData: _buildBorderData(),
+              gridData: _buildGridData(),
+              lineBarsData: [
+                _buildLineChartBarData(),
+              ],
+              minX: 0.0,
+              minY: 0.0,
+              titlesData: _buildTitlesData(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// -- build line chart bar data --
+  LineChartBarData _buildLineChartBarData() {
+    return LineChartBarData(
+      barWidth: 1.0,
+      color: CColors.rBrown,
+      isCurved: false,
+      spots: lineChartData,
+      // spots: lineChartData
+      //     .map((spot) => spot.y < 0 ? FlSpot(spot.y, 0) : spot)
+      //     .toList(),
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            CColors.rBrown,
+            CColors.rBrown.withAlpha(1),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// -- build line chart grid data --
+  FlGridData _buildGridData() {
+    return FlGridData(
+      drawHorizontalLine: true,
+      drawVerticalLine: true,
+      show: true,
+    );
+  }
+
+  /// -- build border data --
+  FlBorderData _buildBorderData() {
+    return FlBorderData(
+      border: Border.all(
+        color: CColors.rBrown,
+        width: 1.0,
+      ),
+      show: true,
+    );
+  }
+
+  /// -- build titles data --
+  FlTitlesData _buildTitlesData() {
+    return FlTitlesData(
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          getTitlesWidget: (value, meta) {
+            return Text(
+              value.toInt() > 12 && value.toInt() < 24
+                  ? '${(value - 12).toInt()}pm'
+                  : (value.toInt() == 12 || value.toInt() - 12 == 12)
+                  ? '${value.toInt()}:00'
+                  : '${value.toInt()}am',
+            );
+          },
+          interval: 3,
+          maxIncluded: true,
+          minIncluded: false,
+          reservedSize: 20.0,
+          showTitles: true,
+        ),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(
+          maxIncluded: true,
+          minIncluded: false,
+          reservedSize: 40.0,
+          showTitles: true,
+        ),
+      ),
+      rightTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
+      ),
+      show: true,
+      topTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
+      ),
+    );
+  }
+}

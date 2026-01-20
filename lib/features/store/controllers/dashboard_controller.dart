@@ -28,8 +28,18 @@ class CDashboardController extends GetxController {
   final RxDouble currentWeekSales = 0.0.obs;
   final RxDouble lastWeekSales = 0.0.obs;
 
+  final RxDouble salesBtnMidnightTo3 = 0.0.obs;
+  final RxDouble salesBtn3to6 = 0.0.obs;
+  final RxDouble salesBtn6to9 = 0.0.obs;
+  final RxDouble salesBtn9to12 = 0.0.obs;
+  final RxDouble salesBtn12to15 = 0.0.obs;
+  final RxDouble salesBtn15to18 = 0.0.obs;
+  final RxDouble salesBtn18to21 = 0.0.obs;
+  final RxDouble salesBtn21toMidnight = 0.0.obs;
+
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
+
   final RxList<double> weeklySales = <double>[].obs;
 
   final txnsController = Get.put(CTxnsController());
@@ -43,6 +53,8 @@ class CDashboardController extends GetxController {
         await txnsController.fetchSoldItems().then((result) async {
           calculateCurrentWeekSales();
           calculateLastWeekSales();
+          filterHourlySales();
+          //computeHourlySales();
         });
       });
     });
@@ -161,7 +173,7 @@ class CDashboardController extends GetxController {
     });
   }
 
-  FlTitlesData buildFlTitlesData() {
+  FlTitlesData buildFlBarChartTitlesData() {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     final userController = Get.put(CUserController());
@@ -185,7 +197,8 @@ class CDashboardController extends GetxController {
 
             return SideTitleWidget(
               space: 0,
-              axisSide: AxisSide.bottom,
+              fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+              meta: meta,
               child: Text(
                 day,
                 style: TextStyle(
@@ -203,10 +216,11 @@ class CDashboardController extends GetxController {
           showTitles: true,
           interval: weeklySalesHighestAmount.value,
           reservedSize: 70.0,
-          getTitlesWidget: (value, meta) {
+          getTitlesWidget: (value, TitleMeta meta) {
             return SideTitleWidget(
+              meta: meta,
               space: 0,
-              axisSide: AxisSide.bottom,
+              fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
               child: Text(
                 '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
                 style: TextStyle(
@@ -245,5 +259,176 @@ class CDashboardController extends GetxController {
     showSummaryFilterField.value = false;
 
     super.dispose();
+  }
+
+  // double computeHourlySales() {
+  //   try {
+  //     var startTime = DateFormat('hh:mm').parse('17:00');
+  //     var endTime = DateFormat('hh:mm').parse('20:00');
+
+  //     final salesBtn17and20 = txnsController.sales.where((sale) {
+  //       final saleTime = DateTime.parse(
+  //         sale.lastModified.replaceAll(' @', ''),
+  //       );
+  //       return saleTime.isAfter(startTime) && saleTime.isBefore(endTime);
+  //     }).toList();
+
+  //     // -- compute total sales --
+  //     final salesInPeriod = salesBtn17and20.fold(
+  //       0.0,
+  //       (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+  //     );
+
+  //     return salesInPeriod;
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('error computing hourly sales: $e');
+  //       CPopupSnackBar.errorSnackBar(
+  //         message: e.toString(),
+  //         title: 'error computing hourly sales',
+  //       );
+  //     }
+  //     rethrow;
+  //   }
+  // }
+
+  filterHourlySales() {
+    final timeAt3Hrs = 3 * 60;
+    final timeAt6Hrs = 6 * 60;
+    final timeAt9Hrs = 9 * 60;
+    final timeAt12Hrs = 12 * 60;
+    final timeAt15Hrs = 15 * 60;
+    final timeAt18Hrs = 18 * 60;
+    final timeAt21Hrs = 21 * 60;
+    final timeAtMidnight = 24 * 60;
+
+    /// -- sales btn midnight and 3:00hrs --
+    var salesBtn0and3 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAtMidnight && timeInMunites < timeAt3Hrs;
+      },
+    ).toList();
+    salesBtnMidnightTo3.value = salesBtn0and3.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 3:00hrs and 6:00hrs --
+    var salesBtn3and6 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt3Hrs && timeInMunites < timeAt6Hrs;
+      },
+    ).toList();
+
+    salesBtn3to6.value = salesBtn3and6.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 6:00hrs and 9:00hrs --
+    var salesBtn6and9 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt6Hrs && timeInMunites < timeAt9Hrs;
+      },
+    ).toList();
+
+    salesBtn6to9.value = salesBtn6and9.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 9:00hrs and 12:00hrs --
+    var salesBtn9and12 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt9Hrs && timeInMunites < timeAt12Hrs;
+      },
+    ).toList();
+    salesBtn9to12.value = salesBtn9and12.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 12:00hrs and 15:00hrs --
+    var salesBtn12and15 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt12Hrs && timeInMunites < timeAt15Hrs;
+      },
+    ).toList();
+
+    salesBtn12to15.value = salesBtn12and15.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 15:00hrs and 18:00hrs --
+    var salesBtn15and18 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(" @", ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt15Hrs && timeInMunites < timeAt18Hrs;
+      },
+    ).toList();
+
+    salesBtn15to18.value = salesBtn15and18.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 18:00hrs and 21:00hrs --
+    var salesBtn18and21 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+
+        return timeInMunites >= timeAt18Hrs && timeInMunites < timeAt21Hrs;
+      },
+    ).toList();
+
+    salesBtn18to21.value = salesBtn18and21.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- sales btn 21:00hrs and midnight --
+    var salesBtn21andMidght = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timeAt21Hrs && timeInMunites < timeAtMidnight;
+      },
+    ).toList();
+
+    salesBtn21toMidnight.value = salesBtn21andMidght.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
   }
 }

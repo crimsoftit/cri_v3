@@ -9,6 +9,35 @@ class CFormatter {
   }
 
   /// -- format time range and return result toString() --
+  static int formatTimeRangeFromNowRaw(String end) {
+    final startTime = DateTime.now();
+    final endTime = DateTime.parse(end);
+
+    var differenceInDays = endTime.difference(startTime).inDays;
+
+    switch (differenceInDays) {
+      case < 0 && <= -1:
+        differenceInDays = endTime.difference(startTime).inDays.abs();
+        break;
+      case < 0 && > -1:
+        break;
+      case >= 0 && < 1:
+
+        // formattedRange =
+        //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
+
+        break;
+      case >= 1:
+        differenceInDays = endTime.difference(startTime).inDays;
+        break;
+      default:
+        differenceInDays = 0;
+    }
+
+    return differenceInDays;
+  }
+
+  /// -- format time range and return result toString() --
   static String formatTimeRangeFromNow(String end) {
     final startTime = DateTime.now();
     final endTime = DateTime.parse(end);
@@ -68,5 +97,11 @@ class CFormatter {
   static String kSuffixFormatter(double amount) {
     final formatter = NumberFormat.compact(locale: 'en_US');
     return formatter.format(amount);
+  }
+
+  /// -- extract time from dateTime string --
+  static String extractTime(String dateTimeString) {
+    final DateTime dateTime = DateTime.parse(dateTimeString);
+    return DateFormat('hh:mm:ss').format(dateTime);
   }
 }

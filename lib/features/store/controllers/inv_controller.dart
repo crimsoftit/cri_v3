@@ -9,6 +9,7 @@ import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -49,8 +50,6 @@ class CInventoryController extends GetxController {
   final RxDouble lowStockItemsValue = 0.0.obs;
   final RxDouble unitBP = 0.0.obs;
   final RxDouble totalInventoryValue = 0.0.obs;
-  
-
 
   // -- lists --
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
@@ -58,15 +57,15 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> lowStockItems = <CInventoryModel>[].obs;
-  
 
-  
   final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
-  
+
   // final RxList<CInventoryModel> invTopSellers = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
+
+  final RxList<CInventoryModel> itemsNearingExpiry = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
 
@@ -105,6 +104,8 @@ class CInventoryController extends GetxController {
 
     await initInvSync();
 
+    await scheduleExpiryAlerts();
+
     super.onInit();
   }
 
@@ -117,8 +118,6 @@ class CInventoryController extends GetxController {
 
   /// -- initialize cloud sync --
   initInvSync() async {
-    //final isConnected = await CNetworkManager.instance.isConnected();
-
     if (localStorage.read('SyncInvDataWithCloud') == true) {
       await importInvDataFromCloud();
       if (await importInvDataFromCloud()) {
@@ -131,7 +130,6 @@ class CInventoryController extends GetxController {
     }
 
     /// TODO:-- schedule notifications for items nearing expiry date (NOT HERE - CAUSES SYSTEM CRASH) --
-   
   }
 
   /// -- fetch list of inventory items from sqflite db --
@@ -168,11 +166,23 @@ class CInventoryController extends GetxController {
                 updateItem.syncAction.toLowerCase().contains('update'),
           )
           .toList();
-      
+
       // -- assign low stock items --
       lowStockItems.value = inventoryItems
           .where(
             (item) => item.quantity <= item.lowStockNotifierLimit,
+          )
+          .toList();
+
+      // -- assign items nearing expiry --
+      itemsNearingExpiry.value = inventoryItems
+          .where(
+            (expiryItem) =>
+                expiryItem.expiryDate != '' &&
+                CFormatter.formatTimeRangeFromNowRaw(
+                      expiryItem.expiryDate.replaceAll('@ ', ''),
+                    ) ==
+                    2,
           )
           .toList();
 
@@ -505,8 +515,6 @@ class CInventoryController extends GetxController {
 
       // -- stop loader
       isLoading.value = false;
-
-      
     } catch (e) {
       // -- stop loader
       isLoading.value = false;
@@ -1196,7 +1204,6 @@ class CInventoryController extends GetxController {
   Future<void> initializeInventorySummary() async {
     try {
       if (inventoryItems.isNotEmpty) {
-
         // -- total value of items in inventory --
         totalInventoryValue.value = inventoryItems
             .where((invItem) => invItem.quantity >= 1)
@@ -1208,8 +1215,6 @@ class CInventoryController extends GetxController {
             .where((item) => item.quantity >= 1)
             .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
       }
-
-      
     } catch (e) {
       if (kDebugMode) {
         print('error initializing inventory summary: $e');
@@ -1218,6 +1223,32 @@ class CInventoryController extends GetxController {
           title: 'inventory summary init error!',
         );
       }
+    }
+  }
+
+  Future<void> scheduleExpiryAlerts() async {
+    try {
+      final notsController = Get.put(CLocalNotificationsController());
+      if (itemsNearingExpiry.isNotEmpty) {
+        for (var expiryItem in itemsNearingExpiry) {
+          notsController.scheduleExpiryNotification(
+            alertId: await notsController.generateNotificationId(),
+            expiryDate: DateTime.parse(
+              expiryItem.expiryDate.replaceAll(' @', ''),
+            ),
+            itemName: expiryItem.name,
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error scheduling notifications: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'scheduling notifications!',
+          message: 'error scheduling notifications: $e',
+        );
+      }
+      rethrow;
     }
   }
 }

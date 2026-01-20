@@ -123,10 +123,11 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                   ),
                   SizedBox(
                     //width: CHelperFunctions.screenWidth() * .5,
-                    height: 200.0,
+                    height: 150.0,
                     child: BarChart(
                       BarChartData(
-                        titlesData: dashboardController.buildFlTitlesData(),
+                        titlesData: dashboardController
+                            .buildFlBarChartTitlesData(),
                         borderData: FlBorderData(
                           show: true,
                           border: const Border(

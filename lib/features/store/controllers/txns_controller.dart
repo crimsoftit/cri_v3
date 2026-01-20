@@ -126,7 +126,6 @@ class CTxnsController extends GetxController {
     dateRangeFieldController.text = '';
     //dbHelper.openDb();
 
-    
     if (await CNetworkManager.instance.isConnected()) {
       StoreSheetsApi.initSpreadSheets();
     }
@@ -219,12 +218,15 @@ class CTxnsController extends GetxController {
       }
 
       /// -- initialize sales summary values --
-      ///
+
       final dashboardController = Get.put(CDashboardController());
       if (dateRangeFieldController.text == '' &&
           !dashboardController.showSummaryFilterField.value) {
         initializeSalesSummaryValues();
       }
+
+      /// -- compute hourly sales --
+      dashboardController.filterHourlySales();
 
       // stop loader
       isLoading.value = false;
