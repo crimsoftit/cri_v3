@@ -1,5 +1,6 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -108,6 +109,11 @@ class CCutomLineChart extends StatelessWidget {
       ),
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
+          getTitlesWidget: (value, meta) {
+            return Text(
+              CFormatter.kSuffixFormatter(value),
+            );
+          },
           maxIncluded: true,
           minIncluded: false,
           reservedSize: 40.0,

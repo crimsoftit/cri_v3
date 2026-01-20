@@ -261,37 +261,6 @@ class CDashboardController extends GetxController {
     super.dispose();
   }
 
-  // double computeHourlySales() {
-  //   try {
-  //     var startTime = DateFormat('hh:mm').parse('17:00');
-  //     var endTime = DateFormat('hh:mm').parse('20:00');
-
-  //     final salesBtn17and20 = txnsController.sales.where((sale) {
-  //       final saleTime = DateTime.parse(
-  //         sale.lastModified.replaceAll(' @', ''),
-  //       );
-  //       return saleTime.isAfter(startTime) && saleTime.isBefore(endTime);
-  //     }).toList();
-
-  //     // -- compute total sales --
-  //     final salesInPeriod = salesBtn17and20.fold(
-  //       0.0,
-  //       (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
-  //     );
-
-  //     return salesInPeriod;
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print('error computing hourly sales: $e');
-  //       CPopupSnackBar.errorSnackBar(
-  //         message: e.toString(),
-  //         title: 'error computing hourly sales',
-  //       );
-  //     }
-  //     rethrow;
-  //   }
-  // }
-
   filterHourlySales() {
     final timeAt3Hrs = 3 * 60;
     final timeAt6Hrs = 6 * 60;

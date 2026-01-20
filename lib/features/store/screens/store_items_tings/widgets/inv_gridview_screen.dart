@@ -27,8 +27,6 @@ class CInvGridviewScreen extends StatelessWidget {
 
   final double? mainAxisExtent;
 
-  /// -- TODO: notify if item is expired before adding it to cart --
-
   @override
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());

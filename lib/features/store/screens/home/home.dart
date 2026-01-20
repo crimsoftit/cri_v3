@@ -233,14 +233,38 @@ class HomeScreen extends StatelessWidget {
               chartHeight: 200.0,
               chartWidth: CHelperFunctions.screenWidth(),
               lineChartData: [
-                FlSpot(3, dashboardController.salesBtn3to6.value),
-                FlSpot(6, dashboardController.salesBtn6to9.value),
-                FlSpot(9, dashboardController.salesBtn9to12.value),
-                FlSpot(12, dashboardController.salesBtn12to15.value),
-                FlSpot(15, dashboardController.salesBtn15to18.value),
-                FlSpot(18, dashboardController.salesBtn18to21.value),
-                FlSpot(21, dashboardController.salesBtn21toMidnight.value),
-                FlSpot(24, dashboardController.salesBtnMidnightTo3.value),
+                FlSpot(
+                  3,
+                  (dashboardController.salesBtn3to6.value),
+                ),
+                FlSpot(
+                  6,
+                  dashboardController.salesBtn6to9.value,
+                ),
+                FlSpot(
+                  9,
+                  dashboardController.salesBtn9to12.value,
+                ),
+                FlSpot(
+                  12,
+                  dashboardController.salesBtn12to15.value,
+                ),
+                FlSpot(
+                  15,
+                  dashboardController.salesBtn15to18.value,
+                ),
+                FlSpot(
+                  18,
+                  dashboardController.salesBtn18to21.value,
+                ),
+                FlSpot(
+                  21,
+                  dashboardController.salesBtn21toMidnight.value,
+                ),
+                FlSpot(
+                  24,
+                  dashboardController.salesBtnMidnightTo3.value,
+                ),
               ],
             );
           },

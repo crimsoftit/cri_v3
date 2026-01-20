@@ -155,6 +155,7 @@ class CCartController extends GetxController {
   }
 
   /// -- add a single item to cart --
+  /// TODO: don't add items that have expired to cart --
   void addSingleItemToCart(
     CCartItemModel item,
     bool fromQtyTxtField,
