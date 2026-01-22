@@ -2,6 +2,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/utils/computations/date_time_computations.dart';
 import 'package:cri_v3/utils/local_storage/storage_utility.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
@@ -106,6 +107,18 @@ class CCartController extends GetxController {
       );
       return;
     }
+    if (item.expiryDate != '') {
+      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+        item.expiryDate.replaceAll('@ ', ''),
+      );
+      if (itemExpiry <= 0) {
+        CPopupSnackBar.warningSnackBar(
+          title: 'item is stale/expired',
+          message: '${item.name} is stale/expired!',
+        );
+        return;
+      }
+    }
     if (item.quantity < 1) {
       CPopupSnackBar.warningSnackBar(
         title: 'oh snap!',
@@ -170,6 +183,19 @@ class CCartController extends GetxController {
     final inventoryItem = invController.inventoryItems.firstWhere(
       (invItem) => invItem.productId == item.productId,
     );
+
+    if (inventoryItem.expiryDate != '') {
+      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
+        inventoryItem.expiryDate.replaceAll('@ ', ''),
+      );
+      if (itemExpiry <= 0) {
+        CPopupSnackBar.warningSnackBar(
+          title: 'item is stale/expired',
+          message: '${inventoryItem.name} has expired!',
+        );
+        return;
+      }
+    }
 
     if (inventoryItem.quantity > 0) {
       if (itemIndex >= 0) {

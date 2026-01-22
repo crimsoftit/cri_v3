@@ -1,8 +1,10 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CCutomLineChart extends StatelessWidget {
   const CCutomLineChart({
@@ -18,12 +20,17 @@ class CCutomLineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CRoundedContainer(
+      borderRadius: 5.0,
       height: chartHeight,
       width: chartWidth,
+
       child: SizedBox.expand(
         child: Padding(
-          padding: const EdgeInsets.all(
-            15.0,
+          padding: const EdgeInsets.only(
+            bottom: 5.0,
+            left: 10.0,
+            right: 10.0,
+            top: 10.0,
           ),
           child: LineChart(
             LineChartData(
@@ -47,7 +54,7 @@ class CCutomLineChart extends StatelessWidget {
     return LineChartBarData(
       barWidth: 1.0,
       color: CColors.rBrown,
-      isCurved: false,
+      isCurved: true,
       spots: lineChartData,
       // spots: lineChartData
       //     .map((spot) => spot.y < 0 ? FlSpot(spot.y, 0) : spot)
@@ -82,12 +89,14 @@ class CCutomLineChart extends StatelessWidget {
         color: CColors.rBrown,
         width: 1.0,
       ),
-      show: true,
+      show: false,
     );
   }
 
   /// -- build titles data --
   FlTitlesData _buildTitlesData() {
+    final dashboardController = Get.put(CDashboardController());
+
     return FlTitlesData(
       bottomTitles: AxisTitles(
         sideTitles: SideTitles(
@@ -114,10 +123,11 @@ class CCutomLineChart extends StatelessWidget {
               CFormatter.kSuffixFormatter(value),
             );
           },
+          interval: dashboardController.peakSalesAmount.value / 2,
           maxIncluded: true,
           minIncluded: false,
-          reservedSize: 40.0,
-          showTitles: true,
+          reservedSize: 10.0,
+          showTitles: false,
         ),
       ),
       rightTitles: AxisTitles(

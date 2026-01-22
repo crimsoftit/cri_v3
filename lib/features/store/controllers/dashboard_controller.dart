@@ -37,6 +37,8 @@ class CDashboardController extends GetxController {
   final RxDouble salesBtn18to21 = 0.0.obs;
   final RxDouble salesBtn21toMidnight = 0.0.obs;
 
+  final RxDouble peakSalesAmount = 0.0.obs;
+
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
 
@@ -214,7 +216,7 @@ class CDashboardController extends GetxController {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: weeklySalesHighestAmount.value,
+          interval: weeklySalesHighestAmount.value / 2,
           reservedSize: 70.0,
           getTitlesWidget: (value, TitleMeta meta) {
             return SideTitleWidget(
@@ -396,6 +398,12 @@ class CDashboardController extends GetxController {
     ).toList();
 
     salesBtn21toMidnight.value = salesBtn21andMidght.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
+    /// -- peak sales amount --
+    peakSalesAmount.value = txnsController.sales.fold(
       0.0,
       (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
     );

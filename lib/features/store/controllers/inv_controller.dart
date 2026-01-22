@@ -104,7 +104,7 @@ class CInventoryController extends GetxController {
 
     await initInvSync();
 
-    await scheduleExpiryAlerts();
+    //await scheduleExpiryAlerts();
 
     super.onInit();
   }

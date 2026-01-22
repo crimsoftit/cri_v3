@@ -57,70 +57,70 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
               padding: const EdgeInsets.only(
                 top: 15.0,
               ),
-              //width: CHelperFunctions.screenWidth() * .5,
+              width: CHelperFunctions.screenWidth() * .7,
               child: Column(
                 children: [
-                  SizedBox(
-                    width: CHelperFunctions.screenWidth(),
-                    height: 55.0,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top:
-                              dashboardController.currentWeekSales.value > 0 &&
-                                  dashboardController.lastWeekSales.value > 0
-                              ? 30.0
-                              : 0,
-                          right:
-                              dashboardController.currentWeekSales.value > 0 &&
-                                  dashboardController.lastWeekSales.value > 0
-                              ? 27.0
-                              : 5.0,
-                          child: Column(
-                            children: [
-                              Text(
-                                '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                      //color: CColors.black,
-                                      fontSizeDelta:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 1.0
-                                          : 2.0,
-                                      fontWeightDelta:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 1
-                                          : 2,
-                                    ),
-                              ),
-                              Text(
-                                '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: CHelperFunctions.screenWidth(),
+                  //   height: 55.0,
+                  //   child: Stack(
+                  //     children: [
+                  //       Positioned(
+                  //         top:
+                  //             dashboardController.currentWeekSales.value > 0 &&
+                  //                 dashboardController.lastWeekSales.value > 0
+                  //             ? 30.0
+                  //             : 0,
+                  //         right:
+                  //             dashboardController.currentWeekSales.value > 0 &&
+                  //                 dashboardController.lastWeekSales.value > 0
+                  //             ? 27.0
+                  //             : 5.0,
+                  //         child: Column(
+                  //           children: [
+                  //             Text(
+                  //               '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
+                  //               style: Theme.of(context).textTheme.labelSmall!
+                  //                   .apply(
+                  //                     color: CColors.rBrown,
+                  //                     //color: CColors.black,
+                  //                     fontSizeDelta:
+                  //                         dashboardController
+                  //                                     .currentWeekSales
+                  //                                     .value >
+                  //                                 0 &&
+                  //                             dashboardController
+                  //                                     .lastWeekSales
+                  //                                     .value >
+                  //                                 0
+                  //                         ? 1.0
+                  //                         : 2.0,
+                  //                     fontWeightDelta:
+                  //                         dashboardController
+                  //                                     .currentWeekSales
+                  //                                     .value >
+                  //                                 0 &&
+                  //                             dashboardController
+                  //                                     .lastWeekSales
+                  //                                     .value >
+                  //                                 0
+                  //                         ? 1
+                  //                         : 2,
+                  //                   ),
+                  //             ),
+                  //             Text(
+                  //               '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
+                  //               style: Theme.of(context).textTheme.labelSmall!
+                  //                   .apply(
+                  //                     color: CColors.rBrown,
+                  //                   ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   SizedBox(
                     //width: CHelperFunctions.screenWidth() * .5,
                     height: 150.0,
@@ -137,8 +137,8 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                         ),
                         gridData: FlGridData(
                           show: true,
-                          drawHorizontalLine: false,
-                          drawVerticalLine: false,
+                          drawHorizontalLine: true,
+                          drawVerticalLine: true,
                           horizontalInterval: 100,
                         ),
                         barGroups: dashboardController.weeklySales
