@@ -1,6 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -19,10 +18,10 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
-    final userController = Get.put(CUserController());
-    final userCurrency = CHelperFunctions.formatCurrency(
-      userController.user.value.currencyCode,
-    );
+    // final userController = Get.put(CUserController());
+    // final userCurrency = CHelperFunctions.formatCurrency(
+    //   userController.user.value.currencyCode,
+    // );
     return Column(
       children: [
         CSectionHeading(

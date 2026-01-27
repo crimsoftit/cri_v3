@@ -12,6 +12,7 @@ class CStoreSummaryCard extends StatelessWidget {
     this.cardBgColor = CColors.white,
     this.iconColor = CColors.rBrown,
     this.iconData,
+    this.iconSize,
     this.onTap,
     this.subTitleTxt,
     this.subTitleTxtColor = CColors.rBrown,
@@ -19,7 +20,7 @@ class CStoreSummaryCard extends StatelessWidget {
   });
 
   final Color? cardBgColor, iconColor, subTitleTxtColor, titleTxtColor;
-  final double? containerWidth;
+  final double? containerWidth, iconSize;
   final IconData? iconData;
   final String? subTitleTxt;
   final String titleTxt;
@@ -78,7 +79,7 @@ class CStoreSummaryCard extends StatelessWidget {
                       Icon(
                         iconData,
                         color: iconColor,
-                        size: CSizes.iconSm,
+                        size: iconSize ?? CSizes.iconSm,
                       ),
                     ],
                   ),

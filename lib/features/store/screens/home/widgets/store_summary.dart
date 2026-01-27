@@ -6,6 +6,7 @@ import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/store_summary_card.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,9 @@ class CStoreSummary extends StatelessWidget {
                     titleTxt: '0',
                   ),
                   CStoreSummaryCard(
+                    iconColor: CColors.error,
                     iconData: Iconsax.danger,
+                    iconSize: CSizes.iconLg,
                     subTitleTxt: 'expired items',
                     subTitleTxtColor: CColors.error,
                     titleTxt:

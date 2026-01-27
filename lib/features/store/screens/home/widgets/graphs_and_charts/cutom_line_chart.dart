@@ -2,6 +2,7 @@ import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/formatter.dart';
+import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,6 +97,7 @@ class CCutomLineChart extends StatelessWidget {
   /// -- build titles data --
   FlTitlesData _buildTitlesData() {
     final dashboardController = Get.put(CDashboardController());
+    // final isDarkTheme = CHelperFunctions.isDarkMode(Get.overlayContext!);
 
     return FlTitlesData(
       bottomTitles: AxisTitles(
@@ -107,6 +109,11 @@ class CCutomLineChart extends StatelessWidget {
                   : (value.toInt() == 12 || value.toInt() - 12 == 12)
                   ? '${value.toInt()}:00'
                   : '${value.toInt()}am',
+              style: TextStyle(
+                color: CNetworkManager.instance.hasConnection.value
+                    ? CColors.rBrown
+                    : CColors.darkerGrey,
+              ),
             );
           },
           interval: 3,
