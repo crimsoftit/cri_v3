@@ -48,6 +48,7 @@ class CInventoryController extends GetxController {
 
   // -- double values --
   final RxDouble lowStockItemsValue = 0.0.obs;
+  final RxDouble expiredItemsValue = 0.0.obs;
   final RxDouble unitBP = 0.0.obs;
   final RxDouble totalInventoryValue = 0.0.obs;
 
@@ -66,6 +67,8 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> itemsNearingExpiry = <CInventoryModel>[].obs;
+
+  final RxList<CInventoryModel> expiredItems = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
 
@@ -179,12 +182,30 @@ class CInventoryController extends GetxController {
           .where(
             (expiryItem) =>
                 expiryItem.expiryDate != '' &&
-                CFormatter.formatTimeRangeFromNowRaw(
+                CFormatter.computeTimeRangeFromNow(
                       expiryItem.expiryDate.replaceAll('@ ', ''),
                     ) ==
                     2,
           )
           .toList();
+
+      // -- assign expired items --
+      expiredItems.value = inventoryItems
+          .where(
+            (expiryItem) =>
+                expiryItem.expiryDate != '' &&
+                CFormatter.computeTimeRangeFromNow(
+                      expiryItem.expiryDate.replaceAll('@ ', ''),
+                    ) <=
+                    0,
+          )
+          .toList();
+
+      // -- count and monetary value of expired items --
+      expiredItemsValue.value = expiredItems.fold(
+        0.0,
+        (sum, item) => sum + (item.unitBp * item.quantity),
+      );
 
       // -- initialize inventory summary --
       if (CTxnsController.instance.dateRangeFieldController.text == '') {

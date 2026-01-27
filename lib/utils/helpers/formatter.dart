@@ -9,30 +9,11 @@ class CFormatter {
   }
 
   /// -- format time range and return result toString() --
-  static int formatTimeRangeFromNowRaw(String end) {
+  static int computeTimeRangeFromNow(String end) {
     final startTime = DateTime.now();
     final endTime = DateTime.parse(end);
 
     var differenceInDays = endTime.difference(startTime).inDays;
-
-    switch (differenceInDays) {
-      case < 0 && <= -1:
-        differenceInDays = endTime.difference(startTime).inDays.abs();
-        break;
-      case < 0 && > -1:
-        break;
-      case >= 0 && < 1:
-
-        // formattedRange =
-        //     '$differenceInHours hour(s) $differenceInMinutes minute(s) ago';
-
-        break;
-      case >= 1:
-        differenceInDays = endTime.difference(startTime).inDays;
-        break;
-      default:
-        differenceInDays = 0;
-    }
 
     return differenceInDays;
   }

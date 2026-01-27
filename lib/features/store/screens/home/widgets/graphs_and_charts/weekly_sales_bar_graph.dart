@@ -139,7 +139,16 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                           show: true,
                           drawHorizontalLine: true,
                           drawVerticalLine: true,
-                          horizontalInterval: 100,
+                          horizontalInterval:
+                              dashboardController
+                                  .weeklySalesHighestAmount
+                                  .value /
+                              2,
+                          verticalInterval:
+                              dashboardController
+                                  .weeklySalesHighestAmount
+                                  .value /
+                              2,
                         ),
                         barGroups: dashboardController.weeklySales
                             .asMap()

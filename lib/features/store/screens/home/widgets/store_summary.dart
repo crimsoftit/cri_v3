@@ -123,15 +123,16 @@ class CStoreSummary extends StatelessWidget {
                     //iconColor: Colors.redAccent,
                     iconData: Iconsax.user_add,
                     subTitleTxt: 'new customers',
-                    //subTitleTxtColor: CColors.warning,
+
                     titleTxt: '0',
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.danger,
                     subTitleTxt: 'expired items',
-                    // titleTxt:
-                    //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
-                    titleTxt: '0',
+                    subTitleTxtColor: CColors.error,
+                    titleTxt:
+                        '$userCurrency.${CFormatter.kSuffixFormatter(invController.expiredItemsValue.value..toStringAsFixed(1))}',
+                    titleTxtColor: CColors.error,
                   ),
                 ],
               ),
