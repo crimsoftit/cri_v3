@@ -29,6 +29,7 @@ class AddUpdateItemDialog {
       invController.txtCode.text = invController.txtCode.text.isEmpty
           ? invModel.pCode.toString()
           : invController.txtCode.text.trim();
+      invController.itemCalibration.value = invModel.calibration;
       invController.txtQty.text = invController.txtQty.text.isEmpty
           ? invModel.quantity.toString()
           : invController.txtQty.text.trim();

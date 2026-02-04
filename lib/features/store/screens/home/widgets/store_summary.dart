@@ -41,16 +41,17 @@ class CStoreSummary extends StatelessWidget {
                   CStoreSummaryCard(
                     iconData: Iconsax.money_recive,
                     subTitleTxt: 'money collected($userCurrency)',
-                    titleTxt:
-                        '${txnsController.moneyCollected.value..toStringAsFixed(1)}',
+                    titleTxt: txnsController.moneyCollected.value
+                        .toStringAsFixed(1),
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_send,
                     subTitleTxt: 'cost of sales($userCurrency)',
                     // titleTxt:
                     //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.costOfSales.value..toStringAsFixed(1))}',
-                    titleTxt:
-                        '${txnsController.costOfSales.value..toStringAsFixed(1)}',
+                    titleTxt: txnsController.costOfSales.value.toStringAsFixed(
+                      2,
+                    ),
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_tick,
@@ -69,7 +70,7 @@ class CStoreSummary extends StatelessWidget {
                     iconData: Iconsax.money_send,
                     subTitleTxt: 'inventory value',
                     titleTxt:
-                        '$userCurrency.${CFormatter.kSuffixFormatter(invController.totalInventoryValue.value..toStringAsFixed(1))}',
+                        '$userCurrency.${CFormatter.kSuffixFormatter(invController.totalInventoryValue.value..toStringAsFixed(2))}',
                     // titleTxt:
                     //     '$userCurrency.${invController.totalInventoryValue.value..toStringAsFixed(1)}',
                   ),
@@ -79,7 +80,7 @@ class CStoreSummary extends StatelessWidget {
                     subTitleTxt: 'gross revenue($userCurrency)',
                     //subTitleTxtColor: CColors.warning,
                     titleTxt:
-                        '${txnsController.grossRevenue.value..toStringAsFixed(1)}',
+                        '${txnsController.grossRevenue.value..toStringAsFixed(2)}',
                   ),
                   CStoreSummaryCard(
                     iconData: Iconsax.money_time,
@@ -87,7 +88,7 @@ class CStoreSummary extends StatelessWidget {
                     // titleTxt:
                     //     '$userCurrency.${CFormatter.kSuffixFormatter(txnsController.invoicesValue.value..toStringAsFixed(1))}',
                     titleTxt:
-                        '${txnsController.invoicesValue.value..toStringAsFixed(1)}',
+                        '${txnsController.invoicesValue.value..toStringAsFixed(2)}',
                   ),
                 ],
               ),

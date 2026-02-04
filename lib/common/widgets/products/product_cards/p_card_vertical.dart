@@ -35,6 +35,7 @@ class CProductCardVertical extends StatelessWidget {
     this.onDoubleTapAction,
     this.onFavoriteIconTap,
     this.onTapAction,
+    this.itemCalibration,
     this.qtyAvailable,
     this.qtyRefunded,
     this.qtySold,
@@ -45,7 +46,7 @@ class CProductCardVertical extends StatelessWidget {
 
   final double containerHeight;
   final Color? expiryColor, favIconColor;
-  final int? lowStockNotifierLimit;
+  final double? lowStockNotifierLimit;
   final int pId;
   final IconData? favIconData;
   final String? bp,
@@ -53,6 +54,7 @@ class CProductCardVertical extends StatelessWidget {
       lastModified,
       isSynced,
       itemAvatar,
+      itemCalibration,
       qtyAvailable,
       qtyRefunded,
       qtySold,
@@ -128,7 +130,7 @@ class CProductCardVertical extends StatelessWidget {
                         //     : CColors.rBrown,
                         bgColor: CColors.transparent,
                         editIconColor:
-                            int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            double.parse(qtyAvailable!) < lowStockNotifierLimit!
                             ? Colors.red
                             : isDarkTheme
                             ? CColors.white
@@ -136,7 +138,7 @@ class CProductCardVertical extends StatelessWidget {
                         includeEditBtn: true,
                         onEdit: onAvatarIconTap,
                         txtColor:
-                            int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            double.parse(qtyAvailable!) < lowStockNotifierLimit!
                             ? Colors.red
                             : isDarkTheme
                             ? CColors.white
@@ -210,12 +212,12 @@ class CProductCardVertical extends StatelessWidget {
               //smallSize: true,
               title:
                   CHelperFunctions.txtExceedsTwoLines(
-                    "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
+                    "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold sold)",
                     Theme.of(context).textTheme.labelSmall!,
                   )
-                  ? "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)"
-                  : "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold item(s) sold)",
-              txtColor: int.parse(qtyAvailable!) < lowStockNotifierLimit!
+                  ? "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold sold)"
+                  : "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold $itemCalibration sold)",
+              txtColor: double.parse(qtyAvailable!) < lowStockNotifierLimit!
                   ? Colors.red
                   : isDarkTheme
                   ? CColors.white
@@ -224,13 +226,15 @@ class CProductCardVertical extends StatelessWidget {
             ),
 
             Text(
-              '($qtyRefunded unit(s) refunded)',
+              '($qtyRefunded $itemCalibration refunded)',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),
             ),
             Text(
-              'sku: $pCode lsn: $lowStockNotifierLimit',
+              itemCalibration == 'units'
+                  ? 'sku: $pCode lsn: ${lowStockNotifierLimit!.toStringAsFixed(0)}'
+                  : 'sku: $pCode lsn: $lowStockNotifierLimit',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),

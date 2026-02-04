@@ -155,19 +155,22 @@ class AddUpdateInventoryForm extends StatelessWidget {
               const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   // -- stock qty field --
                   SizedBox(
-                    width: CHelperFunctions.screenWidth() * .38,
-                    height: 60.0,
+                    width: CHelperFunctions.screenWidth() * .43,
+                    height: 65.0,
                     child: TextFormField(
                       controller: invController.txtQty,
                       keyboardType: const TextInputType.numberWithOptions(
-                        decimal: false,
+                        decimal: true,
                         signed: false,
                       ),
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d{0,2}$'),
+                        ),
                       ],
                       style: const TextStyle(fontWeight: FontWeight.normal),
                       decoration: InputDecoration(
@@ -178,7 +181,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             ? CColors.transparent
                             : CColors.lightGrey,
                         labelStyle: textStyle,
-                        labelText: 'qty/units',
+                        labelText: 'qty (units, kg, litre)',
                         maintainHintSize: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 2.0),
@@ -191,7 +194,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                       validator: (value) {
                         return CValidator.validateNumber(
-                          'qty/ no. of units',
+                          'qty/no. of units',
                           value,
                         );
                       },
@@ -200,132 +203,95 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             value.isNotEmpty) {
                           invController.computeUnitBP(
                             double.parse(invController.txtBP.text.trim()),
-                            int.parse(value.trim()),
+                            double.parse(value.trim()),
                           );
                         }
 
                         if (value.isNotEmpty) {
                           invController.computeLowStockThreshold(
-                            int.parse(value.trim()),
+                            double.parse(value.trim()),
                           );
                         }
                       },
                     ),
                   ),
 
-                  // -- unit selling price field --
-                  SizedBox(
-                    width: CHelperFunctions.screenWidth() * .45,
-                    height: 60.0,
-                    child: TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: invController.txtUnitSP,
-                      decoration: InputDecoration(
-                        constraints: BoxConstraints(minHeight: 60.0),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 2.0,
-                        ),
-                        filled: true,
-                        fillColor: isDarkTheme
-                            ? CColors.transparent
-                            : CColors.lightGrey,
-                        labelStyle: textStyle,
-                        labelText: 'unit selling price',
-                        maintainHintSize: true,
-                        prefixIcon: Icon(
-                          Iconsax.bitcoin_card,
-                          color: CColors.darkGrey,
-                          size: CSizes.iconXs,
-                        ),
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: false,
-                      ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+(\.\d*)?'),
-                        ),
-                      ],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        height: 1.5,
-                      ),
-                      validator: (value) {
-                        return CValidator.validateNumber('usp', value);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              // const SizedBox(
-              //   height: CSizes.spaceBtnInputFields / 1.5,
-              // ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // -- textfield for low stock threshold limit
-                      SizedBox(
-                        width: CHelperFunctions.screenWidth() * .38,
-                        height: 60.0,
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          controller: invController.txtStockNotifierLimit,
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: false,
-                            signed: false,
-                          ),
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
+                  Obx(
+                    () {
+                      return SizedBox(
+                        width: CHelperFunctions.screenWidth() * .42,
+                        height: 65.0,
+                        child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             constraints: BoxConstraints(minHeight: 60.0),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 0.0,
+                            // contentPadding: const EdgeInsets.symmetric(
+                            //   horizontal: 2.0,
+                            // ),
+                            contentPadding: const EdgeInsets.only(
+                              left: 1.0,
                             ),
                             filled: true,
                             fillColor: isDarkTheme
                                 ? CColors.transparent
                                 : CColors.lightGrey,
-                            // label: Container(
-                            //   transform: Matrix4.translationValues(
-                            //     10.0,
-                            //     0.0,
-                            //     0.0,
-                            //   ),
-                            //   child: Text(
-                            //     'threshold',
-                            //   ),
-                            // ),
-                            // labelStyle: textStyle,
-                            labelText: 'alert threshold',
+
+                            labelStyle: textStyle,
+                            labelText: 'metric unit',
+
+                            maintainHintSize: true,
                             prefixIcon: Icon(
-                              // Iconsax.card_pos,
-                              Iconsax.quote_down,
+                              Iconsax.quote_down_circle,
                               color: CColors.darkGrey,
                               size: CSizes.iconXs,
                             ),
                           ),
-                          onChanged: (value) {},
-                          style: const TextStyle(fontWeight: FontWeight.normal),
-                          validator: (value) {
-                            return CValidator.validateNumber(
-                              'alert threshold',
-                              value,
-                            );
+                          initialValue:
+                              invController.itemCalibration.value != ''
+                              ? invController.itemCalibration.value
+                              : null,
+                          // hint: Text(
+                          //   'metric unit',
+                          //   style: Theme.of(context).textTheme.labelMedium,
+                          // ),
+                          onChanged: (String? newValue) {
+                            if (newValue != '' || newValue != null) {
+                              invController.itemCalibration.value = newValue!;
+                            }
                           },
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'unit of measurement is required';
+                            }
+                            return null;
+                          },
+                          items:
+                              <String>[
+                                'units',
+                                'litre',
+                                'kg',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                         ),
-                      ),
-                      SizedBox(width: 8.5),
-
+                      );
+                    },
+                  ),
+                ],
+              ),
+              // -- unit selling price field --
+              Obx(
+                () {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
                       // -- buying price textfield --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .45,
-                        height: 60.0,
+                        width: CHelperFunctions.screenWidth() * .43,
+                        height: 65.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtBP,
@@ -361,7 +327,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 value.isNotEmpty) {
                               invController.computeUnitBP(
                                 double.parse(value),
-                                int.parse(invController.txtQty.text),
+                                double.parse(invController.txtQty.text),
                               );
                             }
                           },
@@ -374,8 +340,117 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           },
                         ),
                       ),
+                      SizedBox(
+                        width: CHelperFunctions.screenWidth() * .42,
+                        height: 65.0,
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: invController.txtUnitSP,
+                          decoration: InputDecoration(
+                            constraints: BoxConstraints(minHeight: 60.0),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 2.0,
+                            ),
+                            filled: true,
+                            fillColor: isDarkTheme
+                                ? CColors.transparent
+                                : CColors.lightGrey,
+                            labelStyle: textStyle,
+                            labelText:
+                                invController.itemCalibration.value == '' ||
+                                    (invController.itemCalibration.value !=
+                                            '' &&
+                                        invController.itemCalibration.value ==
+                                            'units')
+                                ? 'unit selling price'
+                                : 'selling price per ${invController.itemCalibration.value}',
+                            maintainHintSize: true,
+                            prefixIcon: Icon(
+                              Iconsax.bitcoin_card,
+                              color: CColors.darkGrey,
+                              size: CSizes.iconXs,
+                            ),
+                          ),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: false,
+                          ),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+(\.\d*)?'),
+                            ),
+                          ],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1.5,
+                          ),
+                          validator: (value) {
+                            return CValidator.validateNumber('usp', value);
+                          },
+                        ),
+                      ),
                     ],
+                  );
+                },
+              ),
+              // const SizedBox(
+              //   height: CSizes.spaceBtnInputFields / 1.5,
+              // ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    // autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    controller: invController.txtStockNotifierLimit,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                      signed: false,
+                    ),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+(\.\d*)?'),
+                      ),
+                      // FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                      constraints: BoxConstraints(minHeight: 60.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 0.0,
+                      ),
+                      filled: true,
+                      fillColor: isDarkTheme
+                          ? CColors.transparent
+                          : CColors.lightGrey,
+                      // label: Container(
+                      //   transform: Matrix4.translationValues(
+                      //     10.0,
+                      //     0.0,
+                      //     0.0,
+                      //   ),
+                      //   child: Text(
+                      //     'threshold',
+                      //   ),
+                      // ),
+                      // labelStyle: textStyle,
+                      labelText: 'alert when qty falls below:',
+                      prefixIcon: Icon(
+                        // Iconsax.card_pos,
+                        Iconsax.quote_down,
+                        color: CColors.darkGrey,
+                        size: CSizes.iconXs,
+                      ),
+                    ),
+                    onChanged: (value) {},
+                    style: const TextStyle(fontWeight: FontWeight.normal),
+                    validator: (value) {
+                      return CValidator.validateNumber(
+                        'alert threshold',
+                        value,
+                      );
+                    },
                   ),
+                  SizedBox(width: 8.5),
                   Obx(() {
                     final userController = Get.put(CUserController());
                     final currency = CHelperFunctions.formatCurrency(

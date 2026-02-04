@@ -2,7 +2,7 @@
 
 class CBestSellersModel {
   int _productId = 0;
-  int _totalSales = 0;
+  double _totalSales = 0;
   String _productName = "";
   double _unitSellingPrice = 0.0;
 
@@ -26,7 +26,7 @@ class CBestSellersModel {
 
   int get productId => _productId;
   String get productName => _productName;
-  int get totalSales => _totalSales;
+  double get totalSales => _totalSales;
   double get unitSellingPrice => _unitSellingPrice;
 
   set productId(int newPid) {
@@ -37,7 +37,7 @@ class CBestSellersModel {
     _productName = newPname;
   }
 
-  set totalSales(int newTotalSales) {
+  set totalSales(double newTotalSales) {
     if (newTotalSales >= 0) {
       _totalSales = newTotalSales;
     }

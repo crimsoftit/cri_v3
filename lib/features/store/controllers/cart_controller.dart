@@ -19,10 +19,11 @@ class CCartController extends GetxController {
   RxDouble totalCartPrice = 0.0.obs;
 
   final RxBool cartItemsLoading = false.obs;
+  final RxBool displaySaveBtnOnCheckOutItems = false.obs;
   final userController = Get.put(CUserController());
 
-  final RxInt countOfCartItems = 0.obs;
-  RxInt itemQtyInCart = 0.obs;
+  final RxDouble countOfCartItems = 0.0.obs;
+  RxDouble itemQtyInCart = 0.0.obs;
 
   RxList<CCartItemModel> cartItems = <CCartItemModel>[].obs;
 
@@ -36,6 +37,7 @@ class CCartController extends GetxController {
   @override
   void onInit() async {
     cartItemsLoading.value = false;
+    displaySaveBtnOnCheckOutItems.value = false;
     qtyFieldControllers.clear();
 
     cartItems.clear();
@@ -100,7 +102,7 @@ class CCartController extends GetxController {
   /// -- add items to cart --
   void addToCart(CInventoryModel item) {
     // qty check
-    if (itemQtyInCart.value < 1) {
+    if (itemQtyInCart.value < 0.1) {
       CPopupSnackBar.customToast(
         message: 'select quantity',
         forInternetConnectivityStatus: false,
@@ -148,9 +150,10 @@ class CCartController extends GetxController {
       // item already added to cart
       // deviceCartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
       cartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
-      qtyFieldControllers[userCartItemIndex].text = cartItems[userCartItemIndex]
-          .quantity
-          .toString();
+      qtyFieldControllers[userCartItemIndex].text =
+          cartItems[userCartItemIndex].itemMetrics == 'units'
+          ? cartItems[userCartItemIndex].quantity.toStringAsFixed(0)
+          : cartItems[userCartItemIndex].quantity.toString();
     } else {
       cartItems.add(selectedCartItem);
       qtyFieldControllers.add(
@@ -169,11 +172,12 @@ class CCartController extends GetxController {
 
   /// -- add a single item to cart --
   /// TODO: don't add items that have expired to cart --
-  void addSingleItemToCart(
+  Future<void> addSingleItemToCart(
     CCartItemModel item,
     bool fromQtyTxtField,
     String? qtyValue,
-  ) {
+  ) async {
+    fetchCartItems();
     int itemIndex = cartItems.indexWhere(
       (cartItem) => cartItem.productId == item.productId,
     );
@@ -200,7 +204,7 @@ class CCartController extends GetxController {
     if (inventoryItem.quantity > 0) {
       if (itemIndex >= 0) {
         if (fromQtyTxtField && qtyValue != '') {
-          if (int.parse(qtyValue!) > inventoryItem.quantity) {
+          if (double.parse(qtyValue!) > inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
@@ -210,7 +214,7 @@ class CCartController extends GetxController {
             qtyValue = qtyFieldControllers[itemIndex].text;
             return;
           }
-          cartItems[itemIndex].quantity = int.parse(qtyValue);
+          cartItems[itemIndex].quantity = double.parse(qtyValue);
 
           qtyFieldControllers[itemIndex].text = cartItems[itemIndex].quantity
               .toString();
@@ -225,16 +229,18 @@ class CCartController extends GetxController {
             return;
           } else {
             if (fromQtyTxtField) {
-              cartItems[itemIndex].quantity = int.parse(qtyValue!);
+              cartItems[itemIndex].quantity = double.parse(qtyValue!);
               qtyFieldControllers[itemIndex].text = cartItems[itemIndex]
                   .quantity
                   .toString();
             } else {
-              cartItems[itemIndex].quantity += 1;
+              cartItems[itemIndex].quantity +=
+                  cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
               //var itemQty = cartItems[itemIndex].quantity;
-              qtyFieldControllers[itemIndex].text = cartItems[itemIndex]
-                  .quantity
-                  .toString();
+              qtyFieldControllers[itemIndex].text =
+                  cartItems[itemIndex].itemMetrics == 'units'
+                  ? cartItems[itemIndex].quantity.toStringAsFixed(0)
+                  : cartItems[itemIndex].quantity.toString();
               updateCart();
             }
           }
@@ -315,12 +321,13 @@ class CCartController extends GetxController {
   }
 
   /// -- convert a CInventoryModel to a CCartItemModel --
-  CCartItemModel convertInvToCartItem(CInventoryModel item, int quantity) {
+  CCartItemModel convertInvToCartItem(CInventoryModel item, double quantity) {
     return CCartItemModel(
       email: item.userEmail,
       productId: item.productId!,
       pCode: item.pCode,
       pName: item.name,
+      itemMetrics: item.calibration,
       quantity: quantity,
       availableStockQty: item.quantity,
       price: item.unitSellingPrice,
@@ -338,7 +345,7 @@ class CCartController extends GetxController {
   /// -- update cart totals --
   void updateCartTotals() {
     double computedTotalCartPrice = 0.0;
-    int computedCartItemsCount = 0;
+    double computedCartItemsCount = 0;
 
     if (cartItems.isNotEmpty) {
       for (var item in cartItems) {
@@ -365,10 +372,13 @@ class CCartController extends GetxController {
   }
 
   /// -- get a specific item's quantity in the cart --
-  int getItemQtyInCart(int pId) {
+  double getItemQtyInCart(int pId) {
     final foundCartItemQty = cartItems
         .where((item) => item.productId == pId)
-        .fold(0, (previousValue, element) => previousValue + element.quantity);
+        .fold(
+          0.0,
+          (previousValue, element) => previousValue + element.quantity,
+        );
 
     return foundCartItemQty;
   }

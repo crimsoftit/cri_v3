@@ -338,6 +338,7 @@ class CInvDetails extends StatelessWidget {
                           invItem.pCode,
                           invItem.name,
                           invItem.markedAsFavorite,
+                          invItem.calibration,
                           invItem.quantity,
                           invItem.qtySold,
                           invItem.qtyRefunded,

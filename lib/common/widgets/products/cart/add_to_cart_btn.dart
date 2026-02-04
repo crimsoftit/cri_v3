@@ -40,8 +40,15 @@ class CAddToCartBtn extends StatelessWidget {
               message: '${invItem.name} has expired',
             );
           } else {
-            final cartItem = cartController.convertInvToCartItem(invItem, 1);
-            cartController.addSingleItemToCart(cartItem, false, null);
+            final cartItem = cartController.convertInvToCartItem(
+              invItem,
+              invItem.calibration == 'units' ? 1 : .25,
+            );
+            cartController.addSingleItemToCart(
+              cartItem,
+              false,
+              null,
+            );
           }
         },
         child: Container(
@@ -67,12 +74,17 @@ class CAddToCartBtn extends StatelessWidget {
             child: Center(
               child: pQtyInCart > 0
                   ? Text(
-                      pQtyInCart.toString(),
+                      invItem.calibration == 'units'
+                          ? pQtyInCart.toStringAsFixed(0)
+                          : pQtyInCart.toString(),
                       style: Theme.of(
                         context,
                       ).textTheme.bodyLarge!.apply(color: CColors.white),
                     )
-                  : const Icon(Iconsax.add, color: CColors.white),
+                  : const Icon(
+                      Iconsax.add,
+                      color: CColors.white,
+                    ),
             ),
           ),
         ),

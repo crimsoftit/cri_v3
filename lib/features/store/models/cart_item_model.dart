@@ -1,17 +1,20 @@
 class CCartItemModel {
   int productId;
-  String email, pName, pCode;
-  int quantity;
-  int availableStockQty;
+  String email, pCode, pName, itemMetrics;
+  double quantity;
+  double availableStockQty;
   double price;
 
   CCartItemModel({
+    required this.availableStockQty,
     required this.email,
+    required this.itemMetrics,
+    required this.pCode,
     required this.productId,
     this.pName = '',
-    required this.pCode,
+
     required this.quantity,
-    required this.availableStockQty,
+
     this.price = 0.0,
   });
 
@@ -21,8 +24,9 @@ class CCartItemModel {
       email: '',
       pCode: '',
       productId: 0,
-      quantity: 0,
-      availableStockQty: 0,
+      itemMetrics: '',
+      quantity: 0.0,
+      availableStockQty: 0.0,
     );
   }
 
@@ -33,6 +37,7 @@ class CCartItemModel {
       'productId': productId,
       'pCode': pCode,
       'pName': pName,
+      'itemMetrics': itemMetrics,
       'quantity': quantity,
       'availableStockQty': availableStockQty,
       'price': price,
@@ -46,6 +51,7 @@ class CCartItemModel {
       productId: json['productId'],
       pCode: json['pCode'],
       pName: json['pName'],
+      itemMetrics: json['itemMetrics'],
       quantity: json['quantity'],
       availableStockQty: json['availableStockQty'],
       price: json['price'],

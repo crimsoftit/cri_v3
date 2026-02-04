@@ -29,7 +29,7 @@ class ForgotPasswordController extends GetxController {
         CFullScreenLoader.stopLoading();
         CPopupSnackBar.customToast(
           message: 'please check your internet connection',
-          forInternetConnectivityStatus: false,
+          forInternetConnectivityStatus: true,
         );
         return;
       }
@@ -76,7 +76,7 @@ class ForgotPasswordController extends GetxController {
         CFullScreenLoader.stopLoading();
         CPopupSnackBar.customToast(
           message: 'please check your internet connection',
-          forInternetConnectivityStatus: false,
+          forInternetConnectivityStatus: true,
         );
         return;
       }

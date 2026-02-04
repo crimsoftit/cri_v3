@@ -76,6 +76,8 @@ class CInventoryController extends GetxController {
   final RxInt currentItemId = 0.obs;
   final RxInt lowStockItemsCount = 0.obs;
 
+  final RxString itemCalibration = ''.obs;
+
   // -- text controllers --
   final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
@@ -252,15 +254,16 @@ class CInventoryController extends GetxController {
           txtCode.text,
           txtNameController.text,
           0,
-          int.parse(txtQty.text),
-          0,
-          0,
+          itemCalibration.value,
+          double.parse(txtQty.text),
+          0.0,
+          0.0,
           double.parse(txtBP.text.trim()),
           unitBP.value,
           double.parse(txtUnitSP.text.trim()),
           txtStockNotifierLimit.text != ''
-              ? int.parse(txtStockNotifierLimit.text.trim())
-              : (int.parse(txtQty.text) / 5).toInt(),
+              ? double.parse(txtStockNotifierLimit.text.trim())
+              : (double.parse(txtQty.text) / 5),
           txtSupplierName.text.trim(),
           txtSupplierContacts.text.trim(),
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
@@ -320,6 +323,7 @@ class CInventoryController extends GetxController {
               'pCode': e.pCode,
               'name': e.name,
               'markedAsFavorite': e.markedAsFavorite,
+              'calibration': e.calibration,
               'quantity': e.quantity,
               'qtySold': e.qtySold,
               'qtyRefunded': e.qtyRefunded,
@@ -375,6 +379,7 @@ class CInventoryController extends GetxController {
               element.pCode,
               element.name,
               element.markedAsFavorite,
+              element.calibration,
               element.quantity,
               element.qtySold,
               element.qtyRefunded,
@@ -431,6 +436,8 @@ class CInventoryController extends GetxController {
 
         txtId.text = currentItemId.value.toString();
         txtNameController.text = fetchedItem.first.name;
+
+        itemCalibration.value = fetchedItem.first.calibration;
         txtQty.text = (fetchedItem.first.quantity).toString();
         txtBP.text = (fetchedItem.first.buyingPrice).toString();
         unitBP.value = fetchedItem.first.unitBp;
@@ -461,6 +468,7 @@ class CInventoryController extends GetxController {
         txtExpiryDatePicker.text = '';
         txtId.text = '';
         txtNameController.text = '';
+        itemCalibration.value = '';
         txtQty.text = '';
         txtBP.text = '';
         unitBP.value = 0.0;
@@ -487,6 +495,7 @@ class CInventoryController extends GetxController {
     txtCode.text = "";
     txtExpiryDatePicker.text = "";
     txtId.text = "";
+    itemCalibration.value = '';
     txtQty.text = "";
     txtStockNotifierLimit.text = "";
     txtSupplierContacts.text = '';
@@ -617,13 +626,14 @@ class CInventoryController extends GetxController {
 
         inventoryItem.name = txtNameController.text.trim();
         inventoryItem.pCode = txtCode.text.trim();
-        inventoryItem.quantity = int.parse(txtQty.text.trim());
+        inventoryItem.calibration = itemCalibration.value;
+        inventoryItem.quantity = double.parse(txtQty.text.trim());
         inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
         inventoryItem.unitBp = unitBP.value;
         inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
         inventoryItem.lowStockNotifierLimit = txtStockNotifierLimit.text != ''
-            ? int.parse(txtStockNotifierLimit.text.trim())
-            : (int.parse(txtQty.text.trim()) / 5).toInt() + 1;
+            ? double.parse(txtStockNotifierLimit.text.trim())
+            : (double.parse(txtQty.text.trim()) / 5) + 1;
 
         inventoryItem.supplierName = txtSupplierName.text.trim();
         inventoryItem.supplierContacts = txtSupplierContacts.text.trim();
@@ -820,10 +830,21 @@ class CInventoryController extends GetxController {
       return userGSheetData;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap! ERROR FETCHING USER GSHEET INV DATA',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('ERROR FETCHING USER GSHEET INV DATA');
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! ERROR FETCHING USER GSHEET INV DATA',
+          message: e.toString(),
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! ',
+          message:
+              'an unknown error occurred while importing inventory data from cloud!',
+        );
+      }
+
+      rethrow;
     }
   }
 
@@ -845,6 +866,7 @@ class CInventoryController extends GetxController {
               element.pCode,
               element.name,
               element.markedAsFavorite,
+              element.calibration,
               element.quantity,
               element.qtySold,
               element.qtyRefunded,
@@ -886,8 +908,13 @@ class CInventoryController extends GetxController {
           title: 'ERROR IMPORTING inventory DATA FROM CLOUD!',
           message: e.toString(),
         );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'ERROR IMPORTING inventory DATA FROM CLOUD!',
+          message: e.toString(),
+        );
       }
-      throw e.toString();
+      rethrow;
     }
   }
 
@@ -991,6 +1018,7 @@ class CInventoryController extends GetxController {
             element.pCode,
             element.name,
             element.markedAsFavorite,
+            element.calibration,
             element.quantity,
             element.qtySold,
             element.qtyRefunded,
@@ -1099,15 +1127,15 @@ class CInventoryController extends GetxController {
   // }
 
   /// -- compute low stock threshold for alerts --
-  computeLowStockThreshold(int qty) {
-    var threshold = (qty * .2).toInt();
+  computeLowStockThreshold(double qty) {
+    var threshold = (qty * .2).toDouble();
     txtStockNotifierLimit.text = threshold == 0
         ? (threshold + 1).toString()
         : threshold.toString();
   }
 
   /// -- compute unitBP --
-  computeUnitBP(double bp, int qty) {
+  computeUnitBP(double bp, double qty) {
     unitBP.value = bp / qty;
   }
 
@@ -1132,6 +1160,7 @@ class CInventoryController extends GetxController {
     txtId.text = "";
     txtNameController.text = "";
     txtCode.text = "";
+    itemCalibration.value = "";
     txtQty.text = "";
     txtBP.text = "";
     unitBP.value = 0.0;

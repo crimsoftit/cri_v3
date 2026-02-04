@@ -111,9 +111,9 @@ class CCheckoutController extends GetxController {
   final RxDouble customerBal = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
 
-  final RxInt itemStockCount = 0.obs;
+  final RxDouble itemStockCount = 0.0.obs;
   final RxInt checkoutItemId = 0.obs;
-  final RxInt checkoutItemSales = 0.obs;
+  final RxDouble checkoutItemSales = 0.0.obs;
   final RxInt txnId = 0.obs;
 
   final RxString checkoutItemCode = ''.obs;
@@ -248,10 +248,10 @@ class CCheckoutController extends GetxController {
                   case >= 1:
                     if (invItem.quantity == 1) {
                       alertBody =
-                          'only ${invItem.quantity} item/unit of ${invItem.name} is left!!';
+                          'only ${invItem.quantity} ${invItem.calibration} of ${invItem.name} is left!!';
                     } else {
                       alertBody =
-                          'only ${invItem.quantity} items/units of ${invItem.name} are left!!';
+                          'only ${invItem.quantity} ${invItem.calibration} of ${invItem.name} are left!!';
                     }
 
                     break;
@@ -483,6 +483,7 @@ class CCheckoutController extends GetxController {
                 '',
                 '',
                 0,
+                '',
                 0,
                 0,
                 0,

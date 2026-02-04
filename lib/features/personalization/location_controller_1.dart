@@ -122,7 +122,7 @@ class CLocationController1 extends GetxController {
       isLoading.value = false;
       CPopupSnackBar.customToast(
         message: 'please check your internet connection',
-        forInternetConnectivityStatus: false,
+        forInternetConnectivityStatus: true,
       );
       return;
     }

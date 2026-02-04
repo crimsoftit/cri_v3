@@ -60,6 +60,7 @@ class CInvGridviewScreen extends StatelessWidget {
                   '',
                   '',
                   0,
+                  '',
                   0,
                   0,
                   0,
@@ -180,6 +181,12 @@ class CInvGridviewScreen extends StatelessWidget {
                   ? invController.foundInventoryItems[index].name
                   : invController.inventoryItems[index].name;
 
+              var itemCalibration =
+                  searchController.showSearchField.value &&
+                      invController.foundInventoryItems.isNotEmpty
+                  ? invController.foundInventoryItems[index].calibration
+                  : invController.inventoryItems[index].calibration;
+
               var qtyAvailable =
                   searchController.showSearchField.value &&
                       invController.foundInventoryItems.isNotEmpty
@@ -272,6 +279,7 @@ class CInvGridviewScreen extends StatelessWidget {
 
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
+                itemCalibration: itemCalibration,
                 itemName: pName,
                 lastModified: lastModified,
                 lowStockNotifierLimit: lowStockNotifierLimit,
@@ -303,6 +311,7 @@ class CInvGridviewScreen extends StatelessWidget {
                                 sku,
                                 pName,
                                 isFavorite,
+                                itemCalibration,
                                 qtyAvailable,
                                 qtySold,
                                 qtyRefunded,
@@ -346,9 +355,15 @@ class CInvGridviewScreen extends StatelessWidget {
                 },
                 pCode: sku,
                 pId: productId!,
-                qtyAvailable: qtyAvailable.toString(),
-                qtyRefunded: qtyRefunded.toString(),
-                qtySold: qtySold.toString(),
+                qtyAvailable: itemCalibration == 'units'
+                    ? qtyAvailable.toStringAsFixed(0)
+                    : qtyAvailable.toString(),
+                qtyRefunded: itemCalibration == 'units'
+                    ? qtyRefunded.toStringAsFixed(0)
+                    : qtyRefunded.toString(),
+                qtySold: itemCalibration == 'units'
+                    ? qtySold.toStringAsFixed(0)
+                    : qtySold.toString(),
                 syncAction: syncAction,
                 usp: usp.toString(),
               );

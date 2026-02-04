@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -178,10 +177,10 @@ class CDashboardController extends GetxController {
   FlTitlesData buildFlBarChartTitlesData() {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
-    final userController = Get.put(CUserController());
-    final userCurrency = CHelperFunctions.formatCurrency(
-      userController.user.value.currencyCode,
-    );
+    // final userController = Get.put(CUserController());
+    // final userCurrency = CHelperFunctions.formatCurrency(
+    //   userController.user.value.currencyCode,
+    // );
     return FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -224,7 +223,7 @@ class CDashboardController extends GetxController {
               space: 0,
               fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
               child: Text(
-                '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
+                CFormatter.kSuffixFormatter(value),
                 style: TextStyle(
                   color: isConnectedToInternet
                       ? CColors.rBrown
@@ -232,6 +231,16 @@ class CDashboardController extends GetxController {
                   fontSize: 10.0,
                 ),
               ),
+
+              // Text(
+              //   '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
+              //   style: TextStyle(
+              //     color: isConnectedToInternet
+              //         ? CColors.rBrown
+              //         : CColors.darkGrey,
+              //     fontSize: 10.0,
+              //   ),
+              // ),
             );
           },
         ),

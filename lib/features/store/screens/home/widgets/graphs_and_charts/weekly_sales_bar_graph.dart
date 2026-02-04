@@ -56,7 +56,7 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
               padding: const EdgeInsets.only(
                 top: 15.0,
               ),
-              width: CHelperFunctions.screenWidth() * .7,
+              width: CHelperFunctions.screenWidth(),
               child: Column(
                 children: [
                   // SizedBox(
@@ -142,12 +142,12 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                               dashboardController
                                   .weeklySalesHighestAmount
                                   .value /
-                              2,
+                              4,
                           verticalInterval:
                               dashboardController
                                   .weeklySalesHighestAmount
                                   .value /
-                              2,
+                              4,
                         ),
                         barGroups: dashboardController.weeklySales
                             .asMap()

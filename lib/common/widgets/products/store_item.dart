@@ -1,6 +1,7 @@
 import 'package:cri_v3/common/widgets/products/circle_avatar.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -23,6 +24,7 @@ class CStoreItemWidget extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final invController = Get.put(CInventoryController());
+    final txnsController = Get.put(CTxnsController());
 
     var invItem = invController.inventoryItems.firstWhere(
       (item) => item.productId == cartItem.productId,
@@ -32,7 +34,7 @@ class CStoreItemWidget extends StatelessWidget {
       children: [
         CCircleAvatar(
           avatarInitial: cartItem.pName[0],
-          txtColor: invItem.quantity < 5
+          txtColor: invItem.quantity < invItem.lowStockNotifierLimit
               ? Colors.red
               : isDarkTheme
               ? CColors.rBrown
@@ -56,10 +58,10 @@ class CStoreItemWidget extends StatelessWidget {
 
               CProductTitleText(
                 title:
-                    '${cartItem.pName.toUpperCase()} (${cartItem.availableStockQty} stocked)',
+                    '${cartItem.pName.toUpperCase()} (${cartItem.itemMetrics == 'units' ? cartItem.availableStockQty.toStringAsFixed(0) : cartItem.availableStockQty} ${txnsController.fetchInvItemById(cartItem.productId)}(s) stocked)',
                 maxLines: 2,
                 smallSize: false,
-                txtColor: invItem.quantity < 5
+                txtColor: invItem.quantity < invItem.lowStockNotifierLimit
                     ? Colors.red
                     : isDarkTheme
                     ? CColors.white
@@ -71,15 +73,21 @@ class CStoreItemWidget extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: '${cartItem.availableStockQty} stocked ',
+                      text: 'usp:${invItem.unitSellingPrice}; ',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                     TextSpan(
-                      text: 'usp:${invItem.unitSellingPrice} ',
+                      text: 'code:${invItem.pCode}; ',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
+
+                    // TextSpan(
+                    //   text: '${cartItem.availableStockQty} stocked ',
+                    //   style: Theme.of(context).textTheme.labelSmall,
+                    // ),
                     TextSpan(
-                      text: 'code:${invItem.pCode}',
+                      text:
+                          'low-stock alert: ${invItem.calibration == 'units' ? invItem.lowStockNotifierLimit.toStringAsFixed(0) : invItem.lowStockNotifierLimit} ${txnsController.fetchInvItemById(cartItem.productId)}(s)',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],

@@ -99,9 +99,9 @@ class CTxnsController extends GetxController {
   final txtTxnAddress = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
-  final RxInt qtyAvailable = 0.obs;
-  final RxInt totalSales = 0.obs;
-  final RxInt refundQty = 0.obs;
+  final RxDouble qtyAvailable = 0.0.obs;
+  final RxDouble totalSales = 0.0.obs;
+  final RxDouble refundQty = 0.0.obs;
 
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
@@ -1495,6 +1495,40 @@ class CTxnsController extends GetxController {
         CPopupSnackBar.errorSnackBar(
           message: 'error fetching sales summary: $e',
           title: 'error fetching sales summary!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  String fetchInvItemById(int productId) {
+    try {
+      var itemInvIndex = invController.inventoryItems.indexWhere(
+        (item) => item.productId == productId,
+      );
+      if (itemInvIndex != -1) {
+        var thisItem = invController.inventoryItems.firstWhereOrNull(
+          (invItem) => invItem.productId == productId,
+        );
+
+        var formattedOutput = thisItem!.calibration == 'units'
+            ? thisItem.calibration.substring(0, thisItem.calibration.length - 1)
+            : thisItem.calibration;
+
+        return formattedOutput;
+      } else {
+        CPopupSnackBar.customToast(
+          message: 'item is not listed in your inventory list',
+          forInternetConnectivityStatus: false,
+        );
+        return '';
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error fetching inventory item by id: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching inventory item by id: $e',
+          title: 'error fetching inventory item!',
         );
       }
       rethrow;

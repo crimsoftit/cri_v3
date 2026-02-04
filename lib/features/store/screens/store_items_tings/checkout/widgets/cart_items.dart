@@ -171,7 +171,7 @@ class CCartItems extends StatelessWidget {
                                   final thisCartItem = cartController
                                       .convertInvToCartItem(
                                         invItem,
-                                        int.parse(value),
+                                        double.parse(value),
                                       );
 
                                   cartController.addSingleItemToCart(

@@ -17,8 +17,8 @@ class CTxnsModel {
   String _productCode = "";
   String _productName = "";
 
-  int _quantity = 0;
-  int _qtyRefunded = 0;
+  double _quantity = 0;
+  double _qtyRefunded = 0;
   String _refundReason = "";
 
   double _totalAmount = 0.0;
@@ -137,9 +137,9 @@ class CTxnsModel {
   int get productId => _productId;
   String get productCode => _productCode;
   String get productName => _productName;
-  int get quantity => _quantity;
+  double get quantity => _quantity;
 
-  int get qtyRefunded => _qtyRefunded;
+  double get qtyRefunded => _qtyRefunded;
   String get refundReason => _refundReason;
 
   double get totalAmount => _totalAmount;
@@ -202,13 +202,13 @@ class CTxnsModel {
     _productName = newPname;
   }
 
-  set quantity(int newQty) {
-    if (newQty >= 0) {
+  set quantity(double newQty) {
+    if (newQty >= 0.0) {
       _quantity = newQty;
     }
   }
 
-  set qtyRefunded(int newQtyRefunded) {
+  set qtyRefunded(double newQtyRefunded) {
     _qtyRefunded = newQtyRefunded;
   }
 
@@ -368,8 +368,8 @@ class CTxnsModel {
       jsonDecode(json[TxnsSheetFields.productId]),
       json[TxnsSheetFields.productCode],
       json[TxnsSheetFields.productName],
-      jsonDecode(json[TxnsSheetFields.quantity]),
-      jsonDecode(json[TxnsSheetFields.qtyRefunded]),
+      double.parse(json[TxnsSheetFields.quantity]),
+      double.parse(json[TxnsSheetFields.qtyRefunded]),
       json[TxnsSheetFields.refundReason],
       double.parse(json[TxnsSheetFields.totalAmount]),
       double.parse(json[TxnsSheetFields.amountIssued]),

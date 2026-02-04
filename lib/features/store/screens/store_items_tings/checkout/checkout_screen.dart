@@ -191,13 +191,25 @@ class CCheckoutScreen extends StatelessWidget {
                                     itemBuilder: (_, index) {
                                       cartController.qtyFieldControllers.add(
                                         TextEditingController(
-                                          text: cartController
-                                              .getItemQtyInCart(
-                                                cartController
-                                                    .cartItems[index]
-                                                    .productId,
-                                              )
-                                              .toString(),
+                                          text:
+                                              cartController
+                                                      .cartItems[index]
+                                                      .itemMetrics ==
+                                                  'units'
+                                              ? cartController
+                                                    .getItemQtyInCart(
+                                                      cartController
+                                                          .cartItems[index]
+                                                          .productId,
+                                                    )
+                                                    .toStringAsFixed(0)
+                                              : cartController
+                                                    .getItemQtyInCart(
+                                                      cartController
+                                                          .cartItems[index]
+                                                          .productId,
+                                                    )
+                                                    .toString(),
                                         ),
                                       );
 
@@ -285,11 +297,22 @@ class CCheckoutScreen extends StatelessWidget {
                                                                   .fetchCartItems();
 
                                                               cartController
-                                                                  .qtyFieldControllers[index]
-                                                                  .text = cartController
-                                                                  .cartItems[index]
-                                                                  .quantity
-                                                                  .toString();
+                                                                      .qtyFieldControllers[index]
+                                                                      .text =
+                                                                  cartController
+                                                                          .cartItems[index]
+                                                                          .itemMetrics ==
+                                                                      'units'
+                                                                  ? cartController
+                                                                        .cartItems[index]
+                                                                        .quantity
+                                                                        .toStringAsFixed(
+                                                                          0,
+                                                                        )
+                                                                  : cartController
+                                                                        .cartItems[index]
+                                                                        .quantity
+                                                                        .toString();
                                                               if (checkoutController
                                                                       .amtIssuedFieldController
                                                                       .text !=
@@ -347,16 +370,18 @@ class CCheckoutScreen extends StatelessWidget {
                                                                 ),
                                                             keyboardType:
                                                                 const TextInputType.numberWithOptions(
-                                                                  decimal:
-                                                                      false,
+                                                                  decimal: true,
                                                                   signed: false,
                                                                 ),
                                                             inputFormatters:
                                                                 <
                                                                   TextInputFormatter
                                                                 >[
-                                                                  FilteringTextInputFormatter
-                                                                      .digitsOnly,
+                                                                  FilteringTextInputFormatter.allow(
+                                                                    RegExp(
+                                                                      r'^\d+(\.\d*)?',
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                             style: TextStyle(
                                                               color: isDarkTheme
@@ -367,55 +392,10 @@ class CCheckoutScreen extends StatelessWidget {
                                                             ),
 
                                                             onChanged: (value) {
-                                                              invController
-                                                                  .fetchUserInventoryItems();
                                                               cartController
-                                                                  .fetchCartItems();
-                                                              if (cartController
-                                                                      .qtyFieldControllers[index]
-                                                                      .text !=
-                                                                  '') {
-                                                                var invItem = invController.inventoryItems.firstWhere(
-                                                                  (item) =>
-                                                                      item.productId
-                                                                          .toString() ==
-                                                                      cartController
-                                                                          .cartItems[index]
-                                                                          .productId
-                                                                          .toString()
-                                                                          .toLowerCase(),
-                                                                );
-
-                                                                final thisCartItem =
-                                                                    cartController.convertInvToCartItem(
-                                                                      invItem,
-                                                                      int.parse(
-                                                                        value,
-                                                                      ),
-                                                                    );
-
-                                                                cartController
-                                                                    .addSingleItemToCart(
-                                                                      thisCartItem,
-                                                                      true,
-                                                                      value,
-                                                                    );
-                                                                if (checkoutController
-                                                                        .amtIssuedFieldController
-                                                                        .text !=
-                                                                    '') {
-                                                                  checkoutController.computeCustomerBal(
-                                                                    cartController
-                                                                        .totalCartPrice
-                                                                        .value,
-                                                                    double.parse(
-                                                                      checkoutController
-                                                                          .amtIssuedFieldController
-                                                                          .text,
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              }
+                                                                      .displaySaveBtnOnCheckOutItems
+                                                                      .value =
+                                                                  true;
                                                             },
                                                           ),
                                                         ),
@@ -435,10 +415,10 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     .qtyFieldControllers[index]
                                                                     .text !=
                                                                 '') {
-                                                              invController
-                                                                  .fetchUserInventoryItems();
-                                                              cartController
-                                                                  .fetchCartItems();
+                                                              // invController
+                                                              //     .fetchUserInventoryItems();
+                                                              // cartController
+                                                              //     .fetchCartItems();
                                                               var invItem = invController.inventoryItems.firstWhere(
                                                                 (item) =>
                                                                     item.productId
@@ -450,11 +430,14 @@ class CCheckoutScreen extends StatelessWidget {
                                                                         .toLowerCase(),
                                                               );
                                                               final thisCartItem =
-                                                                  cartController
-                                                                      .convertInvToCartItem(
-                                                                        invItem,
-                                                                        1,
-                                                                      );
+                                                                  cartController.convertInvToCartItem(
+                                                                    invItem,
+                                                                    double.parse(
+                                                                      cartController
+                                                                          .qtyFieldControllers[index]
+                                                                          .text,
+                                                                    ),
+                                                                  );
                                                               cartController
                                                                   .addSingleItemToCart(
                                                                     thisCartItem,
@@ -464,11 +447,22 @@ class CCheckoutScreen extends StatelessWidget {
                                                               cartController
                                                                   .fetchCartItems();
                                                               cartController
-                                                                  .qtyFieldControllers[index]
-                                                                  .text = cartController
-                                                                  .cartItems[index]
-                                                                  .quantity
-                                                                  .toString();
+                                                                      .qtyFieldControllers[index]
+                                                                      .text =
+                                                                  cartController
+                                                                          .cartItems[index]
+                                                                          .itemMetrics ==
+                                                                      'units'
+                                                                  ? cartController
+                                                                        .cartItems[index]
+                                                                        .quantity
+                                                                        .toStringAsFixed(
+                                                                          0,
+                                                                        )
+                                                                  : cartController
+                                                                        .cartItems[index]
+                                                                        .quantity
+                                                                        .toString();
                                                               if (checkoutController
                                                                       .amtIssuedFieldController
                                                                       .text !=
@@ -488,6 +482,88 @@ class CCheckoutScreen extends StatelessWidget {
                                                           },
                                                         ),
                                                       ],
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: cartController
+                                                        .displaySaveBtnOnCheckOutItems
+                                                        .value,
+                                                    child: TextButton.icon(
+                                                      icon: Icon(
+                                                        Iconsax.save_add,
+                                                        color: CColors.rBrown,
+                                                      ),
+                                                      label: Text(
+                                                        'save',
+                                                        style: Theme.of(
+                                                          context,
+                                                        ).textTheme.labelMedium,
+                                                      ),
+                                                      onPressed: () {
+                                                        // invController
+                                                        //     .fetchUserInventoryItems();
+                                                        // cartController
+                                                        //     .fetchCartItems();
+                                                        if (cartController
+                                                                .qtyFieldControllers[index]
+                                                                .text !=
+                                                            '') {
+                                                          var invItem = invController
+                                                              .inventoryItems
+                                                              .firstWhere(
+                                                                (item) =>
+                                                                    item.productId
+                                                                        .toString() ==
+                                                                    cartController
+                                                                        .cartItems[index]
+                                                                        .productId
+                                                                        .toString()
+                                                                        .toLowerCase(),
+                                                              );
+
+                                                          final thisCartItem = cartController
+                                                              .convertInvToCartItem(
+                                                                invItem,
+                                                                double.parse(
+                                                                  cartController
+                                                                      .qtyFieldControllers[index]
+                                                                      .text
+                                                                      .trim(),
+                                                                ),
+                                                              );
+
+                                                          cartController
+                                                              .addSingleItemToCart(
+                                                                thisCartItem,
+                                                                true,
+                                                                cartController
+                                                                    .qtyFieldControllers[index]
+                                                                    .text
+                                                                    .trim(),
+                                                              );
+                                                          if (checkoutController
+                                                                  .amtIssuedFieldController
+                                                                  .text !=
+                                                              '') {
+                                                            checkoutController
+                                                                .computeCustomerBal(
+                                                                  cartController
+                                                                      .totalCartPrice
+                                                                      .value,
+                                                                  double.parse(
+                                                                    checkoutController
+                                                                        .amtIssuedFieldController
+                                                                        .text
+                                                                        .trim(),
+                                                                  ),
+                                                                );
+                                                          }
+                                                          cartController
+                                                                  .displaySaveBtnOnCheckOutItems
+                                                                  .value =
+                                                              false;
+                                                        }
+                                                      },
                                                     ),
                                                   ),
                                                 ],

@@ -55,7 +55,7 @@ class CCutomLineChart extends StatelessWidget {
     return LineChartBarData(
       barWidth: 1.0,
       color: CColors.rBrown,
-      isCurved: true,
+      isCurved: false,
       spots: lineChartData,
       // spots: lineChartData
       //     .map((spot) => spot.y < 0 ? FlSpot(spot.y, 0) : spot)
@@ -86,11 +86,15 @@ class CCutomLineChart extends StatelessWidget {
   /// -- build border data --
   FlBorderData _buildBorderData() {
     return FlBorderData(
-      border: Border.all(
-        color: CColors.rBrown,
-        width: 1.0,
+      // border: Border.all(
+      //   color: CColors.rBrown,
+      //   width: 1.0,
+      // ),
+      border: Border(
+        top: BorderSide.none,
+        right: BorderSide.none,
       ),
-      show: false,
+      show: true,
     );
   }
 
@@ -106,7 +110,9 @@ class CCutomLineChart extends StatelessWidget {
             return Text(
               value.toInt() > 12 && value.toInt() < 24
                   ? '${(value - 12).toInt()}pm'
-                  : (value.toInt() == 12 || value.toInt() - 12 == 12)
+                  : (value.toInt() == 12 ||
+                        value.toInt() - 12 == 12 ||
+                        value.toInt() == 0)
                   ? '${value.toInt()}:00'
                   : '${value.toInt()}am',
               style: TextStyle(
@@ -118,7 +124,7 @@ class CCutomLineChart extends StatelessWidget {
           },
           interval: 3,
           maxIncluded: true,
-          minIncluded: false,
+          minIncluded: true,
           reservedSize: 20.0,
           showTitles: true,
         ),
@@ -132,7 +138,7 @@ class CCutomLineChart extends StatelessWidget {
           },
           interval: dashboardController.peakSalesAmount.value / 2,
           maxIncluded: true,
-          minIncluded: false,
+          minIncluded: true,
           reservedSize: 10.0,
           showTitles: false,
         ),

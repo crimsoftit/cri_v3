@@ -63,6 +63,7 @@ class CStoreScreenHeader extends StatelessWidget {
                           '',
                           '',
                           0,
+                          '',
                           0,
                           0,
                           0,

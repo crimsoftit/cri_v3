@@ -87,15 +87,18 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   height: 40.0,
                   iconColor: minusIconBtnColor ?? CColors.white,
                   onPressed: () {
-                    cartController.itemQtyInCart.value < 1
+                    cartController.itemQtyInCart.value < 0.1
                         ? null
-                        : cartController.itemQtyInCart.value -= 1;
+                        : cartController.itemQtyInCart.value -=
+                              inventoryItem.calibration == 'units' ? 1 : .25;
                   },
                 ),
                 //const CFavoriteIcon(),
                 const SizedBox(width: CSizes.spaceBtnItems),
                 Text(
-                  cartController.itemQtyInCart.value.toString(),
+                  inventoryItem.calibration == 'units'
+                      ? '${cartController.itemQtyInCart.value.toStringAsFixed(0)} ${inventoryItem.calibration}'
+                      : '${cartController.itemQtyInCart.value} ${inventoryItem.calibration}(s)',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
 
@@ -115,7 +118,8 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   onPressed: () {
                     if (cartController.itemQtyInCart.value <
                         inventoryItem.quantity) {
-                      cartController.itemQtyInCart.value += 1;
+                      cartController.itemQtyInCart.value +=
+                          inventoryItem.calibration == 'units' ? 1 : .25;
                     } else {
                       CPopupSnackBar.warningSnackBar(
                         title:
@@ -129,7 +133,17 @@ class CAddToCartBottomNavBar extends StatelessWidget {
               ],
             ),
             ElevatedButton.icon(
-              onPressed: cartController.itemQtyInCart.value < 1
+              icon: Icon(
+                Iconsax.shopping_cart,
+                color: CColors.white,
+              ),
+              label: Text(
+                'add to cart'.toUpperCase(),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.apply(color: CColors.white),
+              ),
+              onPressed: cartController.itemQtyInCart.value < 0.1
                   ? null
                   : () {
                       invController.fetchUserInventoryItems();
@@ -163,13 +177,6 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   color: add2CartBtnBorderColor ?? CColors.rBrown,
                 ),
               ),
-              label: Text(
-                'add to cart'.toUpperCase(),
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.apply(color: CColors.white),
-              ),
-              icon: Icon(Iconsax.shopping_cart, color: CColors.white),
             ),
           ],
         );

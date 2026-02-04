@@ -138,6 +138,7 @@ class CFreshDashboardScreen extends StatelessWidget {
                                       '',
                                       '',
                                       0,
+                                      '',
                                       0,
                                       0,
                                       0,

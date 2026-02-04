@@ -38,7 +38,12 @@ class CPositionedCartCounterWidget extends StatelessWidget {
           child: Obx(() {
             final cartController = Get.put(CCartController());
             return Text(
-              cartController.countOfCartItems.value.toString(),
+              cartController.countOfCartItems.value < 1 &&
+                      cartController.countOfCartItems.value > 0
+                  ? cartController.countOfCartItems.value.ceil().toString()
+                  : cartController.countOfCartItems.value
+                        .ceil()
+                        .toStringAsFixed(0),
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color:
                     counterTxtColor ??

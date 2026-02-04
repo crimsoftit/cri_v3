@@ -24,22 +24,36 @@ class CValidator {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
     }
-    if (fieldName == 'buying price' || fieldName == 'usp') {
-      if (double.parse(value) < 1.0) {
-        return 'invalid value for $fieldName';
-      }
-    } else {
-      if (int.parse(value) < 1) {
-        return 'invalid value';
-      }
+    if (double.parse(value) < 0.09) {
+      return 'invalid value for $fieldName';
     }
 
     return null;
   }
 
+  // static String? validateNumber(String? fieldName, String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return '$fieldName field is required!';
+  //   }
+  //   if (fieldName == 'buying price' || fieldName == 'usp') {
+  //     if (double.parse(value) < 1.0) {
+  //       return 'invalid value for $fieldName';
+  //     }
+  //   } else {
+  //     if (int.parse(value) < 1) {
+  //       return 'invalid value';
+  //     }
+  //   }
+
+  //   return null;
+  // }
+
   /* ========== customer balance field validation ========== */
   static String? validateCustomerBal(
-      String? fieldName, String? value, double tAmount) {
+    String? fieldName,
+    String? value,
+    double tAmount,
+  ) {
     if (double.parse(value!) < tAmount) {
       return 'customer should pay $tAmount';
     }
@@ -119,7 +133,9 @@ class CValidator {
   }
 
   static String? validateConfirmPassword(
-      String? originalPswdTxt, String? confirmPswdTxt) {
+    String? originalPswdTxt,
+    String? confirmPswdTxt,
+  ) {
     if (confirmPswdTxt == null || confirmPswdTxt.isEmpty) {
       return 'please retype password!';
     } else if (confirmPswdTxt != originalPswdTxt) {

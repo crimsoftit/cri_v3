@@ -14,13 +14,14 @@ class CInventoryModel {
   String _pCode = "";
   String _name = "";
   int _markedAsFavorite = 0;
-  int _quantity = 0;
-  int _qtySold = 0;
-  int _qtyRefunded = 0;
+  String _calibration = "";
+  double _quantity = 0;
+  double _qtySold = 0;
+  double _qtyRefunded = 0;
   double _buyingPrice = 0.0;
   double _unitBp = 0.0;
   double _unitSellingPrice = 0.0;
-  int _lowStockNotifierLimit = 0;
+  double _lowStockNotifierLimit = 0;
   String _supplierName = "";
   String _supplierContacts = "";
   String _dateAdded = "";
@@ -37,6 +38,7 @@ class CInventoryModel {
     this._pCode,
     this._name,
     this._markedAsFavorite,
+    this._calibration,
     this._quantity,
     this._qtySold,
     this._qtyRefunded,
@@ -61,6 +63,7 @@ class CInventoryModel {
     this._pCode,
     this._name,
     this._markedAsFavorite,
+    this._calibration,
     this._quantity,
     this._qtySold,
     this._qtyRefunded,
@@ -85,13 +88,14 @@ class CInventoryModel {
       '',
       '',
       0,
-      0,
-      0,
-      0,
+      '',
       0.0,
       0.0,
       0.0,
-      0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
       '',
       '',
       '',
@@ -112,15 +116,16 @@ class CInventoryModel {
 
   int get markedAsFavorite => _markedAsFavorite;
 
-  int get quantity => _quantity;
-  int get qtySold => _qtySold;
-  int get qtyRefunded => _qtyRefunded;
+  String get calibration => _calibration;
+  double get quantity => _quantity;
+  double get qtySold => _qtySold;
+  double get qtyRefunded => _qtyRefunded;
 
   double get buyingPrice => _buyingPrice;
   double get unitBp => _unitBp;
   double get unitSellingPrice => _unitSellingPrice;
 
-  int get lowStockNotifierLimit => _lowStockNotifierLimit;
+  double get lowStockNotifierLimit => _lowStockNotifierLimit;
 
   String get supplierName => _supplierName;
   String get supplierContacts => _supplierContacts;
@@ -158,17 +163,21 @@ class CInventoryModel {
     _markedAsFavorite = isMarkedAsFavorite;
   }
 
-  set quantity(int newQty) {
+  set calibration(String newCalibration) {
+    _calibration = newCalibration;
+  }
+
+  set quantity(double newQty) {
     if (newQty >= 0) {
       _quantity = newQty;
     }
   }
 
-  set qtySold(int newQtySold) {
+  set qtySold(double newQtySold) {
     _qtySold = newQtySold;
   }
 
-  set qtyRefunded(int newQtyRefunded) {
+  set qtyRefunded(double newQtyRefunded) {
     _qtyRefunded = newQtyRefunded;
   }
 
@@ -184,7 +193,7 @@ class CInventoryModel {
     _unitSellingPrice = newUSP;
   }
 
-  set lowStockNotifierLimit(int newLimit) {
+  set lowStockNotifierLimit(double newLimit) {
     _lowStockNotifierLimit = newLimit;
   }
 
@@ -230,6 +239,7 @@ class CInventoryModel {
     map['name'] = _name;
     map['markedAsFavorite'] = _markedAsFavorite;
 
+    map['calibration'] = _calibration;
     map['quantity'] = _quantity;
     map['qtySold'] = _qtySold;
     map['qtyRefunded'] = _qtyRefunded;
@@ -262,6 +272,8 @@ class CInventoryModel {
     _name = map['name'];
     _markedAsFavorite = map['markedAsFavorite'];
     _pCode = map['pCode'];
+
+    _calibration = map['calibration'];
     _quantity = map['quantity'];
     _qtySold = map['qtySold'];
     _qtyRefunded = map['qtyRefunded'];
@@ -291,13 +303,14 @@ class CInventoryModel {
       json[InvSheetFields.pCode],
       json[InvSheetFields.name],
       jsonDecode(json[InvSheetFields.markedAsFavorite]),
-      jsonDecode(json[InvSheetFields.quantity]),
-      jsonDecode(json[InvSheetFields.qtySold]),
-      jsonDecode(json[InvSheetFields.qtyRefunded]),
+      json[InvSheetFields.calibration],
+      double.parse(json[InvSheetFields.quantity]),
+      double.parse(json[InvSheetFields.qtySold]),
+      double.parse(json[InvSheetFields.qtyRefunded]),
       double.parse(json[InvSheetFields.buyingPrice]),
       double.parse(json[InvSheetFields.unitBp]),
       double.parse(json[InvSheetFields.unitSellingPrice]),
-      jsonDecode(json[InvSheetFields.lowStockNotifierLimit]),
+      double.parse(json[InvSheetFields.lowStockNotifierLimit]),
       json[InvSheetFields.supplierName],
       json[InvSheetFields.supplierContacts],
       json[InvSheetFields.dateAdded],
