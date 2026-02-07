@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -17,6 +16,7 @@ import 'package:cri_v3/features/store/models/txns_model.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -105,6 +105,7 @@ class CTxnsController extends GetxController {
 
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
+  final RxString saleItemMetrics = ''.obs;
 
   final RxDouble saleItemBp = 0.0.obs;
   final RxDouble saleItemUnitBP = 0.0.obs;
@@ -137,14 +138,14 @@ class CTxnsController extends GetxController {
     showAmountIssuedField.value = true;
     refundQty.value = 0;
 
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
+    //   if (!isAllowed) {
+    //     // This is just a basic example. For real apps, you must show some
+    //     // friendly dialog box before call the request method.
+    //     // This is very important to not harm the user experience
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   }
+    // });
     super.onInit();
   }
 
@@ -474,7 +475,7 @@ class CTxnsController extends GetxController {
         saleItemBp.value = fetchedItem.first.buyingPrice;
         saleItemUnitBP.value = fetchedItem.first.unitBp;
         saleItemUsp.value = fetchedItem.first.unitSellingPrice;
-
+        saleItemMetrics.value = fetchedItem.first.calibration;
         qtyAvailable.value = fetchedItem.first.quantity;
         totalSales.value = fetchedItem.first.qtySold;
       } else {
@@ -668,6 +669,7 @@ class CTxnsController extends GetxController {
     saleItemBp.value = foundItem.buyingPrice;
     saleItemUnitBP.value = foundItem.unitBp;
     saleItemUsp.value = foundItem.unitSellingPrice;
+    saleItemMetrics.value = foundItem.calibration;
     qtyAvailable.value = foundItem.quantity;
     totalSales.value = foundItem.qtySold;
     showAmountIssuedField.value = true;
@@ -697,6 +699,7 @@ class CTxnsController extends GetxController {
     totalSales.value = 0;
     saleItemBp.value = 0.0;
     saleItemUnitBP.value = 0.0;
+    saleItemMetrics.value = '';
     saleItemUsp.value = 0.0;
     deposit.value = 0.0;
     totalAmount.value = 0.0;
@@ -750,6 +753,7 @@ class CTxnsController extends GetxController {
                     'productId': sale.productId,
                     'productCode': sale.productCode,
                     'productName': sale.productName,
+                    'itemMetrics': sale.itemMetrics,
                     'quantity': sale.quantity,
                     'qtyRefunded': sale.qtyRefunded,
                     'refundReason': sale.refundReason,
@@ -833,7 +837,8 @@ class CTxnsController extends GetxController {
       }
 
       //throw e.toString();
-      return false;
+      // return false;
+      rethrow;
     }
     // finally {
     //   txnsSyncIsLoading.value = false;
@@ -901,6 +906,7 @@ class CTxnsController extends GetxController {
               element.productId,
               element.productCode,
               element.productName,
+              element.itemMetrics,
               element.quantity,
               element.qtyRefunded,
               element.refundReason,
@@ -1005,7 +1011,7 @@ class CTxnsController extends GetxController {
                   ),
                 ),
                 Text(
-                  '${soldItem.quantity} sold (${soldItem.qtyRefunded} refunded)',
+                  '${soldItem.quantity} ${CFormatter.formatInventoryMetrics(soldItem.productId)}s sold; (${soldItem.qtyRefunded} ${CFormatter.formatInventoryMetrics(soldItem.productId)}s refunded)',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: isDarkTheme ? CColors.white : CColors.rBrown,
                   ),
@@ -1018,6 +1024,9 @@ class CTxnsController extends GetxController {
                 ),
                 const SizedBox(height: CSizes.spaceBtnInputFields / 4),
                 Obx(() {
+                  var formattedQtyString = soldItem.itemMetrics == 'units'
+                      ? soldItem.quantity.toStringAsFixed(0)
+                      : soldItem.quantity.toString();
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1041,7 +1050,7 @@ class CTxnsController extends GetxController {
                       const SizedBox(width: CSizes.spaceBtnItems),
                       Text(
                         refundQty.value > soldItem.quantity
-                            ? soldItem.quantity.toString()
+                            ? formattedQtyString
                             : refundQty.value.toString(),
                         style: Theme.of(context).textTheme.titleSmall!.apply(
                           color: isDarkTheme ? CColors.white : CColors.rBrown,
@@ -1270,11 +1279,11 @@ class CTxnsController extends GetxController {
         } else {
           if (kDebugMode) {
             print('internet connection required for txns cloud sync!');
-            CPopupSnackBar.customToast(
-              message: 'internet connection required for txns cloud sync!',
-              forInternetConnectivityStatus: true,
-            );
           }
+          CPopupSnackBar.customToast(
+            message: 'internet connection required for txns cloud sync!',
+            forInternetConnectivityStatus: true,
+          );
         }
       }
 
@@ -1365,9 +1374,13 @@ class CTxnsController extends GetxController {
           );
 
       // -- compute cost of sales --
-      costOfSales.value = sales
-          .where((sale) => sale.quantity >= 1)
-          .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
+      // costOfSales.value = sales
+      //     .where((sale) => sale.quantity > 0)
+      //     .fold(0.0, (sum, sale) => sum + (sale.quantity * sale.unitBP));
+      costOfSales.value = sales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.quantity * sale.unitBP),
+      );
 
       grossRevenue.value = sales.fold(
         0.0,
@@ -1375,16 +1388,10 @@ class CTxnsController extends GetxController {
       );
 
       // -- compute total revenue --
-      moneyCollected.value = sales
-          .where(
-            (sale) =>
-                sale.quantity >= 1 &&
-                sale.txnStatus.toLowerCase().contains('complete'),
-          )
-          .fold(
-            0.0,
-            (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
-          );
+      moneyCollected.value = sales.fold(
+        0.0,
+        (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+      );
 
       // -- compute gross profit --
       totalProfit.value = grossRevenue.value - costOfSales.value;
@@ -1440,17 +1447,6 @@ class CTxnsController extends GetxController {
                 ).isBefore(formattedEndDate.add(Duration(days: 1))),
           )
           .toList();
-      // var filteredSales = sales
-      //     .where(
-      //       (soldItem) =>
-      //           DateTime.parse(
-      //             soldItem.lastModified.replaceAll(' @', ''),
-      //           ).isAfter(formattedStartDate) &&
-      //           DateTime.parse(
-      //             soldItem.lastModified.replaceAll(' @', ''),
-      //           ).isBefore(formattedEndDate),
-      //     )
-      //     .toList();
 
       // -- compute cost of sales --
       var cogs = filteredSales.fold(
@@ -1495,40 +1491,6 @@ class CTxnsController extends GetxController {
         CPopupSnackBar.errorSnackBar(
           message: 'error fetching sales summary: $e',
           title: 'error fetching sales summary!',
-        );
-      }
-      rethrow;
-    }
-  }
-
-  String fetchInvItemById(int productId) {
-    try {
-      var itemInvIndex = invController.inventoryItems.indexWhere(
-        (item) => item.productId == productId,
-      );
-      if (itemInvIndex != -1) {
-        var thisItem = invController.inventoryItems.firstWhereOrNull(
-          (invItem) => invItem.productId == productId,
-        );
-
-        var formattedOutput = thisItem!.calibration == 'units'
-            ? thisItem.calibration.substring(0, thisItem.calibration.length - 1)
-            : thisItem.calibration;
-
-        return formattedOutput;
-      } else {
-        CPopupSnackBar.customToast(
-          message: 'item is not listed in your inventory list',
-          forInternetConnectivityStatus: false,
-        );
-        return '';
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('error fetching inventory item by id: $e');
-        CPopupSnackBar.errorSnackBar(
-          message: 'error fetching inventory item by id: $e',
-          title: 'error fetching inventory item!',
         );
       }
       rethrow;

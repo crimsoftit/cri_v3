@@ -1,3 +1,7 @@
+import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CFormatter {
@@ -84,5 +88,40 @@ class CFormatter {
   static String extractTime(String dateTimeString) {
     final DateTime dateTime = DateTime.parse(dateTimeString);
     return DateFormat('hh:mm:ss').format(dateTime);
+  }
+
+  static String formatInventoryMetrics(int productId) {
+    final invController = Get.put(CInventoryController());
+    try {
+      var itemInvIndex = invController.inventoryItems.indexWhere(
+        (item) => item.productId == productId,
+      );
+      if (itemInvIndex != -1) {
+        var thisItem = invController.inventoryItems.firstWhereOrNull(
+          (invItem) => invItem.productId == productId,
+        );
+
+        var formattedOutput = thisItem!.calibration == 'units'
+            ? thisItem.calibration.substring(0, thisItem.calibration.length - 1)
+            : thisItem.calibration;
+
+        return formattedOutput;
+      } else {
+        CPopupSnackBar.customToast(
+          message: 'item is not listed in your inventory list',
+          forInternetConnectivityStatus: false,
+        );
+        return '';
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error fetching inventory item by id: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching inventory item by id: $e',
+          title: 'error fetching inventory item!',
+        );
+      }
+      rethrow;
+    }
   }
 }

@@ -230,7 +230,7 @@ class HomeScreen extends StatelessWidget {
         Obx(
           () {
             return CCutomLineChart(
-              chartHeight: 200.0,
+              chartHeight: 180.0,
               chartWidth: CHelperFunctions.screenWidth(),
               lineChartData: [
                 FlSpot(

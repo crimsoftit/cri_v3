@@ -1,10 +1,8 @@
-import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/products/cart/add_remove_btns.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
-import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -23,7 +21,7 @@ class CTypeAheadSearchField extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final searchBarController = Get.put(CSearchBarController());
     final cartController = Get.put(CCartController());
-    final txnsController = Get.put(CTxnsController());
+
     final screenWidth = CHelperFunctions.screenWidth();
     final userController = Get.put(CUserController());
     final currencySymbol = CHelperFunctions.formatCurrency(
@@ -163,25 +161,25 @@ class CTypeAheadSearchField extends StatelessWidget {
               Column(
                 children: [
                   Obx(() {
-                    if (txnsController.isLoading.value ||
-                        invController.isLoading.value ||
-                        invController.syncIsLoading.value) {
-                      // return const CVerticalProductShimmer(
-                      //   itemCount: 2,
-                      // );
-                      return CRoundedContainer(
-                        bgColor: CColors.rBrown,
-                        height: 30.0,
-                        showBorder: false,
-                        width: 100.0,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: CColors.white,
-                          ),
-                        ),
-                      );
-                      // return const DefaultLoaderScreen();
-                    }
+                    // if (txnsController.isLoading.value ||
+                    //     invController.isLoading.value ||
+                    //     invController.syncIsLoading.value) {
+                    //   // return const CVerticalProductShimmer(
+                    //   //   itemCount: 2,
+                    //   // );
+                    //   return CRoundedContainer(
+                    //     bgColor: CColors.rBrown,
+                    //     height: 50.0,
+                    //     showBorder: false,
+                    //     width: 100.0,
+                    //     child: Center(
+                    //       child: CircularProgressIndicator(
+                    //         color: CColors.white,
+                    //       ),
+                    //     ),
+                    //   );
+                    //   // return const DefaultLoaderScreen();
+                    // }
                     return Row(
                       //crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
@@ -257,7 +255,12 @@ class CTypeAheadSearchField extends StatelessWidget {
                                   .getItemQtyInCart(suggestion.productId!)
                                   .isGreaterThan(0)) {
                                 final thisCartItem = cartController
-                                    .convertInvToCartItem(suggestion, 1);
+                                    .convertInvToCartItem(
+                                      suggestion,
+                                      suggestion.calibration == 'units'
+                                          ? 1
+                                          : .25,
+                                    );
                                 cartController.removeSingleItemFromCart(
                                   thisCartItem,
                                   false,
@@ -274,19 +277,34 @@ class CTypeAheadSearchField extends StatelessWidget {
                             }
                           },
                           qtyWidget: Text(
-                            cartController
-                                    .getItemQtyInCart(suggestion.productId!)
-                                    .isGreaterThan(0)
+                            suggestion.calibration == 'units'
                                 ? cartController
                                       .getItemQtyInCart(suggestion.productId!)
+                                      .toInt()
                                       .toString()
-                                : 0.toString(),
+                                : cartController
+                                      .getItemQtyInCart(suggestion.productId!)
+                                      .toString(),
                             style: Theme.of(context).textTheme.labelMedium!
                                 .apply(
                                   color: CColors.rBrown,
                                   fontSizeDelta: 1.5,
                                 ),
                           ),
+                          // Text(
+                          //   cartController
+                          //           .getItemQtyInCart(suggestion.productId!)
+                          //           .isGreaterThan(0)
+                          //       ? cartController
+                          //             .getItemQtyInCart(suggestion.productId!)
+                          //             .toString()
+                          //       : 0.toString(),
+                          //   style: Theme.of(context).textTheme.labelMedium!
+                          //       .apply(
+                          //         color: CColors.rBrown,
+                          //         fontSizeDelta: 1.5,
+                          //       ),
+                          // ),
 
                           // button to increment item qty in the cart
                           addItemBtnAction: () {
@@ -300,7 +318,10 @@ class CTypeAheadSearchField extends StatelessWidget {
                               //         suggestion.productId);
 
                               final thisCartItem = cartController
-                                  .convertInvToCartItem(suggestion, 1);
+                                  .convertInvToCartItem(
+                                    suggestion,
+                                    suggestion.calibration == 'units' ? 1 : .25,
+                                  );
                               cartController.addSingleItemToCart(
                                 thisCartItem,
                                 false,

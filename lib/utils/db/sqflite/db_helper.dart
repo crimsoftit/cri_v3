@@ -91,6 +91,7 @@ class DbHelper extends GetxController {
             productId INTEGER NOT NULL,
             productCode LONGTEXT NOT NULL,
             productName TEXT NOT NULL,
+            itemMetrics TEXT NOT NULL,
             quantity REAL NOT NULL,
             qtyRefunded REAL NOT NULL,
             refundReason TEXT NOT NULL,
@@ -460,7 +461,7 @@ class DbHelper extends GetxController {
       final db = _db;
 
       final topSellers = await db!.rawQuery(
-        'SELECT * FROM $invTable WHERE userEmail = ? AND qtySold >= 1 ORDER BY qtySold DESC LIMIT 10',
+        'SELECT * FROM $invTable WHERE userEmail = ? AND qtySold >= 0.1 ORDER BY qtySold DESC LIMIT 10',
         [email],
       );
 

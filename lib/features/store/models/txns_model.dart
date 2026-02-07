@@ -17,6 +17,7 @@ class CTxnsModel {
   String _productCode = "";
   String _productName = "";
 
+  String _itemMetrics = '';
   double _quantity = 0;
   double _qtyRefunded = 0;
   String _refundReason = "";
@@ -47,6 +48,7 @@ class CTxnsModel {
     this._productId,
     this._productCode,
     this._productName,
+    this._itemMetrics,
     this._quantity,
     this._qtyRefunded,
     this._refundReason,
@@ -77,6 +79,7 @@ class CTxnsModel {
     this._productId,
     this._productCode,
     this._productName,
+    this._itemMetrics,
     this._quantity,
     this._qtyRefunded,
     this._refundReason,
@@ -107,6 +110,7 @@ class CTxnsModel {
       'productId',
       'productCode',
       'productName',
+      'itemMetrics',
       'quantity',
       'qtyRefunded',
       'refundReason',
@@ -137,6 +141,8 @@ class CTxnsModel {
   int get productId => _productId;
   String get productCode => _productCode;
   String get productName => _productName;
+
+  String get itemMetrics => _itemMetrics;
   double get quantity => _quantity;
 
   double get qtyRefunded => _qtyRefunded;
@@ -200,6 +206,10 @@ class CTxnsModel {
 
   set productName(String newPname) {
     _productName = newPname;
+  }
+
+  set itemMetrics(String newItemMetrics) {
+    _itemMetrics = newItemMetrics;
   }
 
   set quantity(double newQty) {
@@ -303,6 +313,8 @@ class CTxnsModel {
     map['productId'] = _productId;
     map['productCode'] = _productCode;
     map['productName'] = _productName;
+
+    map['itemMetrics'] = _itemMetrics;
     map['quantity'] = _quantity;
 
     map['qtyRefunded'] = _qtyRefunded;
@@ -337,6 +349,7 @@ class CTxnsModel {
     _productId = map['productId'];
     _productCode = map['productCode'];
     _productName = map['productName'];
+    _itemMetrics = map['itemMetrics'];
     _quantity = map['quantity'];
     _qtyRefunded = map['qtyRefunded'];
     _refundReason = map['refundReason'];
@@ -368,6 +381,7 @@ class CTxnsModel {
       jsonDecode(json[TxnsSheetFields.productId]),
       json[TxnsSheetFields.productCode],
       json[TxnsSheetFields.productName],
+      json[TxnsSheetFields.itemMetrics],
       double.parse(json[TxnsSheetFields.quantity]),
       double.parse(json[TxnsSheetFields.qtyRefunded]),
       json[TxnsSheetFields.refundReason],

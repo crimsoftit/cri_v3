@@ -31,6 +31,7 @@ import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/full_screen_loader.dart';
@@ -56,6 +57,7 @@ class CCheckoutController extends GetxController {
     customerContactsFieldController.text = '';
     customerNameFieldController.text = '';
     customerBalField.text == '';
+    selectedPaymentMethod.value.platformName == 'cash';
     setFocusOnAmtIssuedField.value = false;
     includeAmtIssuedFieldonModal.value = false;
     CLocationServices.instance.getUserLocation(
@@ -152,13 +154,21 @@ class CCheckoutController extends GetxController {
 
         var userCoordinates = '';
 
-        if (locationController.userLocation.value!.latitude == null ||
-            locationController.userLocation.value!.longitude == null) {
-          userCoordinates = userController.user.value.locationCoordinates;
-        } else {
+        if (CNetworkManager.instance.hasConnection.value ||
+            await CNetworkManager.instance.isConnected()) {
           userCoordinates =
               'lat: ${locationController.userLocation.value!.latitude} long: ${locationController.userLocation.value!.longitude}';
+        } else {
+          userCoordinates = userController.user.value.locationCoordinates;
         }
+
+        // if (locationController.userLocation.value!.latitude == null ||
+        //     locationController.userLocation.value!.longitude == null) {
+        //   userCoordinates = userController.user.value.locationCoordinates;
+        // } else {
+        //   userCoordinates =
+        //       'lat: ${locationController.userLocation.value!.latitude} long: ${locationController.userLocation.value!.longitude}';
+        // }
 
         for (var cartItem in itemsInCart) {
           var saleItemUnitBP = invController.inventoryItems
@@ -175,6 +185,7 @@ class CCheckoutController extends GetxController {
             cartItem.productId,
             cartItem.pCode,
             cartItem.pName,
+            cartItem.itemMetrics,
             cartItem.quantity,
             0,
             '',
@@ -245,13 +256,14 @@ class CCheckoutController extends GetxController {
                     alertBody = '${invItem.name} is out of stock!!';
                     break;
 
-                  case >= 1:
-                    if (invItem.quantity == 1) {
+                  case >= 0.1:
+                    if (invItem.quantity == 1 &&
+                        invItem.calibration == 'units') {
                       alertBody =
                           'only ${invItem.quantity} ${invItem.calibration} of ${invItem.name} is left!!';
                     } else {
                       alertBody =
-                          'only ${invItem.quantity} ${invItem.calibration} of ${invItem.name} are left!!';
+                          'only ${invItem.quantity} ${CFormatter.formatInventoryMetrics(invItem.productId!)}s of ${invItem.name} are left!!';
                     }
 
                     break;
@@ -285,7 +297,6 @@ class CCheckoutController extends GetxController {
                       1,
                       'restocking is due!',
                       alertBody,
-
                       0,
                       invItem.productId,
                       userController.user.value.email,
@@ -660,7 +671,7 @@ class CCheckoutController extends GetxController {
     customerContactsFieldController.text = '';
     customerBalField.text == '';
     itemExists.value = false;
-
+    selectedPaymentMethod.value.platformName == 'cash';
     setFocusOnAmtIssuedField.value = false;
   }
 
@@ -688,6 +699,7 @@ class CCheckoutController extends GetxController {
   refreshData() {
     final cartController = Get.put(CCartController());
 
+    selectedPaymentMethod.value.platformName == 'cash';
     txnsController.fetchSoldItems();
     customerBal.value = 0.0;
 
@@ -827,63 +839,74 @@ class CCheckoutController extends GetxController {
   }
 
   /// -- TODO: update stock count when item is sold o credit
-  onCheckoutBtnPressed() {
-    if (selectedPaymentMethod.value.platformName == 'cash') {
-      if (amtIssuedFieldController.text == '') {
-        CPopupSnackBar.customToast(
-          message: 'please enter the amount issued by the customer!!',
-          forInternetConnectivityStatus: false,
-        );
-        setFocusOnAmtIssuedField.value = true;
+  onCheckoutBtnPressed() async {
+    try {
+      if (selectedPaymentMethod.value.platformName == 'cash') {
+        if (amtIssuedFieldController.text == '') {
+          CPopupSnackBar.customToast(
+            message: 'please enter the amount issued by the customer!!',
+            forInternetConnectivityStatus: false,
+          );
+          setFocusOnAmtIssuedField.value = true;
 
-        return;
+          return;
+        }
+        // else {
+        //   includeAmtIssuedFieldonModal.value = false;
+        // }
+        if (amtIssuedFieldController.text == '' ||
+            double.parse(amtIssuedFieldController.text.trim()) <
+                cartController.totalCartPrice.value) {
+          CPopupSnackBar.errorSnackBar(
+            title: 'customer still owes you!!',
+            message: 'the amount issued is not enough',
+          );
+          return;
+        }
       }
-      // else {
-      //   includeAmtIssuedFieldonModal.value = false;
-      // }
-      if (amtIssuedFieldController.text == '' ||
-          double.parse(amtIssuedFieldController.text.trim()) <
-              cartController.totalCartPrice.value) {
-        CPopupSnackBar.errorSnackBar(
-          title: 'customer still owes you!!',
-          message: 'the amount issued is not enough',
-        );
-        return;
-      }
-    }
-    if ((selectedPaymentMethod.value.platformName == 'mPesa (offline)' ||
-            selectedPaymentMethod.value.platformName == 'credit') &&
-        customerNameFieldController.text == '') {
-      customerNameFocusNode.value.requestFocus();
-      CPopupSnackBar.warningSnackBar(
-        title: 'customer details required!',
-        message:
-            'please provide customer\'s name for ${selectedPaymentMethod.value.platformName} payment verification',
-      );
-      return;
-    }
-    if (selectedPaymentMethod.value.platformName == 'credit') {
-      if (customerNameFieldController.text == '') {
+      if ((selectedPaymentMethod.value.platformName == 'mPesa (offline)' ||
+              selectedPaymentMethod.value.platformName == 'credit') &&
+          customerNameFieldController.text == '') {
         customerNameFocusNode.value.requestFocus();
         CPopupSnackBar.warningSnackBar(
           title: 'customer details required!',
           message:
-              'please provide customer\'s name and (or) contacts for ${selectedPaymentMethod.value.platformName} payment verification',
+              'please provide customer\'s name for ${selectedPaymentMethod.value.platformName} payment verification',
         );
         return;
       }
-    }
+      if (selectedPaymentMethod.value.platformName == 'credit') {
+        if (customerNameFieldController.text == '') {
+          customerNameFocusNode.value.requestFocus();
+          CPopupSnackBar.warningSnackBar(
+            title: 'customer details required!',
+            message:
+                'please provide customer\'s name and (or) contacts for ${selectedPaymentMethod.value.platformName} payment verification',
+          );
+          return;
+        }
+      }
 
-    /// -- check if txn is to be completed or invoiced --
-    String txnType;
-    switch (selectedPaymentMethod.value.platformName) {
-      case "credit":
-        txnType = 'invoiced';
-        break;
-      default:
-        txnType = 'complete';
+      /// -- check if txn is to be completed or invoiced --
+      String txnType;
+      switch (selectedPaymentMethod.value.platformName) {
+        case "credit":
+          txnType = 'invoiced';
+          break;
+        default:
+          txnType = 'complete';
+      }
+      processTxn(txnType);
+    } catch (e) {
+      if (kDebugMode) {
+        print('checkout error: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'an error occurred while checking out: $e',
+          title: 'checkout error!',
+        );
+      }
+      rethrow;
     }
-    processTxn(txnType);
   }
 
   confirmInvoicePaymentDialog(int txnId) {

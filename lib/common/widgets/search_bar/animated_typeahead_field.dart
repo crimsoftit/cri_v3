@@ -1,4 +1,3 @@
-import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/screens/search/widgets/c_typeahead_field.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -20,7 +19,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchBarController = Get.put(CSearchBarController());
-    final invController = Get.put(CInventoryController());
+    //final invController = Get.put(CInventoryController());
 
     //final screenWidth = CHelperFunctions.screenWidth();
 
@@ -65,7 +64,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                   ),
                   onTap: () {
                     searchBarController.onTypeAheadSearchIconTap();
-                    invController.fetchUserInventoryItems();
+                    //invController.fetchUserInventoryItems();
                   },
                   child: const Icon(
                     Iconsax.search_normal,
@@ -74,18 +73,6 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                   ),
                 ),
               ),
-
-        // IconButton(
-        //     onPressed: () {
-        //       searchBarController.onTypeAheadSearchIconTap();
-        //       invController.fetchUserInventoryItems();
-        //     },
-        //     icon: const Icon(
-        //       Iconsax.search_normal,
-        //       color: CColors.rBrown,
-        //       size: CSizes.iconMd,
-        //     ),
-        //   ),
       );
     });
   }

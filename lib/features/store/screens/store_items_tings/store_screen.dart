@@ -42,7 +42,9 @@ class CStoreScreen extends StatelessWidget {
     // }
 
     return DefaultTabController(
-      animationDuration: Duration(milliseconds: 1000),
+      animationDuration: Duration(
+        milliseconds: 800,
+      ),
       length: 5,
       child: Obx(() {
         return Scaffold(
@@ -51,10 +53,18 @@ class CStoreScreen extends StatelessWidget {
             leadingWidget: searchController.showSearchField.value
                 ? null
                 : Padding(
-                    padding: const EdgeInsets.only(top: 5.0, left: 10.0),
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      left: 10.0,
+                    ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Iconsax.menu, size: 25.0, color: CColors.rBrown),
+                        Icon(
+                          Iconsax.menu,
+                          size: 25.0,
+                          color: CColors.rBrown,
+                        ),
                         Expanded(
                           child: searchController.showSearchField.value
                               ? CAnimatedSearchBar(
@@ -181,7 +191,7 @@ class CStoreScreen extends StatelessWidget {
                           containerWidth: 14.0,
                           counterBgColor: CColors.white,
                           counterTxtColor: CColors.rBrown,
-                          rightPosition: 70.0,
+                          rightPosition: 75.0,
                           topPosition: 12.0,
                         ),
                       ],

@@ -104,7 +104,7 @@ class CStoreSummary extends StatelessWidget {
                     //     : CColors.white,
                     iconColor: invController.lowStockItemsCount.value > 0
                         ? CColors.warning
-                        : CColors.rBrown,
+                        : Colors.green,
                     iconData: invController.lowStockItemsCount.value > 0
                         ? Iconsax.warning_2
                         : Iconsax.tick_circle,
@@ -112,12 +112,12 @@ class CStoreSummary extends StatelessWidget {
                         'low-stock items(${invController.lowStockItemsCount.value})',
                     subTitleTxtColor: invController.lowStockItemsCount.value > 0
                         ? CColors.warning
-                        : CColors.rBrown,
+                        : Colors.green,
                     titleTxt: invController.lowStockItemsValue.value
                         .toStringAsFixed(1),
                     titleTxtColor: invController.lowStockItemsCount.value > 0
                         ? CColors.warning
-                        : CColors.rBrown,
+                        : Colors.green,
                     // titleTxt:
                     //     '$userCurrency.${invController.totalInventoryValue.value..toStringAsFixed(1)}',
                   ),
@@ -129,14 +129,24 @@ class CStoreSummary extends StatelessWidget {
                     titleTxt: '0',
                   ),
                   CStoreSummaryCard(
-                    iconColor: CColors.error,
-                    iconData: Iconsax.danger,
-                    iconSize: CSizes.iconLg,
+                    iconColor: invController.expiredItemsValue.value == 0
+                        ? Colors.green
+                        : CColors.error,
+                    iconData: invController.expiredItemsValue.value == 0
+                        ? Iconsax.tick_circle
+                        : Iconsax.danger,
+                    iconSize: invController.expiredItemsValue.value == 0
+                        ? CSizes.iconSm
+                        : CSizes.iconLg,
                     subTitleTxt: 'expired items',
-                    subTitleTxtColor: CColors.error,
+                    subTitleTxtColor: invController.expiredItemsValue.value == 0
+                        ? Colors.green
+                        : CColors.error,
                     titleTxt:
                         '$userCurrency.${CFormatter.kSuffixFormatter(invController.expiredItemsValue.value..toStringAsFixed(1))}',
-                    titleTxtColor: CColors.error,
+                    titleTxtColor: invController.expiredItemsValue.value == 0
+                        ? Colors.green
+                        : CColors.error,
                   ),
                 ],
               ),

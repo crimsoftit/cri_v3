@@ -212,11 +212,11 @@ class CProductCardVertical extends StatelessWidget {
               //smallSize: true,
               title:
                   CHelperFunctions.txtExceedsTwoLines(
-                    "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold sold)",
+                    "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold sold)",
                     Theme.of(context).textTheme.labelSmall!,
                   )
-                  ? "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold sold)"
-                  : "${itemName.toUpperCase()} ($qtyAvailable $itemCalibration stocked, $qtySold $itemCalibration sold)",
+                  ? "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold sold)"
+                  : "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} sold)",
               txtColor: double.parse(qtyAvailable!) < lowStockNotifierLimit!
                   ? Colors.red
                   : isDarkTheme
@@ -226,7 +226,7 @@ class CProductCardVertical extends StatelessWidget {
             ),
 
             Text(
-              '($qtyRefunded $itemCalibration refunded)',
+              '($qtyRefunded ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} refunded)',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),

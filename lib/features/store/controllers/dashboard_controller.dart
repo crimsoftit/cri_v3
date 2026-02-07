@@ -188,7 +188,7 @@ class CDashboardController extends GetxController {
           showTitles: true,
           getTitlesWidget: (value, meta) {
             // map index to the desired day of the week
-            final days = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'];
+            final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
             // calculate the index and ensure it wraps around the corresponding day of the week
             final index = value.toInt() % days.length;
@@ -216,7 +216,7 @@ class CDashboardController extends GetxController {
         sideTitles: SideTitles(
           showTitles: true,
           interval: weeklySalesHighestAmount.value / 2,
-          reservedSize: 70.0,
+          reservedSize: 40.0,
           getTitlesWidget: (value, TitleMeta meta) {
             return SideTitleWidget(
               meta: meta,

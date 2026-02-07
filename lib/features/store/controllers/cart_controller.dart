@@ -216,41 +216,56 @@ class CCartController extends GetxController {
           }
           cartItems[itemIndex].quantity = double.parse(qtyValue);
 
-          qtyFieldControllers[itemIndex].text = cartItems[itemIndex].quantity
-              .toString();
+          qtyFieldControllers[itemIndex].text =
+              cartItems[itemIndex].itemMetrics == 'units'
+              ? cartItems[itemIndex].quantity.toInt().toString()
+              : cartItems[itemIndex].quantity.toString();
         } else {
           if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
             );
-            qtyFieldControllers[itemIndex].text = inventoryItem.quantity
-                .toString();
+            qtyFieldControllers[itemIndex].text =
+                inventoryItem.calibration == 'units'
+                ? inventoryItem.quantity.toInt().toString()
+                : inventoryItem.quantity.toString();
             return;
           } else {
-            if (fromQtyTxtField) {
-              cartItems[itemIndex].quantity = double.parse(qtyValue!);
-              qtyFieldControllers[itemIndex].text = cartItems[itemIndex]
-                  .quantity
-                  .toString();
-            } else {
-              cartItems[itemIndex].quantity +=
-                  cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
-              //var itemQty = cartItems[itemIndex].quantity;
-              qtyFieldControllers[itemIndex].text =
-                  cartItems[itemIndex].itemMetrics == 'units'
-                  ? cartItems[itemIndex].quantity.toStringAsFixed(0)
-                  : cartItems[itemIndex].quantity.toString();
-              updateCart();
-            }
+            cartItems[itemIndex].quantity +=
+                cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
+            qtyFieldControllers[itemIndex].text =
+                cartItems[itemIndex].itemMetrics == 'units'
+                ? cartItems[itemIndex].quantity.toStringAsFixed(0)
+                : cartItems[itemIndex].quantity.toString();
+            // if (fromQtyTxtField) {
+            //   cartItems[itemIndex].quantity = double.parse(qtyValue!);
+            //   // qtyFieldControllers[itemIndex].text = cartItems[itemIndex]
+            //   //     .quantity
+            //   //     .toString();
+            //   qtyFieldControllers[itemIndex].text =
+            //       cartItems[itemIndex].itemMetrics == 'units'
+            //       ? cartItems[itemIndex].quantity.toStringAsFixed(0)
+            //       : cartItems[itemIndex].quantity.toString();
+            // } else {
+            //   cartItems[itemIndex].quantity +=
+            //       cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
+            //   //var itemQty = cartItems[itemIndex].quantity;
+
+            //   //updateCart();
+            // }
           }
         }
       } else {
         cartItems.add(item);
 
-        updateCart();
+        //updateCart();
         qtyFieldControllers.add(
-          TextEditingController(text: item.quantity.toString()),
+          TextEditingController(
+            text: item.itemMetrics == 'units'
+                ? item.quantity.toInt().toString()
+                : item.quantity.toString(),
+          ),
         );
       }
 
@@ -270,18 +285,20 @@ class CCartController extends GetxController {
     });
 
     if (removeItemIndex >= 0) {
-      if (cartItems[removeItemIndex].quantity > 1) {
-        cartItems[removeItemIndex].quantity -= 1;
+      if (cartItems[removeItemIndex].quantity > 0.1) {
+        cartItems[removeItemIndex].quantity -=
+            cartItems[removeItemIndex].itemMetrics == 'units' ? 1 : .25;
       } else {
         if (showConfirmDialog) {
           // show confirm dialog before entirely removing
-          cartItems[removeItemIndex].quantity == 1
+          cartItems[removeItemIndex].quantity == 1 ||
+                  cartItems[removeItemIndex].quantity == .25
               ? removeItemFromCartDialog(removeItemIndex, item.pName)
               : cartItems.removeAt(removeItemIndex);
         } else {
           // perform action to entirely remove this item from the cart
           cartItems.removeAt(removeItemIndex);
-          updateCart();
+          //updateCart();
           // CPopupSnackBar.customToast(
           //   message: '$itemToRemove removed from the cart...',
           //   forInternetConnectivityStatus: false,
@@ -289,9 +306,10 @@ class CCartController extends GetxController {
         }
       }
       updateCart();
-      qtyFieldControllers[removeItemIndex].text = cartItems[removeItemIndex]
-          .quantity
-          .toString();
+      qtyFieldControllers[removeItemIndex].text =
+          cartItems[removeItemIndex].itemMetrics == 'units'
+          ? cartItems[removeItemIndex].quantity.toStringAsFixed(0)
+          : cartItems[removeItemIndex].quantity.toString();
     }
   }
 
@@ -373,6 +391,7 @@ class CCartController extends GetxController {
 
   /// -- get a specific item's quantity in the cart --
   double getItemQtyInCart(int pId) {
+    //fetchCartItems(); <-- AVOID THIS KABSA... NOMA SANA -->
     final foundCartItemQty = cartItems
         .where((item) => item.productId == pId)
         .fold(

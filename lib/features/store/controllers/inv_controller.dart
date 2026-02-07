@@ -186,7 +186,7 @@ class CInventoryController extends GetxController {
                 expiryItem.expiryDate != '' &&
                 CFormatter.computeTimeRangeFromNow(
                       expiryItem.expiryDate.replaceAll('@ ', ''),
-                    ) ==
+                    ) <=
                     2,
           )
           .toList();
@@ -1255,15 +1255,23 @@ class CInventoryController extends GetxController {
     try {
       if (inventoryItems.isNotEmpty) {
         // -- total value of items in inventory --
-        totalInventoryValue.value = inventoryItems
-            .where((invItem) => invItem.quantity >= 1)
-            .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+        // totalInventoryValue.value = inventoryItems
+        //     .where((invItem) => invItem.quantity > 0)
+        //     .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+        totalInventoryValue.value = inventoryItems.fold(
+          0.0,
+          (sum, item) => sum + (item.unitBp * item.quantity),
+        );
 
         // -- total count and value of low stock items in inventory --
         lowStockItemsCount.value = lowStockItems.length;
-        lowStockItemsValue.value = lowStockItems
-            .where((item) => item.quantity >= 1)
-            .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+        // lowStockItemsValue.value = lowStockItems
+        //     .where((item) => item.quantity >= 1)
+        //     .fold(0.0, (sum, item) => sum + (item.unitBp * item.quantity));
+        lowStockItemsValue.value = lowStockItems.fold(
+          0.0,
+          (sum, item) => sum + (item.unitBp * item.quantity),
+        );
       }
     } catch (e) {
       if (kDebugMode) {

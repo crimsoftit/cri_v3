@@ -55,9 +55,14 @@ class CPopupSnackBar extends GetxController {
                         flex: 7,
                         child: Text(
                           message,
-                          style: Theme.of(
-                            Get.context!,
-                          ).textTheme.labelLarge!.apply(color: CColors.rBrown),
+                          style:
+                              Theme.of(
+                                Get.context!,
+                              ).textTheme.labelLarge!.apply(
+                                color: isDarkTheme
+                                    ? CColors.white
+                                    : CColors.rBrown,
+                              ),
                         ),
                       ),
                     ],

@@ -132,49 +132,53 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton.icon(
-              icon: Icon(
-                Iconsax.shopping_cart,
-                color: CColors.white,
-              ),
-              label: Text(
-                'add to cart'.toUpperCase(),
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.apply(color: CColors.white),
-              ),
-              onPressed: cartController.itemQtyInCart.value < 0.1
-                  ? null
-                  : () {
-                      invController.fetchUserInventoryItems();
-                      cartController.fetchCartItems();
+            Visibility(
+              visible: cartController.itemQtyInCart.value > 0,
+              child: ElevatedButton.icon(
+                icon: Icon(
+                  Iconsax.shopping_cart,
+                  color: CColors.white,
+                ),
+                label: Text(
+                  'add to cart'.toUpperCase(),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelMedium?.apply(color: CColors.white),
+                ),
+                onPressed: cartController.itemQtyInCart.value < 0.1
+                    ? null
+                    : () {
+                        invController.fetchUserInventoryItems();
+                        cartController.fetchCartItems();
 
-                      /// -- check if item has expired before adding it to cart --
-                      if (inventoryItem.expiryDate != '') {
-                        var itemExpiry = CDateTimeComputations.timeRangeFromNow(
-                          inventoryItem.expiryDate.replaceAll('@ ', ''),
-                        );
-                        if (itemExpiry <= 0) {
-                          CPopupSnackBar.warningSnackBar(
-                            title: 'item is stale/expired',
-                            message: '${inventoryItem.name} has expired!',
-                          );
-                          return;
+                        /// -- check if item has expired before adding it to cart --
+                        if (inventoryItem.expiryDate != '') {
+                          var itemExpiry =
+                              CDateTimeComputations.timeRangeFromNow(
+                                inventoryItem.expiryDate.replaceAll('@ ', ''),
+                              );
+                          if (itemExpiry <= 0) {
+                            CPopupSnackBar.warningSnackBar(
+                              title: 'item is stale/expired',
+                              message: '${inventoryItem.name} has expired!',
+                            );
+                            return;
+                          }
                         }
-                      }
-                      cartController.addToCart(inventoryItem);
-                      cartController.fetchCartItems();
-                      if (fromCheckoutScreen) {
-                        Navigator.pop(context);
-                      }
-                    },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(CSizes.md),
-                backgroundColor: CNetworkManager.instance.hasConnection.value
-                    ? CColors.rBrown
-                    : CColors.black,
-                side: BorderSide(
-                  color: add2CartBtnBorderColor ?? CColors.rBrown,
+                        cartController.addToCart(inventoryItem);
+                        cartController.fetchCartItems();
+                        if (fromCheckoutScreen) {
+                          Navigator.pop(context);
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(CSizes.md),
+                  backgroundColor: CNetworkManager.instance.hasConnection.value
+                      ? CColors.rBrown
+                      : CColors.black,
+                  side: BorderSide(
+                    color: add2CartBtnBorderColor ?? CColors.rBrown,
+                  ),
                 ),
               ),
             ),

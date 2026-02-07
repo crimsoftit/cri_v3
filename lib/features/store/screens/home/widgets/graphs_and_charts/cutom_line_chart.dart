@@ -52,9 +52,13 @@ class CCutomLineChart extends StatelessWidget {
 
   /// -- build line chart bar data --
   LineChartBarData _buildLineChartBarData() {
+    //final isDarkTheme = CHelperFunctions.isDarkMode(Get.overlayContext!);
+
     return LineChartBarData(
       barWidth: 1.0,
-      color: CColors.rBrown,
+      color: CNetworkManager.instance.hasConnection.value
+          ? CColors.rBrown
+          : CColors.darkerGrey,
       isCurved: false,
       spots: lineChartData,
       // spots: lineChartData
@@ -66,8 +70,12 @@ class CCutomLineChart extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            CColors.rBrown,
-            CColors.rBrown.withAlpha(1),
+            CNetworkManager.instance.hasConnection.value
+                ? CColors.rBrown
+                : CColors.darkGrey,
+            CNetworkManager.instance.hasConnection.value
+                ? CColors.rBrown.withAlpha(1)
+                : CColors.darkGrey.withAlpha(1),
           ],
         ),
       ),

@@ -36,9 +36,9 @@ class CSizes {
   static const spaceBtnSections = 32.0;
 
   // -- border radius
-  static const borderRadiusSm = 4.0;
-  static const borderRadiusMd = 8.0;
   static const borderRadiusLg = 12.0;
+  static const borderRadiusMd = 8.0;
+  static const borderRadiusSm = 4.0;
 
   // -- product item dimensions
   static const pItemHeight = 160.0;

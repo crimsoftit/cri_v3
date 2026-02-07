@@ -94,12 +94,18 @@ class AuthRepo extends GetxController {
 
           if (await userController.fetchUserDetails()) {
             await invController.initInvSync();
+            await invController.fetchUserInventoryItems();
+
             await txnsController.initTxnsSync();
+            await txnsController.fetchSoldItems();
             Get.put(CCheckoutController());
 
             final navController = Get.put(CNavMenuController());
-
-            navController.selectedIndex.value = 1;
+            navController.selectedIndex.value =
+                (invController.inventoryItems.isEmpty &&
+                    txnsController.sales.isEmpty)
+                ? 0
+                : 1;
             Future.delayed(
               Duration.zero,
               () {

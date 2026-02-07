@@ -161,7 +161,7 @@ class CInvDetails extends StatelessWidget {
                       CMenuTile(
                         icon: Iconsax.shopping_cart,
                         title:
-                            '${(invItem.quantity)} (${(invItem.qtyRefunded)} refunded)',
+                            '${invItem.calibration == 'units' ? invItem.quantity.toInt() : invItem.quantity} (${invItem.calibration == 'units' ? invItem.qtyRefunded.toInt() : invItem.qtyRefunded} ${CFormatter.formatInventoryMetrics(invItem.productId!)}(s) refunded)',
                         subTitle: 'in stock',
                         onTap: () {},
                       ),

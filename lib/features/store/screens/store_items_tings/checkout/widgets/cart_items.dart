@@ -113,7 +113,10 @@ class CCartItems extends StatelessWidget {
                                             .toLowerCase(),
                                   );
                               final thisCartItem = cartController
-                                  .convertInvToCartItem(invItem, 1);
+                                  .convertInvToCartItem(
+                                    invItem,
+                                    invItem.calibration == 'units' ? 1 : .25,
+                                  );
                               cartController.removeSingleItemFromCart(
                                 thisCartItem,
                                 true,
@@ -121,12 +124,13 @@ class CCartItems extends StatelessWidget {
                               cartController.fetchCartItems();
 
                               cartController.qtyFieldControllers[index].text =
-                                  cartController.cartItems[index].quantity
-                                      .toString();
+                                  cartController.cartItems[index].itemMetrics == 'units' ? cartController.cartItems[index].quantity
+                                      .toString() : cartController.cartItems[index].quantity
+                                      .toStringAsFixed(0);
                             }
                           },
                           qtyField: SizedBox(
-                            width: 40.0,
+                            width: 50.0,
                             child: TextFormField(
                               controller:
                                   cartController.qtyFieldControllers[index],
@@ -142,7 +146,7 @@ class CCartItems extends StatelessWidget {
                               ),
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                    decimal: false,
+                                    decimal: true,
                                     signed: false,
                                   ),
                               inputFormatters: <TextInputFormatter>[
@@ -203,7 +207,10 @@ class CCartItems extends StatelessWidget {
                                             .toLowerCase(),
                                   );
                               final thisCartItem = cartController
-                                  .convertInvToCartItem(invItem, 1);
+                                  .convertInvToCartItem(
+                                    invItem,
+                                    invItem.calibration == 'units' ? 1 : .25,
+                                  );
                               cartController.addSingleItemToCart(
                                 thisCartItem,
                                 false,
