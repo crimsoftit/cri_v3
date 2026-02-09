@@ -210,8 +210,10 @@ class CCartController extends GetxController {
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
             );
-            qtyFieldControllers[itemIndex].text = inventoryItem.quantity
-                .toString();
+            qtyFieldControllers[itemIndex].text =
+                inventoryItem.calibration == 'units'
+                ? inventoryItem.quantity.toInt().toString()
+                : inventoryItem.quantity.toString();
             qtyValue = qtyFieldControllers[itemIndex].text;
             return;
           }
@@ -237,19 +239,18 @@ class CCartController extends GetxController {
                 cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
           }
         }
+        updateCart();
       } else {
         cartItems.add(item);
+        updateCart();
 
         qtyFieldControllers.add(
-          TextEditingController(
-            text: item.itemMetrics == 'units'
-                ? item.quantity.toInt().toString()
-                : item.quantity.toString(),
-          ),
+          TextEditingController(),
         );
+        qtyFieldControllers[itemIndex].text = item.itemMetrics == 'units'
+            ? item.quantity.toInt().toString()
+            : item.quantity.toString();
       }
-
-      updateCart();
     } else {
       CPopupSnackBar.warningSnackBar(
         title: 'oh snap!',
@@ -320,8 +321,9 @@ class CCartController extends GetxController {
           message: '$itemToRemove removed from the cart...',
           forInternetConnectivityStatus: false,
         );
+        Get.back();
         Get.to(() => const CCheckoutScreen());
-        //Get.back();
+        //
         //checkoutController.handleNavToCheckout();
       },
       title: 'remove item?',
