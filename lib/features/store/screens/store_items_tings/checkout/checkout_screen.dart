@@ -283,11 +283,14 @@ class CCheckoutScreen extends StatelessWidget {
                                                                         .toLowerCase(),
                                                               );
                                                               final thisCartItem =
-                                                                  cartController
-                                                                      .convertInvToCartItem(
-                                                                        invItem,
-                                                                        1,
-                                                                      );
+                                                                  cartController.convertInvToCartItem(
+                                                                    invItem,
+                                                                    double.parse(
+                                                                      cartController
+                                                                          .qtyFieldControllers[index]
+                                                                          .text,
+                                                                    ),
+                                                                  );
                                                               cartController
                                                                   .removeSingleItemFromCart(
                                                                     thisCartItem,
@@ -435,7 +438,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     double.parse(
                                                                       cartController
                                                                           .qtyFieldControllers[index]
-                                                                          .text,
+                                                                          .text.trim(),
                                                                     ),
                                                                   );
                                                               cartController

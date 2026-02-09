@@ -2,6 +2,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/models/cart_item_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
 import 'package:cri_v3/utils/computations/date_time_computations.dart';
 import 'package:cri_v3/utils/local_storage/storage_utility.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -140,15 +141,13 @@ class CCartController extends GetxController {
     final selectedCartItem = convertInvToCartItem(item, itemQtyInCart.value);
 
     // check if selected cart item already exists in the cart
-    // int index = deviceCartItems.indexWhere(
-    //     (cartItem) => cartItem.productId == selectedCartItem.productId);
+
     int userCartItemIndex = cartItems.indexWhere(
       (uCartItem) => uCartItem.productId == selectedCartItem.productId,
     );
 
     if (userCartItemIndex >= 0) {
       // item already added to cart
-      // deviceCartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
       cartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
       qtyFieldControllers[userCartItemIndex].text =
           cartItems[userCartItemIndex].itemMetrics == 'units'
@@ -157,7 +156,9 @@ class CCartController extends GetxController {
     } else {
       cartItems.add(selectedCartItem);
       qtyFieldControllers.add(
-        TextEditingController(text: selectedCartItem.quantity.toString()),
+        TextEditingController(
+          text: selectedCartItem.quantity.toString(),
+        ),
       );
       updateCart();
     }
@@ -221,7 +222,7 @@ class CCartController extends GetxController {
               ? cartItems[itemIndex].quantity.toInt().toString()
               : cartItems[itemIndex].quantity.toString();
         } else {
-          if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
+          if (cartItems[itemIndex].quantity > inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
@@ -234,32 +235,11 @@ class CCartController extends GetxController {
           } else {
             cartItems[itemIndex].quantity +=
                 cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
-            qtyFieldControllers[itemIndex].text =
-                cartItems[itemIndex].itemMetrics == 'units'
-                ? cartItems[itemIndex].quantity.toStringAsFixed(0)
-                : cartItems[itemIndex].quantity.toString();
-            // if (fromQtyTxtField) {
-            //   cartItems[itemIndex].quantity = double.parse(qtyValue!);
-            //   // qtyFieldControllers[itemIndex].text = cartItems[itemIndex]
-            //   //     .quantity
-            //   //     .toString();
-            //   qtyFieldControllers[itemIndex].text =
-            //       cartItems[itemIndex].itemMetrics == 'units'
-            //       ? cartItems[itemIndex].quantity.toStringAsFixed(0)
-            //       : cartItems[itemIndex].quantity.toString();
-            // } else {
-            //   cartItems[itemIndex].quantity +=
-            //       cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
-            //   //var itemQty = cartItems[itemIndex].quantity;
-
-            //   //updateCart();
-            // }
           }
         }
       } else {
         cartItems.add(item);
 
-        //updateCart();
         qtyFieldControllers.add(
           TextEditingController(
             text: item.itemMetrics == 'units'
@@ -285,16 +265,22 @@ class CCartController extends GetxController {
     });
 
     if (removeItemIndex >= 0) {
-      if (cartItems[removeItemIndex].quantity > 0.1) {
+      if ((cartItems[removeItemIndex].quantity > 0.25 &&
+              cartItems[removeItemIndex].itemMetrics != 'units') ||
+          (cartItems[removeItemIndex].quantity > 1 &&
+              cartItems[removeItemIndex].itemMetrics == 'units')) {
         cartItems[removeItemIndex].quantity -=
             cartItems[removeItemIndex].itemMetrics == 'units' ? 1 : .25;
       } else {
         if (showConfirmDialog) {
           // show confirm dialog before entirely removing
-          cartItems[removeItemIndex].quantity == 1 ||
-                  cartItems[removeItemIndex].quantity == .25
+          (cartItems[removeItemIndex].quantity == 1 &&
+                      cartItems[removeItemIndex].itemMetrics == 'units') ||
+                  (cartItems[removeItemIndex].quantity == .25 &&
+                      cartItems[removeItemIndex].itemMetrics != 'units')
               ? removeItemFromCartDialog(removeItemIndex, item.pName)
               : cartItems.removeAt(removeItemIndex);
+          //updateCart();
         } else {
           // perform action to entirely remove this item from the cart
           cartItems.removeAt(removeItemIndex);
@@ -315,9 +301,15 @@ class CCartController extends GetxController {
 
   /// -- confirm dialog before entirely removing item from cart --
   void removeItemFromCartDialog(int itemIndex, String itemToRemove) {
+    //final checkoutController = Get.put(CCheckoutController());
     Get.defaultDialog(
-      title: 'remove item?',
+      barrierDismissible: false,
       middleText: 'are you certain you wish to remove this item from the cart?',
+      onCancel: () {
+        //checkoutController.handleNavToCheckout();
+        //Get.back();
+        Get.to(() => const CCheckoutScreen());
+      },
       onConfirm: () {
         // perform action to entirely remove this item from the cart
         cartItems.removeAt(itemIndex);
@@ -328,13 +320,11 @@ class CCartController extends GetxController {
           message: '$itemToRemove removed from the cart...',
           forInternetConnectivityStatus: false,
         );
+        Get.to(() => const CCheckoutScreen());
         //Get.back();
-        Navigator.of(Get.overlayContext!).pop();
+        //checkoutController.handleNavToCheckout();
       },
-      onCancel: () {
-        Navigator.of(Get.overlayContext!).pop();
-        //Get.back();
-      },
+      title: 'remove item?',
     );
   }
 
@@ -375,7 +365,7 @@ class CCartController extends GetxController {
       totalCartPrice.value = computedTotalCartPrice;
       //txnTotals.value = totalCartPrice.value;
     } else {
-      countOfCartItems.value = 0;
+      countOfCartItems.value = 0.0;
       totalCartPrice.value = 0.0;
       //txnTotals.value = 0.0;
     }

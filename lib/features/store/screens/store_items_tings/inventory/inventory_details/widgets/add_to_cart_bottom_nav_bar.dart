@@ -140,7 +140,9 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   color: CColors.white,
                 ),
                 label: Text(
-                  'add to cart'.toUpperCase(),
+                  cartController.itemQtyInCart.value > 0
+                      ? 'update cart'
+                      : 'add to cart'.toUpperCase(),
                   style: Theme.of(
                     context,
                   ).textTheme.labelMedium?.apply(color: CColors.white),

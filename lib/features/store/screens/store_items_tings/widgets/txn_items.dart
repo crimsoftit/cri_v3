@@ -12,6 +12,7 @@ import 'package:cri_v3/utils/constants/app_icons.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
@@ -41,15 +42,17 @@ class CTxnItemsListView extends StatelessWidget {
             // title.contains('invoiced')
             //     ? title.replaceAll('invoiced', 'unpaid!')
             //     : title,
-            title.replaceAll('invoiced', 'unpaid!'),
             style: Theme.of(context).textTheme.labelMedium!.apply(
               color: title.toLowerCase().contains('invoiced'.toLowerCase())
                   ? Colors.amber
                   : CColors.rBrown,
               //fontSizeFactor: .8,
             ),
+            title.replaceAll('invoiced', 'unpaid!'),
           ),
           Text.rich(
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
             TextSpan(
               children: [
                 TextSpan(
@@ -327,8 +330,13 @@ class CTxnItemsListView extends StatelessWidget {
                                         : buildSalesDetails(
                                             context,
                                             '${item.productName.toUpperCase()} (${item.txnStatus})',
-                                            '${item.quantity} sold; ${item.qtyRefunded} refunded @: $userCurrency.${item.unitSellingPrice} #${item.productId}',
+                                            '${CFormatter.formatItemQtyDisplays(item.quantity, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics)}(s) sold; ${CFormatter.formatItemQtyDisplays(item.qtyRefunded, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics)}(s) refunded @: $userCurrency.${item.unitSellingPrice} #${item.productId}',
                                           ),
+                                    // buildSalesDetails(
+                                    //   context,
+                                    //   '${item.productName.toUpperCase()} (${item.txnStatus})',
+                                    //   '${item.quantity} sold; ${item.qtyRefunded} refunded @: $userCurrency.${item.unitSellingPrice} #${item.productId}',
+                                    // ),
                                     CRoundedContainer(
                                       bgColor: CColors.transparent,
                                       child: Text(

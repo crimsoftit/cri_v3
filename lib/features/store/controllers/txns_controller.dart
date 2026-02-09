@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
@@ -95,6 +94,7 @@ class CTxnsController extends GetxController {
   final txtCustomerName = TextEditingController();
   final txtCustomerContacts = TextEditingController();
   final txtRefundReason = TextEditingController();
+  final txtRefundQty = TextEditingController();
   final txtSaleItemQty = TextEditingController();
   final txtTxnAddress = TextEditingController();
 
@@ -136,6 +136,7 @@ class CTxnsController extends GetxController {
     initTxnsSync();
 
     showAmountIssuedField.value = true;
+    txtRefundQty.text = '';
     refundQty.value = 0;
 
     // AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
@@ -704,6 +705,7 @@ class CTxnsController extends GetxController {
     deposit.value = 0.0;
     totalAmount.value = 0.0;
 
+    txtRefundQty.text = '';
     txtSaleItemQty.text = '';
     txtAmountIssued.text = '';
     txtCustomerName.text = '';
@@ -999,7 +1001,9 @@ class CTxnsController extends GetxController {
           padding: MediaQuery.of(context).viewInsets,
           child: CRoundedContainer(
             height: CHelperFunctions.screenHeight() * 0.35,
-            padding: const EdgeInsets.all(CSizes.lg / 3),
+            padding: const EdgeInsets.all(
+              CSizes.lg / 3,
+            ),
             bgColor: isDarkTheme ? CColors.rBrown : CColors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1011,7 +1015,7 @@ class CTxnsController extends GetxController {
                   ),
                 ),
                 Text(
-                  '${soldItem.quantity} ${CFormatter.formatInventoryMetrics(soldItem.productId)}s sold; (${soldItem.qtyRefunded} ${CFormatter.formatInventoryMetrics(soldItem.productId)}s refunded)',
+                  '${soldItem.itemMetrics == 'units' ? soldItem.quantity.toInt() : soldItem.quantity} ${CFormatter.formatInventoryMetrics(soldItem.productId)}(s) sold; (${soldItem.itemMetrics == 'units' ? soldItem.qtyRefunded.toInt() : soldItem.qtyRefunded} ${CFormatter.formatInventoryMetrics(soldItem.productId)}(s) refunded)',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: isDarkTheme ? CColors.white : CColors.rBrown,
                   ),
@@ -1022,62 +1026,218 @@ class CTxnsController extends GetxController {
                   indent: 100.0,
                   thickness: 0.2,
                 ),
-                const SizedBox(height: CSizes.spaceBtnInputFields / 4),
-                Obx(() {
-                  var formattedQtyString = soldItem.itemMetrics == 'units'
-                      ? soldItem.quantity.toStringAsFixed(0)
-                      : soldItem.quantity.toString();
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('qty'),
-                      const SizedBox(width: CSizes.spaceBtnInputFields),
-                      CCircularIconBtn(
-                        icon: Iconsax.minus,
-                        iconBorderRadius: 100,
-                        bgColor: CColors.black.withValues(alpha: 0.5),
-                        width: 45.0,
-                        height: 45.0,
-                        iconColor: CColors.white,
-                        onPressed: () {
-                          if (refundQty.value > 0 &&
-                              refundQty.value <= soldItem.quantity) {
-                            refundQty.value -= 1;
-                          }
-                        },
-                      ),
-                      //const CFavoriteIcon(),
-                      const SizedBox(width: CSizes.spaceBtnItems),
-                      Text(
-                        refundQty.value > soldItem.quantity
-                            ? formattedQtyString
-                            : refundQty.value.toString(),
-                        style: Theme.of(context).textTheme.titleSmall!.apply(
-                          color: isDarkTheme ? CColors.white : CColors.rBrown,
-                        ),
-                      ),
-                      const SizedBox(width: CSizes.spaceBtnItems),
+                const SizedBox(
+                  height: CSizes.spaceBtnInputFields / 4,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('qty:'),
+                    const SizedBox(
+                      width: CSizes.spaceBtnInputFields,
+                    ),
+                    // CCircularIconBtn(
+                    //   icon: Iconsax.minus,
+                    //   iconBorderRadius: 100,
+                    //   bgColor: CColors.black.withValues(alpha: 0.5),
+                    //   width: 45.0,
+                    //   height: 45.0,
+                    //   iconColor: CColors.white,
+                    //   onPressed: () {
+                    //     if (refundQty.value > 0 &&
+                    //         refundQty.value <= soldItem.quantity) {
+                    //       refundQty.value -= soldItem.itemMetrics == 'units'
+                    //           ? 1
+                    //           : .25;
+                    //       txtRefundQty.text = CFormatter.formatItemQtyDisplays(
+                    //         refundQty.value,
+                    //         soldItem.itemMetrics,
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                    //const CFavoriteIcon(),
+                    //const SizedBox(width: CSizes.spaceBtnItems),
+                    // Text(
+                    //   refundQty.value > soldItem.quantity
+                    //       ? formattedQtyString
+                    //       : refundQty.value.toString(),
+                    //   style: Theme.of(context).textTheme.titleSmall!.apply(
+                    //     color: isDarkTheme ? CColors.white : CColors.rBrown,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: 35.0,
+                      width: CHelperFunctions.screenWidth() * .4,
+                      child: TextFormField(
+                        autofocus: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: txtRefundQty,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 2.0,
+                            vertical: 0.0,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, // Customize border color
+                              width: 2.0, // Customize border width
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: CColors.white, // Color when focused
+                              width: 2.0,
+                            ),
+                          ),
 
-                      CCircularIconBtn(
-                        iconBorderRadius: 100,
-                        // bgColor: (CNetworkManager.instance.hasConnection.value
-                        //     ? CColors.rBrown
-                        //     : CColors.black),
-                        bgColor: CColors.black,
-                        icon: Iconsax.add,
-                        iconColor: CColors.white,
-                        width: 45.0,
-                        height: 45.0,
-                        onPressed: () {
-                          if (refundQty.value < soldItem.quantity) {
-                            refundQty.value += 1;
+                          //labelText: 'enter refund qty',
+                          prefixIcon: IconButton(
+                            icon: Icon(
+                              Iconsax.minus_cirlce,
+                              size: CSizes.iconMd,
+                            ),
+                            // iconBorderRadius: 30,
+                            // bgColor: CColors.black.withValues(
+                            //   alpha: 0.5,
+                            // ),
+                            // width: 25.0,
+                            // height: 25.0,
+                            color: CColors.darkGrey,
+                            onPressed: () {
+                              if (refundQty.value > 0 &&
+                                  refundQty.value <= soldItem.quantity) {
+                                refundQty.value -=
+                                    soldItem.itemMetrics == 'units' ? 1 : .25;
+                                txtRefundQty.text =
+                                    CFormatter.formatItemQtyDisplays(
+                                      refundQty.value,
+                                      soldItem.itemMetrics,
+                                    );
+                              }
+                            },
+                            padding: const EdgeInsets.all(1.0),
+                          ),
+                          prefixIconConstraints: BoxConstraints(
+                            maxWidth: 30.0,
+                          ),
+                          suffixIcon: IconButton(
+                            //iconBorderRadius: 100,
+                            // bgColor: (CNetworkManager.instance.hasConnection.value
+                            //     ? CColors.rBrown
+                            //     : CColors.black),
+                            //bgColor: CColors.black,
+                            icon: Icon(
+                              Iconsax.add_circle,
+                              size: CSizes.iconMd,
+                            ),
+                            color: CColors.darkGrey,
+                            //width: 25.0,
+                            //height: 25.0,
+                            onPressed: () {
+                              if (refundQty.value < soldItem.quantity) {
+                                refundQty.value +=
+                                    soldItem.itemMetrics == 'units' ? 1 : .25;
+                                txtRefundQty.text =
+                                    CFormatter.formatItemQtyDisplays(
+                                      refundQty.value,
+                                      soldItem.itemMetrics,
+                                    );
+                              }
+                            },
+                            padding: const EdgeInsets.all(
+                              1.0,
+                            ),
+                          ),
+                          suffixIconConstraints: BoxConstraints(
+                            maxWidth: 30.0,
+                          ),
+                        ),
+                        //initialValue: '0',
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: soldItem.itemMetrics == 'units'
+                              ? false
+                              : true,
+                          signed: false,
+                        ),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d{0,2}$'),
+                          ),
+                        ],
+                        // TODO: APO CHINI
+                        //VALIDATE QTY BEFORE PERFORMING REFUND
+                        onChanged: (value) {
+                          if ((txtRefundQty.text != '' ||
+                                  txtRefundQty.text.isNotEmpty) &&
+                              double.parse(value) <= soldItem.quantity) {
+                            refundQty.value = double.parse(value);
+                          } else {
+                            refundQty.value = soldItem.quantity;
                           }
                         },
+                        textAlign: TextAlign.center,
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'qty is required';
+                          } else if (double.parse(value) > soldItem.quantity) {
+                            txtRefundQty.text =
+                                CFormatter.formatItemQtyDisplays(
+                                  soldItem.quantity,
+                                  soldItem.itemMetrics,
+                                );
+                            return 'only ${CFormatter.formatItemQtyDisplays(
+                              soldItem.quantity,
+                              soldItem.itemMetrics,
+                            )} ${CFormatter.formatItemMetrics(soldItem.itemMetrics)}(s) were sold';
+                          }
+                          return null;
+                        },
                       ),
-                    ],
-                  );
-                }),
-                const SizedBox(height: CSizes.spaceBtnInputFields),
+                    ),
+
+                    // Text(
+                    //   refundQty.value > soldItem.quantity
+                    //       ? CFormatter.formatItemQtyDisplays(
+                    //           soldItem.quantity,
+                    //           soldItem.itemMetrics,
+                    //         )
+                    //       : CFormatter.formatItemQtyDisplays(
+                    //           refundQty.value,
+                    //           soldItem.itemMetrics,
+                    //         ),
+                    //   style: Theme.of(context).textTheme.titleSmall!.apply(
+                    //     color: isDarkTheme ? CColors.white : CColors.rBrown,
+                    //   ),
+                    // ),
+                    // const SizedBox(width: CSizes.spaceBtnItems),
+                    // CCircularIconBtn(
+                    //   iconBorderRadius: 100,
+                    //   // bgColor: (CNetworkManager.instance.hasConnection.value
+                    //   //     ? CColors.rBrown
+                    //   //     : CColors.black),
+                    //   bgColor: CColors.black,
+                    //   icon: Iconsax.add,
+                    //   iconColor: CColors.white,
+                    //   width: 45.0,
+                    //   height: 45.0,
+                    //   onPressed: () {
+                    //     if (refundQty.value < soldItem.quantity) {
+                    //       refundQty.value += soldItem.itemMetrics == 'units'
+                    //           ? 1
+                    //           : .25;
+                    //       txtRefundQty.text = CFormatter.formatItemQtyDisplays(
+                    //         refundQty.value,
+                    //         soldItem.itemMetrics,
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                  ],
+                ),
+                const SizedBox(
+                  height: CSizes.spaceBtnInputFields,
+                ),
 
                 // -- textarea for reason of refund --
                 Padding(
@@ -1085,12 +1245,16 @@ class CTxnsController extends GetxController {
                   child: TextFormField(
                     controller: txtRefundReason,
                     decoration: InputDecoration(
+                      // fillColor: CColors.lightGrey,
+                      // filled: true,
                       labelText: 'reason for refund(optional)',
                       //labelStyle: textStyle,
                       suffixIcon: const Icon(Iconsax.message),
                     ),
                     maxLines: 1, // marked for observation - could be a textarea
-                    style: const TextStyle(fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
                 // Divider(
@@ -1127,7 +1291,8 @@ class CTxnsController extends GetxController {
                                     );
 
                                 // -- update stock count & total sales for this inventory item --
-                                if (inventoryItem.productId! > 100) {
+                                if (inventoryItem.productId! > 100 &&
+                                    soldItem.quantity >= refundQty.value) {
                                   inventoryItem.quantity += refundQty.value;
                                   inventoryItem.qtyRefunded += refundQty.value;
                                   inventoryItem.qtySold -= refundQty.value;
@@ -1184,6 +1349,13 @@ class CTxnsController extends GetxController {
                                         ).pop(true);
                                       });
                                 } else {
+                                  if (refundQty.value > soldItem.quantity) {
+                                    CPopupSnackBar.warningSnackBar(
+                                      message:
+                                          'only ${CFormatter.formatItemQtyDisplays(soldItem.quantity, soldItem.itemMetrics)} of ${CFormatter.formatItemMetrics(soldItem.itemMetrics)}s were sold to this customer!',
+                                      title: 'refund qty is invalid!',
+                                    );
+                                  }
                                   if (kDebugMode) {
                                     print('ERROR: INVENTORY ITEM IS NULL');
                                     CPopupSnackBar.errorSnackBar(
@@ -1229,7 +1401,10 @@ class CTxnsController extends GetxController {
                             context,
                           ).textTheme.bodyMedium!.apply(color: CColors.white),
                         ),
-                        icon: Icon(Iconsax.undo, color: CColors.rBrown),
+                        icon: Icon(
+                          Iconsax.undo,
+                          color: CColors.white,
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: CColors.black.withValues(alpha: 0.5),
                         ),
@@ -1254,7 +1429,8 @@ class CTxnsController extends GetxController {
 
       final internetIsConnected = await CNetworkManager.instance.isConnected();
 
-      if (refundDataUpdated.value) {
+      if (refundDataUpdated.value ||
+          CNetworkManager.instance.hasConnection.value) {
         if (internetIsConnected) {
           //await syncController.processSync();
           if (await syncController.processSync()) {
@@ -1296,6 +1472,7 @@ class CTxnsController extends GetxController {
         print('------------------\n');
         print('bottomSheet closed');
       }
+      Get.put(CDashboardController());
     } catch (e) {
       if (kDebugMode) {
         print('### error syncing refund item ###\n');

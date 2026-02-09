@@ -115,10 +115,57 @@ class CFormatter {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('error fetching inventory item by id: $e');
+        print('error formatting item metrics: $e');
         CPopupSnackBar.errorSnackBar(
-          message: 'error fetching inventory item by id: $e',
-          title: 'error fetching inventory item!',
+          message: 'error formatting item metrics: $e',
+          title: 'item metrics format error!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  static String formatItemMetrics(String metrics) {
+    try {
+      
+      var formattedOutput = metrics == 'units'
+            ? metrics.substring(0, metrics.length - 1)
+            : metrics;
+
+        return formattedOutput;
+    } catch (e) {
+      if (kDebugMode) {
+        print('metrics format error: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'metrics format error: $e',
+          title: 'metrics format error!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  static String formatItemQtyDisplays(double qty, String itemMetrics) {
+    try {
+      var output = '';
+      switch (itemMetrics) {
+        case 'units':
+          output = qty.toInt().toString();
+          break;
+        case 'litre' || 'kg':
+          output = qty.toString();
+          break;
+        default:
+          output = '';
+      }
+
+      return output;
+    } catch (e) {
+      if (kDebugMode) {
+        print('error formatting qty: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: e.toString(),
+          title: 'format error',
         );
       }
       rethrow;

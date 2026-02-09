@@ -157,65 +157,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  // -- stock qty field --
-                  SizedBox(
-                    width: CHelperFunctions.screenWidth() * .43,
-                    height: 65.0,
-                    child: TextFormField(
-                      controller: invController.txtQty,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: false,
-                      ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d*\.?\d{0,2}$'),
-                        ),
-                      ],
-                      style: const TextStyle(fontWeight: FontWeight.normal),
-                      decoration: InputDecoration(
-                        constraints: BoxConstraints(minHeight: 60.0),
-                        contentPadding: const EdgeInsets.only(left: 2.0),
-                        filled: true,
-                        fillColor: isDarkTheme
-                            ? CColors.transparent
-                            : CColors.lightGrey,
-                        labelStyle: textStyle,
-                        labelText: 'qty (units, kg, litre)',
-                        maintainHintSize: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(left: 2.0),
-                          child: Icon(
-                            Iconsax.quote_up,
-                            color: CColors.darkGrey,
-                            size: CSizes.iconXs,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        return CValidator.validateNumber(
-                          'qty/no. of units',
-                          value,
-                        );
-                      },
-                      onChanged: (value) {
-                        if (invController.txtBP.text.isNotEmpty &&
-                            value.isNotEmpty) {
-                          invController.computeUnitBP(
-                            double.parse(invController.txtBP.text.trim()),
-                            double.parse(value.trim()),
-                          );
-                        }
-
-                        if (value.isNotEmpty) {
-                          invController.computeLowStockThreshold(
-                            double.parse(value.trim()),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-
                   Obx(
                     () {
                       return SizedBox(
@@ -279,6 +220,67 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // -- inventory qty field --
+                  SizedBox(
+                    width: CHelperFunctions.screenWidth() * .43,
+                    height: 65.0,
+                    child: TextFormField(
+                      controller: invController.txtQty,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: false,
+                      ),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d{0,2}$'),
+                        ),
+                      ],
+                      style: const TextStyle(fontWeight: FontWeight.normal),
+                      decoration: InputDecoration(
+                        constraints: BoxConstraints(minHeight: 60.0),
+                        contentPadding: const EdgeInsets.only(left: 2.0),
+                        filled: true,
+                        fillColor: isDarkTheme
+                            ? CColors.transparent
+                            : CColors.lightGrey,
+                        labelStyle: textStyle,
+                        labelText: 'qty (units, kg, litre)',
+                        maintainHintSize: true,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.only(left: 2.0),
+                          child: Icon(
+                            Iconsax.quote_up,
+                            color: CColors.darkGrey,
+                            size: CSizes.iconXs,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        return CValidator.validateNumber(
+                          'qty/no. of units',
+                          value,
+                        );
+                      },
+                      onChanged: (value) {
+                        if (invController.txtBP.text.isNotEmpty &&
+                            value.isNotEmpty) {
+                          invController.computeUnitBP(
+                            double.parse(invController.txtBP.text.trim()),
+                            double.parse(value.trim()),
+                          );
+                        }
+
+                        if (value.isNotEmpty) {
+                          invController.computeLowStockThreshold(
+                            double.parse(value.trim()),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+
+                  
                 ],
               ),
               // -- unit selling price field --

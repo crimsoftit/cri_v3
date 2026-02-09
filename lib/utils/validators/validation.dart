@@ -19,7 +19,14 @@ class CValidator {
     return null;
   }
 
-  /* ========== barcode field validation ========== */
+  /// -- validate refundQty --
+  // static String? validateRefundQty(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'refund qty field is required!';
+  //   }
+  // }
+
+  /* ========== number validation ========== */
   static String? validateNumber(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';

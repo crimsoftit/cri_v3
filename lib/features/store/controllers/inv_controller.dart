@@ -1129,9 +1129,14 @@ class CInventoryController extends GetxController {
   /// -- compute low stock threshold for alerts --
   computeLowStockThreshold(double qty) {
     var threshold = (qty * .2).toDouble();
-    txtStockNotifierLimit.text = threshold == 0
-        ? (threshold + 1).toString()
-        : threshold.toString();
+    var formattedOutput = CFormatter.formatItemQtyDisplays(
+      threshold == 0.0 ? threshold + 1 : threshold,
+      itemCalibration.value,
+    );
+    // txtStockNotifierLimit.text = threshold == 0.0
+    //     ? (threshold + 1).toString()
+    //     : threshold.toString();
+    txtStockNotifierLimit.text = formattedOutput;
   }
 
   /// -- compute unitBP --
