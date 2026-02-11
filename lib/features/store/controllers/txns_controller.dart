@@ -1032,40 +1032,12 @@ class CTxnsController extends GetxController {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('qty:'),
+                    Text(
+                      'qty (${CFormatter.formatItemMetrics(soldItem.itemMetrics)}(s)):',
+                    ),
                     const SizedBox(
                       width: CSizes.spaceBtnInputFields,
                     ),
-                    // CCircularIconBtn(
-                    //   icon: Iconsax.minus,
-                    //   iconBorderRadius: 100,
-                    //   bgColor: CColors.black.withValues(alpha: 0.5),
-                    //   width: 45.0,
-                    //   height: 45.0,
-                    //   iconColor: CColors.white,
-                    //   onPressed: () {
-                    //     if (refundQty.value > 0 &&
-                    //         refundQty.value <= soldItem.quantity) {
-                    //       refundQty.value -= soldItem.itemMetrics == 'units'
-                    //           ? 1
-                    //           : .25;
-                    //       txtRefundQty.text = CFormatter.formatItemQtyDisplays(
-                    //         refundQty.value,
-                    //         soldItem.itemMetrics,
-                    //       );
-                    //     }
-                    //   },
-                    // ),
-                    //const CFavoriteIcon(),
-                    //const SizedBox(width: CSizes.spaceBtnItems),
-                    // Text(
-                    //   refundQty.value > soldItem.quantity
-                    //       ? formattedQtyString
-                    //       : refundQty.value.toString(),
-                    //   style: Theme.of(context).textTheme.titleSmall!.apply(
-                    //     color: isDarkTheme ? CColors.white : CColors.rBrown,
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 35.0,
                       width: CHelperFunctions.screenWidth() * .4,
@@ -1097,12 +1069,6 @@ class CTxnsController extends GetxController {
                               Iconsax.minus_cirlce,
                               size: CSizes.iconMd,
                             ),
-                            // iconBorderRadius: 30,
-                            // bgColor: CColors.black.withValues(
-                            //   alpha: 0.5,
-                            // ),
-                            // width: 25.0,
-                            // height: 25.0,
                             color: CColors.darkGrey,
                             onPressed: () {
                               if (refundQty.value > 0 &&
@@ -1122,18 +1088,11 @@ class CTxnsController extends GetxController {
                             maxWidth: 30.0,
                           ),
                           suffixIcon: IconButton(
-                            //iconBorderRadius: 100,
-                            // bgColor: (CNetworkManager.instance.hasConnection.value
-                            //     ? CColors.rBrown
-                            //     : CColors.black),
-                            //bgColor: CColors.black,
                             icon: Icon(
                               Iconsax.add_circle,
                               size: CSizes.iconMd,
                             ),
                             color: CColors.darkGrey,
-                            //width: 25.0,
-                            //height: 25.0,
                             onPressed: () {
                               if (refundQty.value < soldItem.quantity) {
                                 refundQty.value +=
@@ -1195,44 +1154,6 @@ class CTxnsController extends GetxController {
                         },
                       ),
                     ),
-
-                    // Text(
-                    //   refundQty.value > soldItem.quantity
-                    //       ? CFormatter.formatItemQtyDisplays(
-                    //           soldItem.quantity,
-                    //           soldItem.itemMetrics,
-                    //         )
-                    //       : CFormatter.formatItemQtyDisplays(
-                    //           refundQty.value,
-                    //           soldItem.itemMetrics,
-                    //         ),
-                    //   style: Theme.of(context).textTheme.titleSmall!.apply(
-                    //     color: isDarkTheme ? CColors.white : CColors.rBrown,
-                    //   ),
-                    // ),
-                    // const SizedBox(width: CSizes.spaceBtnItems),
-                    // CCircularIconBtn(
-                    //   iconBorderRadius: 100,
-                    //   // bgColor: (CNetworkManager.instance.hasConnection.value
-                    //   //     ? CColors.rBrown
-                    //   //     : CColors.black),
-                    //   bgColor: CColors.black,
-                    //   icon: Iconsax.add,
-                    //   iconColor: CColors.white,
-                    //   width: 45.0,
-                    //   height: 45.0,
-                    //   onPressed: () {
-                    //     if (refundQty.value < soldItem.quantity) {
-                    //       refundQty.value += soldItem.itemMetrics == 'units'
-                    //           ? 1
-                    //           : .25;
-                    //       txtRefundQty.text = CFormatter.formatItemQtyDisplays(
-                    //         refundQty.value,
-                    //         soldItem.itemMetrics,
-                    //       );
-                    //     }
-                    //   },
-                    // ),
                   ],
                 ),
                 const SizedBox(
@@ -1309,45 +1230,48 @@ class CTxnsController extends GetxController {
                                         inventoryItem,
                                         inventoryItem.productId!,
                                       )
-                                      .then((result) async {
-                                        /// -- update receipt item --
-                                        var txnItem = sales.firstWhere(
-                                          (txnItem) =>
-                                              txnItem.productId ==
-                                              soldItem.productId,
-                                        );
+                                      .then(
+                                        (result) async {
+                                          /// -- update receipt item --
+                                          var txnItem = sales.firstWhere(
+                                            (txnItem) =>
+                                                txnItem.productId ==
+                                                soldItem.productId,
+                                          );
 
-                                        txnItem.refundReason = txtRefundReason
-                                            .text
-                                            .trim();
-                                        txnItem.quantity -= refundQty.value;
-                                        txnItem.qtyRefunded += refundQty.value;
-                                        txnItem.totalAmount -=
-                                            refundQty.value *
-                                            txnItem.unitSellingPrice;
-                                        txnItem.lastModified = DateFormat(
-                                          'yyyy-MM-dd @ kk:mm',
-                                        ).format(clock.now());
-                                        txnItem.syncAction =
-                                            txnItem.isSynced == 0
-                                            ? 'append'
-                                            : 'update';
-                                        //txnItem.txnStatus = 'refunded';
+                                          txnItem.refundReason = txtRefundReason
+                                              .text
+                                              .trim();
+                                          txnItem.quantity -= refundQty.value;
+                                          txnItem.qtyRefunded +=
+                                              refundQty.value;
+                                          txnItem.totalAmount -=
+                                              refundQty.value *
+                                              txnItem.unitSellingPrice;
+                                          txnItem.lastModified = DateFormat(
+                                            'yyyy-MM-dd @ kk:mm',
+                                          ).format(clock.now());
+                                          txnItem.syncAction =
+                                              txnItem.isSynced == 0
+                                              ? 'append'
+                                              : 'update';
+                                          //txnItem.txnStatus = 'refunded';
 
-                                        dbHelper
-                                            .updateReceiptItem(
-                                              txnItem,
-                                              txnItem.soldItemId!,
-                                            )
-                                            .then((_) {
-                                              fetchSoldItems();
-                                              refundDataUpdated.value = true;
-                                            });
+                                          dbHelper
+                                              .updateReceiptItem(
+                                                txnItem,
+                                                txnItem.soldItemId!,
+                                              )
+                                              .then((_) {
+                                                fetchSoldItems();
+                                                refundDataUpdated.value = true;
+                                              });
 
-                                        Navigator.of(
-                                          Get.overlayContext!,
-                                        ).pop(true);
-                                      });
+                                          Navigator.of(
+                                            Get.overlayContext!,
+                                          ).pop(true);
+                                        },
+                                      );
                                 } else {
                                   if (refundQty.value > soldItem.quantity) {
                                     CPopupSnackBar.warningSnackBar(
@@ -1463,7 +1387,6 @@ class CTxnsController extends GetxController {
         }
       }
 
-      updatesOnRefundDone.value = false;
       resetSalesFields();
 
       if (kDebugMode) {
@@ -1472,7 +1395,7 @@ class CTxnsController extends GetxController {
         print('------------------\n');
         print('bottomSheet closed');
       }
-      Get.put(CDashboardController());
+      CDashboardController.instance.onInit();
     } catch (e) {
       if (kDebugMode) {
         print('### error syncing refund item ###\n');
@@ -1564,11 +1487,13 @@ class CTxnsController extends GetxController {
         (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
       );
 
-      // -- compute total revenue --
-      moneyCollected.value = sales.fold(
-        0.0,
-        (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
-      );
+      // -- compute total money collected (complete txns) --
+      moneyCollected.value = sales
+          .where((soldItem) => soldItem.txnStatus == 'complete')
+          .fold(
+            0.0,
+            (sum, sale) => sum + (sale.quantity * sale.unitSellingPrice),
+          );
 
       // -- compute gross profit --
       totalProfit.value = grossRevenue.value - costOfSales.value;

@@ -35,21 +35,32 @@ class CPositionedCartCounterWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
         child: Center(
-          child: Obx(() {
-            final cartController = Get.put(CCartController());
-            return Text(
-              cartController.countOfCartItems.value > 0 &&
-                      cartController.countOfCartItems.value < 1.0
-                  ? 1.toInt().toString()
-                  : cartController.countOfCartItems.value.toInt().toString(),
-              style: Theme.of(context).textTheme.labelSmall!.apply(
-                color:
-                    counterTxtColor ??
-                    (isDarkTheme ? CColors.rBrown : CColors.white),
-                fontSizeFactor: 1.0,
-              ),
-            );
-          }),
+          child: Obx(
+            () {
+              final cartController = Get.put(CCartController());
+              // return Text(
+              //   cartController.countOfCartItems.value > 0 &&
+              //           cartController.countOfCartItems.value < 1.0
+              //       ? 1.toInt().toString()
+              //       : cartController.countOfCartItems.value.toInt().toString(),
+              //   style: Theme.of(context).textTheme.labelSmall!.apply(
+              //     color:
+              //         counterTxtColor ??
+              //         (isDarkTheme ? CColors.rBrown : CColors.white),
+              //     fontSizeFactor: 1.0,
+              //   ),
+              // );
+              return Text(
+                cartController.cartItems.length.toString(),
+                style: Theme.of(context).textTheme.labelSmall!.apply(
+                  color:
+                      counterTxtColor ??
+                      (isDarkTheme ? CColors.rBrown : CColors.white),
+                  fontSizeFactor: 1.0,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
