@@ -262,6 +262,19 @@ class CInvGridviewScreen extends StatelessWidget {
                         expiryDate.replaceAll('@ ', ''),
                       )
                     : 'N/A',
+                // expiryColor: expiryDate != ''
+                //     ? CDateTimeComputations.timeRangeFromNow(
+                //                 expiryDate.replaceAll('@ ', ''),
+                //               ) <=
+                //               0
+                //           ? CColors.error
+                //           : CDateTimeComputations.timeRangeFromNow(
+                //                   expiryDate.replaceAll('@ ', ''),
+                //                 ) <=
+                //                 3
+                //           ? CColors.warning
+                //           : const Color.fromRGBO(147, 147, 147, 1)
+                //     : CColors.grey,
                 expiryColor: expiryDate != ''
                     ? CDateTimeComputations.timeRangeFromNow(
                                 expiryDate.replaceAll('@ ', ''),
@@ -273,8 +286,8 @@ class CInvGridviewScreen extends StatelessWidget {
                                 ) <=
                                 3
                           ? CColors.warning
-                          : const Color.fromRGBO(147, 147, 147, 1)
-                    : CColors.grey,
+                          : CColors.darkGrey
+                    : CColors.darkGrey,
                 favIconColor: isFavorite == 1 ? CColors.error : CColors.white,
 
                 isSynced: isSynced.toString(),

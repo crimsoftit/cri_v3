@@ -209,7 +209,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                           .cartItems[index]
                                                           .productId,
                                                     )
-                                                    .toString(),
+                                                    .toStringAsFixed(2),
                                         ),
                                       );
 
@@ -438,7 +438,8 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     double.parse(
                                                                       cartController
                                                                           .qtyFieldControllers[index]
-                                                                          .text.trim(),
+                                                                          .text
+                                                                          .trim(),
                                                                     ),
                                                                   );
                                                               cartController

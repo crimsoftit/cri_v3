@@ -218,11 +218,14 @@ class CCartController extends GetxController {
             return;
           }
           cartItems[itemIndex].quantity = double.parse(qtyValue);
-
-          qtyFieldControllers[itemIndex].text =
-              cartItems[itemIndex].itemMetrics == 'units'
-              ? cartItems[itemIndex].quantity.toInt().toString()
-              : cartItems[itemIndex].quantity.toString();
+          updateCart().then(
+            (_) {
+              qtyFieldControllers[itemIndex].text =
+                  cartItems[itemIndex].itemMetrics == 'units'
+                  ? cartItems[itemIndex].quantity.toInt().toString()
+                  : cartItems[itemIndex].quantity.toString();
+            },
+          );
         } else {
           if (cartItems[itemIndex].quantity > inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
@@ -237,19 +240,26 @@ class CCartController extends GetxController {
           } else {
             cartItems[itemIndex].quantity +=
                 cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
+            updateCart().then(
+              (_) {
+                qtyFieldControllers[itemIndex].text =
+                    cartItems[itemIndex].itemMetrics == 'units'
+                    ? cartItems[itemIndex].quantity.toInt().toString()
+                    : cartItems[itemIndex].quantity.toString();
+              },
+            );
           }
         }
-        updateCart();
       } else {
         cartItems.add(item);
         updateCart();
-
         qtyFieldControllers.add(
-          TextEditingController(),
+          TextEditingController(
+            text: item.itemMetrics == 'units'
+                ? item.quantity.toInt().toString()
+                : item.quantity.toStringAsFixed(2),
+          ),
         );
-        qtyFieldControllers[itemIndex].text = item.itemMetrics == 'units'
-            ? item.quantity.toInt().toString()
-            : item.quantity.toString();
       }
     } else {
       CPopupSnackBar.warningSnackBar(
@@ -257,6 +267,7 @@ class CCartController extends GetxController {
         message: '${cartItems[itemIndex].pName} is out of stock!',
       );
     }
+    //updateCart();
   }
 
   /// -- decrement cart item qty/remove a single item from the cart --

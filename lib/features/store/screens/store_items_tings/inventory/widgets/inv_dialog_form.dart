@@ -128,7 +128,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   return CValidator.validateBarcode('barcode value', value);
                 },
               ),
-              const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
+              const SizedBox(
+                height: CSizes.spaceBtnInputFields / 1.5,
+              ),
 
               // -- product name field --
               TextFormField(
@@ -152,79 +154,138 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   return CValidator.validateEmptyText('product name', value);
                 },
               ),
-              const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
+              const SizedBox(
+                height: CSizes.spaceBtnInputFields / 1.5,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Obx(
-                    () {
-                      return SizedBox(
-                        width: CHelperFunctions.screenWidth() * .42,
-                        height: 65.0,
-                        child: DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            constraints: BoxConstraints(minHeight: 60.0),
-                            // contentPadding: const EdgeInsets.symmetric(
-                            //   horizontal: 2.0,
-                            // ),
-                            contentPadding: const EdgeInsets.only(
-                              left: 1.0,
-                            ),
-                            filled: true,
-                            fillColor: isDarkTheme
-                                ? CColors.transparent
-                                : CColors.lightGrey,
-
-                            labelStyle: textStyle,
-                            labelText: 'metric unit',
-
-                            maintainHintSize: true,
-                            prefixIcon: Icon(
-                              Iconsax.quote_down_circle,
-                              color: CColors.darkGrey,
-                              size: CSizes.iconXs,
-                            ),
+                  // -- item metrics dropdown button --
+                  SizedBox(
+                    width: CHelperFunctions.screenWidth() * .42,
+                    height: 55.0,
+                    child: Obx(
+                      () {
+                        return DropdownButton<String>(
+                          borderRadius: BorderRadius.circular(12),
+                          items: invController.demMetrics.map(
+                            (
+                              String value,
+                            ) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: Theme.of(context).textTheme.labelLarge!
+                                      .apply(
+                                        color: isDarkTheme
+                                            ? CColors.white
+                                            : CColors.rBrown,
+                                      ),
+                                ),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (value) {
+                            if (value != '') {
+                              invController.itemMetrics.value = value!;
+                            }
+                          },
+                          style: Theme.of(context).textTheme.labelLarge!.apply(
+                            color: CColors.rBrown,
                           ),
-                          initialValue:
-                              invController.itemCalibration.value != ''
-                              ? invController.itemCalibration.value
-                              : null,
-                          // hint: Text(
-                          //   'metric unit',
-                          //   style: Theme.of(context).textTheme.labelMedium,
-                          // ),
-                          onChanged: (String? newValue) {
-                            if (newValue != '' || newValue != null) {
-                              invController.itemCalibration.value = newValue!;
-                            }
-                          },
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'unit of measurement is required';
-                            }
-                            return null;
-                          },
-                          items:
-                              <String>[
-                                'units',
-                                'litre',
-                                'kg',
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                        ),
-                      );
-                    },
+                          dropdownColor: isDarkTheme
+                              ? CColors.rBrown
+                              : CColors.white.withValues(
+                                  alpha: 0.6,
+                                ),
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: isDarkTheme ? CColors.white : CColors.rBrown,
+                          ),
+                          underline: Container(
+                            // color: isDarkTheme ? CColors.white : CColors.rBrown,
+                            color: CColors.white,
+                            height: 2,
+                          ),
+                          padding: const EdgeInsets.only(
+                            left: 5.0,
+                            right: 5.0,
+                          ),
+                          value: invController.setItemMetrics(),
+                        );
+                      },
+                    ),
                   ),
+                  // Obx(
+                  //   () {
+                  //     return SizedBox(
+                  //       width: CHelperFunctions.screenWidth() * .42,
+                  //       height: 65.0,
+                  //       child: DropdownButtonFormField<String>(
+                  //         decoration: InputDecoration(
+                  //           constraints: BoxConstraints(minHeight: 60.0),
+                  //           // contentPadding: const EdgeInsets.symmetric(
+                  //           //   horizontal: 2.0,
+                  //           // ),
+                  //           contentPadding: const EdgeInsets.only(
+                  //             left: 1.0,
+                  //           ),
+                  //           filled: true,
+                  //           fillColor: isDarkTheme
+                  //               ? CColors.transparent
+                  //               : CColors.lightGrey,
+
+                  //           labelStyle: textStyle,
+                  //           labelText: 'metric unit',
+
+                  //           maintainHintSize: true,
+                  //           prefixIcon: Icon(
+                  //             Iconsax.quote_down_circle,
+                  //             color: CColors.darkGrey,
+                  //             size: CSizes.iconXs,
+                  //           ),
+                  //         ),
+                  //         initialValue:
+                  //             invController.itemCalibration.value != ''
+                  //             ? invController.itemCalibration.value
+                  //             : null,
+                  //         // hint: Text(
+                  //         //   'metric unit',
+                  //         //   style: Theme.of(context).textTheme.labelMedium,
+                  //         // ),
+                  //         onChanged: (String? newValue) {
+                  //           if (newValue != '' || newValue != null) {
+                  //             invController.itemCalibration.value = newValue!;
+                  //           }
+                  //         },
+                  //         validator: (String? value) {
+                  //           if (value == null || value.isEmpty) {
+                  //             return 'unit of measurement is required';
+                  //           }
+                  //           return null;
+                  //         },
+                  //         items:
+                  //             <String>[
+                  //               'units',
+                  //               'litre',
+                  //               'kg',
+                  //             ].map<DropdownMenuItem<String>>((String value) {
+                  //               return DropdownMenuItem<String>(
+                  //                 value: value,
+                  //                 child: Text(value),
+                  //               );
+                  //             }).toList(),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
 
                   // -- inventory qty field --
                   SizedBox(
-                    width: CHelperFunctions.screenWidth() * .43,
-                    height: 65.0,
+                    width: CHelperFunctions.screenWidth() * .42,
+                    height: 55.0,
                     child: TextFormField(
                       controller: invController.txtQty,
                       keyboardType: const TextInputType.numberWithOptions(
@@ -279,11 +340,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       },
                     ),
                   ),
-
-                  
                 ],
               ),
-              // -- unit selling price field --
+
               Obx(
                 () {
                   return Row(
@@ -292,8 +351,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     children: [
                       // -- buying price textfield --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .43,
-                        height: 65.0,
+                        width: CHelperFunctions.screenWidth() * .42,
+                        height: 55.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtBP,
@@ -310,7 +369,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 1.0,
                             ),
-                            constraints: BoxConstraints(minHeight: 60.0),
+                            constraints: BoxConstraints(minHeight: 40.0),
                             filled: true,
                             fillColor: isDarkTheme
                                 ? CColors.transparent
@@ -342,9 +401,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           },
                         ),
                       ),
+
+                      SizedBox(
+                        width: CSizes.spaceBtnInputFields / 2.5,
+                      ),
+
+                      // -- unit selling price field --
                       SizedBox(
                         width: CHelperFunctions.screenWidth() * .42,
-                        height: 65.0,
+                        height: 55.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtUnitSP,
@@ -359,13 +424,12 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 : CColors.lightGrey,
                             labelStyle: textStyle,
                             labelText:
-                                invController.itemCalibration.value == '' ||
-                                    (invController.itemCalibration.value !=
-                                            '' &&
-                                        invController.itemCalibration.value ==
+                                invController.itemMetrics.value == '' ||
+                                    (invController.itemMetrics.value != '' &&
+                                        invController.itemMetrics.value ==
                                             'units')
                                 ? 'unit selling price'
-                                : 'selling price per ${invController.itemCalibration.value}',
+                                : 'selling price per ${invController.itemMetrics.value}',
                             maintainHintSize: true,
                             prefixIcon: Icon(
                               Iconsax.bitcoin_card,
@@ -387,7 +451,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             height: 1.5,
                           ),
                           validator: (value) {
-                            return CValidator.validateNumber('usp', value);
+                            return CValidator.validateNumber(
+                              'unit selling price',
+                              value,
+                            );
                           },
                         ),
                       ),
@@ -398,96 +465,90 @@ class AddUpdateInventoryForm extends StatelessWidget {
               // const SizedBox(
               //   height: CSizes.spaceBtnInputFields / 1.5,
               // ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    // autovalidateMode: AutovalidateMode.onUserInteraction,
-                    autovalidateMode: AutovalidateMode.onUnfocus,
-                    controller: invController.txtStockNotifierLimit,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+(\.\d*)?'),
-                      ),
-                      // FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    decoration: InputDecoration(
-                      constraints: BoxConstraints(minHeight: 60.0),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 0.0,
-                      ),
-                      filled: true,
-                      fillColor: isDarkTheme
-                          ? CColors.transparent
-                          : CColors.lightGrey,
-                      // label: Container(
-                      //   transform: Matrix4.translationValues(
-                      //     10.0,
-                      //     0.0,
-                      //     0.0,
-                      //   ),
-                      //   child: Text(
-                      //     'threshold',
-                      //   ),
-                      // ),
-                      // labelStyle: textStyle,
-                      labelText: 'alert when qty falls below:',
-                      prefixIcon: Icon(
-                        // Iconsax.card_pos,
-                        Iconsax.quote_down,
-                        color: CColors.darkGrey,
-                        size: CSizes.iconXs,
-                      ),
-                    ),
-                    onChanged: (value) {},
-                    style: const TextStyle(fontWeight: FontWeight.normal),
-                    validator: (value) {
-                      return CValidator.validateNumber(
-                        'alert threshold',
-                        value,
-                      );
-                    },
-                  ),
-                  SizedBox(width: 8.5),
-                  Obx(() {
-                    final userController = Get.put(CUserController());
-                    final currency = CHelperFunctions.formatCurrency(
-                      userController.user.value.currencyCode,
-                    );
+              Obx(
+                () {
+                  final userController = Get.put(CUserController());
+                  final currency = CHelperFunctions.formatCurrency(
+                    userController.user.value.currencyCode,
+                  );
 
-                    // -- display unit buying price
-                    return Visibility(
-                      visible:
+                  // -- display unit buying price
+                  return Visibility(
+                    visible:
+                        invController.txtBP.text.isEmpty &&
+                            invController.txtQty.text.isEmpty
+                        ? false
+                        : true,
+                    replacement: SizedBox.shrink(),
+                    child: Container(
+                      padding: const EdgeInsets.all(0.0),
+                      width: CHelperFunctions.screenWidth() * .95,
+                      height:
                           invController.txtBP.text.isEmpty &&
                               invController.txtQty.text.isEmpty
-                          ? false
-                          : true,
-                      replacement: SizedBox.shrink(),
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        width: CHelperFunctions.screenWidth() * .95,
-                        height:
-                            invController.txtBP.text.isEmpty &&
-                                invController.txtQty.text.isEmpty
-                            ? 0
-                            : 10.0,
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          'unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.labelSmall!.apply(
-                            fontStyle: FontStyle.italic,
-                          ),
+                          ? 0
+                          : 10.0,
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        'unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.labelSmall!.apply(
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
-                    );
-                  }),
-
-                  //const SizedBox(height: CSizes.spaceBtnInputFields / 1.5),
+                    ),
+                  );
+                },
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                autovalidateMode: AutovalidateMode.onUnfocus,
+                controller: invController.txtStockNotifierLimit,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
+                ),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'^\d+(\.\d*)?'),
+                  ),
+                  // FilteringTextInputFormatter.digitsOnly,
                 ],
+                decoration: InputDecoration(
+                  constraints: BoxConstraints(minHeight: 60.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 0.0,
+                  ),
+                  filled: true,
+                  fillColor: isDarkTheme
+                      ? CColors.transparent
+                      : CColors.lightGrey,
+                  // label: Container(
+                  //   transform: Matrix4.translationValues(
+                  //     10.0,
+                  //     0.0,
+                  //     0.0,
+                  //   ),
+                  //   child: Text(
+                  //     'threshold',
+                  //   ),
+                  // ),
+                  // labelStyle: textStyle,
+                  labelText: 'alert when qty falls below:',
+                  prefixIcon: Icon(
+                    // Iconsax.card_pos,
+                    Iconsax.quote_down,
+                    color: CColors.darkGrey,
+                    size: CSizes.iconXs,
+                  ),
+                ),
+                onChanged: (value) {},
+                style: const TextStyle(fontWeight: FontWeight.normal),
+                validator: (value) {
+                  return CValidator.validateNumber(
+                    'alert threshold',
+                    value,
+                  );
+                },
               ),
 
               Obx(() {
@@ -675,10 +736,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         backgroundColor: CColors.white, // background color
                       ),
                       onPressed: () {
-                        invController.fetchUserInventoryItems();
-
                         Navigator.pop(context, true);
                         invController.resetInvFields();
+                        //invController.fetchUserInventoryItems();
                       },
                     ),
                   ),

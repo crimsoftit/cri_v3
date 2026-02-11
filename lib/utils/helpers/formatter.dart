@@ -127,12 +127,11 @@ class CFormatter {
 
   static String formatItemMetrics(String metrics) {
     try {
-      
       var formattedOutput = metrics == 'units'
-            ? metrics.substring(0, metrics.length - 1)
-            : metrics;
+          ? metrics.substring(0, metrics.length - 1)
+          : metrics;
 
-        return formattedOutput;
+      return formattedOutput;
     } catch (e) {
       if (kDebugMode) {
         print('metrics format error: $e');
@@ -153,7 +152,7 @@ class CFormatter {
           output = qty.toInt().toString();
           break;
         case 'litre' || 'kg':
-          output = qty.toString();
+          output = qty.toStringAsFixed(2);
           break;
         default:
           output = '';

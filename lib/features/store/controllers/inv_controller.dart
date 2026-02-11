@@ -69,14 +69,19 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> itemsNearingExpiry = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> expiredItems = <CInventoryModel>[].obs;
+  final RxList<String> demMetrics = [
+    'units',
+    'litre',
+    'kg',
+  ].obs;
+
+  final RxString itemMetrics = ''.obs;
 
   final RxString scanResults = ''.obs;
 
   // -- integers --
   final RxInt currentItemId = 0.obs;
   final RxInt lowStockItemsCount = 0.obs;
-
-  final RxString itemCalibration = ''.obs;
 
   // -- text controllers --
   final txtExpiryDatePicker = TextEditingController();
@@ -254,7 +259,7 @@ class CInventoryController extends GetxController {
           txtCode.text,
           txtNameController.text,
           0,
-          itemCalibration.value,
+          itemMetrics.value,
           double.parse(txtQty.text),
           0.0,
           0.0,
@@ -437,7 +442,7 @@ class CInventoryController extends GetxController {
         txtId.text = currentItemId.value.toString();
         txtNameController.text = fetchedItem.first.name;
 
-        itemCalibration.value = fetchedItem.first.calibration;
+        itemMetrics.value = fetchedItem.first.calibration;
         txtQty.text = (fetchedItem.first.quantity).toString();
         txtBP.text = (fetchedItem.first.buyingPrice).toString();
         unitBP.value = fetchedItem.first.unitBp;
@@ -468,7 +473,7 @@ class CInventoryController extends GetxController {
         txtExpiryDatePicker.text = '';
         txtId.text = '';
         txtNameController.text = '';
-        itemCalibration.value = '';
+        itemMetrics.value = '';
         txtQty.text = '';
         txtBP.text = '';
         unitBP.value = 0.0;
@@ -495,7 +500,7 @@ class CInventoryController extends GetxController {
     txtCode.text = "";
     txtExpiryDatePicker.text = "";
     txtId.text = "";
-    itemCalibration.value = '';
+    itemMetrics.value = '';
     txtQty.text = "";
     txtStockNotifierLimit.text = "";
     txtSupplierContacts.text = '';
@@ -626,7 +631,7 @@ class CInventoryController extends GetxController {
 
         inventoryItem.name = txtNameController.text.trim();
         inventoryItem.pCode = txtCode.text.trim();
-        inventoryItem.calibration = itemCalibration.value;
+        inventoryItem.calibration = itemMetrics.value;
         inventoryItem.quantity = double.parse(txtQty.text.trim());
         inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
         inventoryItem.unitBp = unitBP.value;
@@ -1131,7 +1136,7 @@ class CInventoryController extends GetxController {
     var threshold = (qty * .2).toDouble();
     var formattedOutput = CFormatter.formatItemQtyDisplays(
       threshold == 0.0 ? threshold + 1 : threshold,
-      itemCalibration.value,
+      itemMetrics.value,
     );
     // txtStockNotifierLimit.text = threshold == 0.0
     //     ? (threshold + 1).toString()
@@ -1162,10 +1167,12 @@ class CInventoryController extends GetxController {
   /// -- reset fields --
   resetInvFields() {
     itemExists.value = false;
+    itemMetrics.value = "";
+    includeSupplierDetails.value = false;
     txtId.text = "";
     txtNameController.text = "";
     txtCode.text = "";
-    itemCalibration.value = "";
+    
     txtQty.text = "";
     txtBP.text = "";
     unitBP.value = 0.0;
@@ -1313,5 +1320,12 @@ class CInventoryController extends GetxController {
       }
       rethrow;
     }
+  }
+
+  String setItemMetrics() {
+    itemMetrics.value = itemExists.value || itemMetrics.value != ''
+        ? itemMetrics.value
+        : demMetrics[0];
+    return itemMetrics.value;
   }
 }
