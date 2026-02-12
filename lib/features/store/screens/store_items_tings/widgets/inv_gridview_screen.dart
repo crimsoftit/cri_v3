@@ -292,7 +292,7 @@ class CInvGridviewScreen extends StatelessWidget {
 
                 isSynced: isSynced.toString(),
                 itemAvatar: avatarTxt,
-                itemCalibration: itemCalibration,
+                itemMetrics: itemCalibration,
                 itemName: pName,
                 lastModified: lastModified,
                 lowStockNotifierLimit: lowStockNotifierLimit,

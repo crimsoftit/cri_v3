@@ -6,6 +6,7 @@ import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/nav_menu.dart' show NavMenu;
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
@@ -286,57 +287,63 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   SizedBox(
                     width: CHelperFunctions.screenWidth() * .42,
                     height: 55.0,
-                    child: TextFormField(
-                      controller: invController.txtQty,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: false,
-                      ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d*\.?\d{0,2}$'),
-                        ),
-                      ],
-                      style: const TextStyle(fontWeight: FontWeight.normal),
-                      decoration: InputDecoration(
-                        constraints: BoxConstraints(minHeight: 60.0),
-                        contentPadding: const EdgeInsets.only(left: 2.0),
-                        filled: true,
-                        fillColor: isDarkTheme
-                            ? CColors.transparent
-                            : CColors.lightGrey,
-                        labelStyle: textStyle,
-                        labelText: 'qty (units, kg, litre)',
-                        maintainHintSize: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(left: 2.0),
-                          child: Icon(
-                            Iconsax.quote_up,
-                            color: CColors.darkGrey,
-                            size: CSizes.iconXs,
+                    child: Obx(
+                      () {
+                        return TextFormField(
+                          controller: invController.txtQty,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: false,
                           ),
-                        ),
-                      ),
-                      validator: (value) {
-                        return CValidator.validateNumber(
-                          'qty/no. of units',
-                          value,
-                        );
-                      },
-                      onChanged: (value) {
-                        if (invController.txtBP.text.isNotEmpty &&
-                            value.isNotEmpty) {
-                          invController.computeUnitBP(
-                            double.parse(invController.txtBP.text.trim()),
-                            double.parse(value.trim()),
-                          );
-                        }
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d{0,2}$'),
+                            ),
+                          ],
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                          decoration: InputDecoration(
+                            constraints: BoxConstraints(minHeight: 60.0),
+                            contentPadding: const EdgeInsets.only(left: 2.0),
+                            filled: true,
+                            fillColor: isDarkTheme
+                                ? CColors.transparent
+                                : CColors.lightGrey,
+                            labelStyle: textStyle,
+                            //labelText:  'qty (units, kg, litre)',
+                            labelText:
+                                'qty in ${CFormatter.formatItemMetrics(invController.itemMetrics.value)}(s):',
+                            maintainHintSize: true,
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(left: 2.0),
+                              child: Icon(
+                                Iconsax.quote_up,
+                                color: CColors.darkGrey,
+                                size: CSizes.iconXs,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            return CValidator.validateNumber(
+                              'qty/no. of units',
+                              value,
+                            );
+                          },
+                          onChanged: (value) {
+                            if (invController.txtBP.text.isNotEmpty &&
+                                value.isNotEmpty) {
+                              invController.computeUnitBP(
+                                double.parse(invController.txtBP.text.trim()),
+                                double.parse(value.trim()),
+                              );
+                            }
 
-                        if (value.isNotEmpty) {
-                          invController.computeLowStockThreshold(
-                            double.parse(value.trim()),
-                          );
-                        }
+                            if (value.isNotEmpty) {
+                              invController.computeLowStockThreshold(
+                                double.parse(value.trim()),
+                              );
+                            }
+                          },
+                        );
                       },
                     ),
                   ),
@@ -375,7 +382,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 ? CColors.transparent
                                 : CColors.lightGrey,
                             labelStyle: textStyle,
-                            labelText: 'buying price',
+                            labelText: 'buying price:',
                             prefixIcon: Icon(
                               // Iconsax.card_pos,
                               Iconsax.bitcoin_card,
@@ -428,8 +435,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                     (invController.itemMetrics.value != '' &&
                                         invController.itemMetrics.value ==
                                             'units')
-                                ? 'unit selling price'
-                                : 'selling price per ${invController.itemMetrics.value}',
+                                ? 'unit selling price:'
+                                : 'selling price per ${invController.itemMetrics.value}:',
                             maintainHintSize: true,
                             prefixIcon: Icon(
                               Iconsax.bitcoin_card,
@@ -572,7 +579,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               // labelStyle: Theme.of(
                               //   context,
                               // ).textTheme.labelSmall,
-                              labelText: 'supplier name',
+                              labelText: 'supplier name:',
                               prefixIcon: Icon(
                                 Iconsax.user_add,
                                 color: CColors.darkGrey,
@@ -597,7 +604,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               //   color: CColors.darkGrey,
                               //   inherit: true,
                               // ),
-                              labelText: 'supplier contacts',
+                              labelText: 'supplier contacts:',
 
                               prefixIcon: Icon(
                                 Icons.contact_mail,
@@ -628,7 +635,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           fillColor: isDarkTheme
                               ? CColors.transparent
                               : CColors.lightGrey,
-                          labelText: 'pick expiry date',
+                          labelText: 'pick expiry date:',
                           labelStyle: textStyle,
                           prefixIcon: Icon(
                             Iconsax.calendar,

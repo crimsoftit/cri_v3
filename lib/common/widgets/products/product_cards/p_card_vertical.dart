@@ -35,7 +35,7 @@ class CProductCardVertical extends StatelessWidget {
     this.onDoubleTapAction,
     this.onFavoriteIconTap,
     this.onTapAction,
-    this.itemCalibration,
+    this.itemMetrics,
     this.qtyAvailable,
     this.qtyRefunded,
     this.qtySold,
@@ -54,7 +54,7 @@ class CProductCardVertical extends StatelessWidget {
       lastModified,
       isSynced,
       itemAvatar,
-      itemCalibration,
+      itemMetrics,
       qtyAvailable,
       qtyRefunded,
       qtySold,
@@ -212,11 +212,17 @@ class CProductCardVertical extends StatelessWidget {
               //smallSize: true,
               title:
                   CHelperFunctions.txtExceedsTwoLines(
-                    "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold sold)",
+                    "${itemName.toUpperCase()} (${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked, $qtySold sold)",
                     Theme.of(context).textTheme.labelSmall!,
                   )
-                  ? "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold sold)"
-                  : "${itemName.toUpperCase()} ($qtyAvailable ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} stocked, $qtySold ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} sold)",
+                  ? "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked; $qtySold sold)"
+                  : "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s) stocked; $qtySold ${CFormatter.formatItemMetrics(itemMetrics!)}(s) sold)",
+              // title: CHelperFunctions.txtExceedsTwoLines(
+              //   "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold sold)",
+              //   Theme.of(context).textTheme.labelSmall!,
+              // )
+              // ? "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold sold)"
+              // : "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} sold)",
               txtColor: double.parse(qtyAvailable!) < lowStockNotifierLimit!
                   ? Colors.red
                   : isDarkTheme
@@ -225,16 +231,20 @@ class CProductCardVertical extends StatelessWidget {
               maxLines: 2,
             ),
 
+            // Text(
+            //   '($qtyRefunded ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} refunded)',
+            //   style: Theme.of(context).textTheme.labelSmall!.apply(
+            //     color: isDarkTheme ? CColors.white : CColors.darkGrey,
+            //   ),
+            // ),
             Text(
-              '($qtyRefunded ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} refunded)',
+              '($qtyRefunded ${CFormatter.formatItemMetrics(itemMetrics!)}(s) refunded)',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),
             ),
             Text(
-              itemCalibration == 'units'
-                  ? 'sku: $pCode lsn: ${lowStockNotifierLimit!.toStringAsFixed(0)}'
-                  : 'sku: $pCode lsn: $lowStockNotifierLimit',
+              'sku: $pCode lsn: ${CFormatter.formatItemQtyDisplays(lowStockNotifierLimit!, itemMetrics!)}',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),

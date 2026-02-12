@@ -96,8 +96,7 @@ class CCheckoutController extends GetxController {
   TextEditingController amtIssuedFieldController = TextEditingController();
 
   TextEditingController customerNameFieldController = TextEditingController();
-  TextEditingController customerContactsFieldController =
-      TextEditingController();
+  final customerContactsFieldController = TextEditingController();
   final customerBalField = TextEditingController();
   final TextEditingController modalQtyFieldController = TextEditingController();
 

@@ -703,7 +703,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                               .value
                                                               .platformName ==
                                                           'mPesa online'
-                                                      ? CCustomIntlPhoneFieldForm(
+                                                      ? CCustomIntlPhoneFormField(
                                                           btnTxt:
                                                               'request payment',
                                                           // formTitle:

@@ -5,6 +5,7 @@ import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog_form.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +32,10 @@ class AddUpdateItemDialog {
           : invController.txtCode.text.trim();
       invController.itemMetrics.value = invModel.calibration;
       invController.txtQty.text = invController.txtQty.text.isEmpty
-          ? invModel.quantity.toString()
+          ? CFormatter.formatItemQtyDisplays(
+              invModel.quantity,
+              invModel.calibration,
+            )
           : invController.txtQty.text.trim();
       invController.txtBP.text = invController.txtBP.text.isEmpty
           ? invModel.buyingPrice.toString()
@@ -42,7 +46,10 @@ class AddUpdateItemDialog {
           : invController.txtUnitSP.text.trim();
       invController.txtStockNotifierLimit.text =
           invController.txtStockNotifierLimit.text.isEmpty
-          ? invModel.lowStockNotifierLimit.toString()
+          ? CFormatter.formatItemQtyDisplays(
+              invModel.lowStockNotifierLimit,
+              invModel.calibration,
+            )
           : invController.txtStockNotifierLimit.text.trim();
       invController.txtExpiryDatePicker.text =
           invController.txtExpiryDatePicker.text.trim().isEmpty

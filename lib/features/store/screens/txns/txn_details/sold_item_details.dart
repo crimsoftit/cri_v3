@@ -1,4 +1,3 @@
-
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/list_tiles/menu_tile.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
@@ -6,6 +5,7 @@ import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/app_icons.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,11 @@ class CSoldItemDetails extends StatelessWidget {
             title: Text(
               'TXN/RECIEPT #${saleItem.txnId}',
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                color: isDarkTheme ? CColors.grey : CColors.rBrown,
+                color: saleItem.txnStatus == 'invoiced'
+                    ? CColors.warning
+                    : isDarkTheme
+                    ? CColors.grey
+                    : CColors.rBrown,
               ),
             ),
             actions: [
@@ -71,7 +75,9 @@ class CSoldItemDetails extends StatelessWidget {
                   //   left: CSizes.defaultSpace / 3,
                   // ),
                   leading: CircleAvatar(
-                    backgroundColor: Colors.brown[300],
+                    backgroundColor: saleItem.txnStatus == 'complete'
+                        ? Colors.brown[300]
+                        : CColors.warning,
                     child: Text(
                       saleItem.productName[0].toUpperCase(),
                       style: Theme.of(
@@ -80,9 +86,13 @@ class CSoldItemDetails extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    saleItem.productName.toUpperCase(),
+                    '${saleItem.productName.toUpperCase()} ${saleItem.txnStatus == 'invoiced' ? '(unpaid)' : ''}',
                     style: Theme.of(context).textTheme.labelMedium!.apply(
-                      color: isDarkTheme ? CColors.grey : CColors.rBrown,
+                      color: saleItem.txnStatus == 'invoiced'
+                          ? CColors.warning
+                          : isDarkTheme
+                          ? CColors.grey
+                          : CColors.rBrown,
                       fontSizeDelta: 2.0,
                     ),
                   ),
@@ -101,10 +111,10 @@ class CSoldItemDetails extends StatelessWidget {
                   //   ),
                   // ),
                 ),
-                
+
                 /// -- custom divider --
                 CCustomDivider(),
-              
+
                 Padding(
                   padding: const EdgeInsets.all(CSizes.defaultSpace / 3),
                   child: Column(
@@ -131,8 +141,10 @@ class CSoldItemDetails extends StatelessWidget {
                       ),
                       CMenuTile(
                         icon: Iconsax.bitcoin_card,
+                        // title:
+                        //     '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${saleItem.quantity} sold; ${saleItem.qtyRefunded} refunded)',
                         title:
-                            '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${saleItem.quantity} sold; ${saleItem.qtyRefunded} refunded)',
+                            '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${CFormatter.formatItemQtyDisplays(saleItem.quantity, saleItem.itemMetrics)} ${CFormatter.formatItemMetrics(saleItem.itemMetrics)}(s) sold; ${CFormatter.formatItemQtyDisplays(saleItem.qtyRefunded, saleItem.itemMetrics)} refunded)',
                         subTitle: 'total amount',
                         onTap: () {},
                       ),
@@ -140,11 +152,17 @@ class CSoldItemDetails extends StatelessWidget {
                         icon: saleItem.txnStatus == 'complete'
                             ? Iconsax.money_tick
                             : Iconsax.money_time,
+                        iconColor: saleItem.txnStatus == 'complete'
+                            ? Colors.green
+                            : CColors.warning,
+                        onTap: () {},
+                        subTitle: 'txn/payment status',
                         title: saleItem.txnStatus == 'complete'
                             ? saleItem.txnStatus
                             : 'deferred(${saleItem.txnStatus})',
-                        subTitle: 'txn/payment status',
-                        onTap: () {},
+                        titleColor: saleItem.txnStatus == 'complete'
+                            ? Colors.green
+                            : CColors.warning,
                       ),
                       CMenuTile(
                         icon: CAppIcons.contactDetails,
@@ -169,6 +187,28 @@ class CSoldItemDetails extends StatelessWidget {
                             );
                           },
                         ),
+                      ),
+                      CMenuTile(
+                        icon: Iconsax.money,
+                        onTap: () {},
+                        title: saleItem.paymentMethod,
+                        subTitle: 'payment method',
+                        // trailing: InkWell(
+                        //   child: Icon(
+                        //     saleItem.customerName == '' &&
+                        //             saleItem.customerContacts == ''
+                        //         ? Iconsax.card_add
+                        //         : Iconsax.card_edit,
+                        //     color: CColors.darkGrey,
+                        //     size: CSizes.iconMd,
+                        //   ),
+                        //   onTap: () {
+                        //     CPopupSnackBar.customToast(
+                        //       message: 'rada safi',
+                        //       forInternetConnectivityStatus: false,
+                        //     );
+                        //   },
+                        // ),
                       ),
                     ],
                   ),

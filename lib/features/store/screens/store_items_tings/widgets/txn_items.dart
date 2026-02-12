@@ -401,7 +401,7 @@ class CTxnItemsListView extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${txnsController.transactionItems[index].productName.toUpperCase()} (${txnsController.transactionItems[index].quantity} item(s) @ $userCurrency.${txnsController.transactionItems[index].unitSellingPrice})',
+                                                    '${txnsController.transactionItems[index].productName.toUpperCase()} (${CFormatter.formatItemQtyDisplays(txnsController.transactionItems[index].quantity, txnsController.transactionItems[index].itemMetrics)} ${CFormatter.formatItemMetrics(txnsController.transactionItems[index].itemMetrics)}(s) @ $userCurrency.${txnsController.transactionItems[index].unitSellingPrice})',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .labelMedium!

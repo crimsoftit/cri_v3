@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-class CCustomIntlPhoneFieldForm extends StatelessWidget {
-  const CCustomIntlPhoneFieldForm({
+class CCustomIntlPhoneFormField extends StatelessWidget {
+  const CCustomIntlPhoneFormField({
     super.key,
     required this.btnTxt,
     required this.intlPhoneFieldController,
@@ -55,10 +55,11 @@ class CCustomIntlPhoneFieldForm extends StatelessWidget {
                 counterStyle: TextStyle(fontSize: 8.0),
                 //fillColor: isDarkTheme ? CColors.darkBg :
               ),
+              enabled: true,
               focusNode: focusNode,
               initialCountryCode: 'KE',
-              initialValue: "0",
 
+              //initialValue: "0",
               languageCode: "en",
               onChanged: (phone) {
                 var mpesaNumber = phone.completeNumber.substring(
