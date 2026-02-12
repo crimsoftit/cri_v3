@@ -158,6 +158,7 @@ dependencies:
   carousel_slider: any
   flutter_rating_bar: any
   intl_phone_field: any
+  intl_phone_number_input: ^0.7.5
   path: any
   clock: any
   #currency_pickers: any
