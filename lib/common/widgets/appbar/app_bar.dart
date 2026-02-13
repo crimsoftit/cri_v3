@@ -6,18 +6,20 @@ import 'package:iconsax/iconsax.dart';
 
 class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CAppBar({
-    super.key,
-    this.title,
     this.actions,
+    this.backIconColor,
+    this.bgColor,
+    this.horizontalPadding = CSizes.md,
     this.leadingIcon,
     this.leadingOnPressed,
-    this.showBackArrow = true,
-    this.backIconColor,
-    required this.backIconAction,
-    this.horizontalPadding = CSizes.md,
     this.leadingWidget,
+    this.leadingWidth,
+    this.showBackArrow = true,
     this.showSubTitle = false,
-    this.bgColor,
+    this.title,
+
+    required this.backIconAction,
+    super.key,
   });
 
   final Widget? title;
@@ -29,7 +31,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
   final VoidCallback backIconAction;
-  final double? horizontalPadding;
+  final double? horizontalPadding, leadingWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
         //leadingWidth: 280.0,
         leadingWidth: showBackArrow
             ? CHelperFunctions.screenWidth() * 0.1
-            : CHelperFunctions.screenWidth() * 0.799,
+            : CHelperFunctions.screenWidth() * 0.815,
         backgroundColor: bgColor,
 
         leading: showBackArrow

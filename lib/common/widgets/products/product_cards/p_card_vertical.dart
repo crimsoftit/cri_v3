@@ -1,5 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
+import 'package:cri_v3/common/widgets/buttons/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/common/widgets/products/cart/add_to_cart_btn.dart';
 import 'package:cri_v3/common/widgets/products/circle_avatar.dart';
 import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';

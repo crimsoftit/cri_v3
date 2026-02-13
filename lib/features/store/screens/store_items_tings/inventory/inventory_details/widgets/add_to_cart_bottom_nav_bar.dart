@@ -1,4 +1,4 @@
-import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
+import 'package:cri_v3/common/widgets/buttons/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';

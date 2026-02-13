@@ -208,7 +208,7 @@ class CTxnsController extends GetxController {
 
       // assign values for refunded items
       var refundedItems = soldItems
-          .where((refundedItem) => refundedItem.qtyRefunded >= 1)
+          .where((refundedItem) => refundedItem.qtyRefunded > 0)
           .toList();
       refunds.assignAll(refundedItems);
 

@@ -66,7 +66,9 @@ class AddUpdateItemDialog {
         child: AlertDialog(
           backgroundColor: isDarkTheme
               ? CColors.rBrown
-              : CColors.darkGrey.withValues(alpha: 0.3),
+              : CColors.darkGrey.withValues(
+                  alpha: 0.3,
+                ),
           insetPadding: const EdgeInsets.all(2.0),
           title: Obx(
             () => Row(

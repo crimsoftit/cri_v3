@@ -147,8 +147,8 @@ class CCutomLineChart extends StatelessWidget {
           interval: dashboardController.peakSalesAmount.value / 2,
           maxIncluded: true,
           minIncluded: true,
-          reservedSize: 10.0,
-          showTitles: false,
+          reservedSize: 40.0,
+          showTitles: true,
         ),
       ),
       rightTitles: AxisTitles(

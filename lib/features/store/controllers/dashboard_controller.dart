@@ -8,7 +8,6 @@ import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_date_utils/in_date_utils.dart';
@@ -42,6 +41,16 @@ class CDashboardController extends GetxController {
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
 
   final RxList<double> weeklySales = <double>[].obs;
+
+  final RxList<String> salesFilters = [
+    'this week',
+    '2026',
+    '2025',
+    '2024',
+    '2023',
+  ].obs;
+
+  final RxString defautSalesFilterPeriod = ''.obs;
 
   final txnsController = Get.put(CTxnsController());
 
@@ -83,7 +92,7 @@ class CDashboardController extends GetxController {
     txnsController.fetchSoldItems().then((result) {
       if (result.isNotEmpty) {
         var demLegitSales = txnsController.sales
-            .where((soldItem) => soldItem.quantity >= 0.01 )
+            .where((soldItem) => soldItem.quantity >= 0.01)
             .toList();
         for (var sale in demLegitSales) {
           final String rawSaleDate = sale.lastModified.trim();
@@ -105,11 +114,11 @@ class CDashboardController extends GetxController {
             weeklySales[index] += (sale.unitSellingPrice * sale.quantity);
             currentWeekSales.value += (sale.unitSellingPrice * sale.quantity);
 
-            if (kDebugMode) {
-              print(
-                'date: $formattedDate, current week day: $currentWeekSalesStart, index: $index',
-              );
-            }
+            // if (kDebugMode) {
+            //   print(
+            //     'date: $formattedDate, current week day: $currentWeekSalesStart, index: $index',
+            //   );
+            // }
           }
         }
       }
@@ -118,9 +127,9 @@ class CDashboardController extends GetxController {
           ? weeklySales.reduce(max)
           : 1000;
 
-      if (kDebugMode) {
-        print('weekly sales: $weeklySales');
-      }
+      // if (kDebugMode) {
+      //   print('weekly sales: $weeklySales');
+      // }
     });
   }
 
@@ -138,40 +147,50 @@ class CDashboardController extends GetxController {
       Duration(days: 6),
     ); // Sunday of last week
 
-    if (kDebugMode) {
-      print('last week start date: $lastWeekStart \n');
-      print('last week end date: $lastWeekEnd \n');
-    }
+    // if (kDebugMode) {
+    //   print('last week start date: $lastWeekStart \n');
+    //   print('last week end date: $lastWeekEnd \n');
+    // }
 
     // Filter sales data for the last week
-    Future.delayed(Duration.zero, () {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        txnsController.fetchSoldItems().then((result) {
-          if (result.isNotEmpty) {
-            var demLegitSales = txnsController.sales
-                .where((soldItem) => soldItem.quantity >= 0.001)
-                .toList();
-            // Filter sales data for last week
-            lastWeekSales.value = demLegitSales
-                .where((sale) {
-                  final String rawSaleDate = sale.lastModified.trim();
-                  var formattedDate = rawSaleDate.replaceAll(' @', '');
+    Future.delayed(
+      Duration.zero,
+      () {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            txnsController.fetchSoldItems().then(
+              (result) {
+                if (result.isNotEmpty) {
+                  var demLegitSales = txnsController.sales
+                      .where((soldItem) => soldItem.quantity >= 0.001)
+                      .toList();
+                  // Filter sales data for last week
+                  lastWeekSales.value = demLegitSales
+                      .where((sale) {
+                        final String rawSaleDate = sale.lastModified.trim();
+                        var formattedDate = rawSaleDate.replaceAll(' @', '');
 
-                  return DateTime.parse(formattedDate).isAfter(lastWeekStart) &&
-                      DateTime.parse(formattedDate).isBefore(lastWeekEnd);
-                })
-                .fold(
-                  0.0,
-                  (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
-                );
+                        return DateTime.parse(
+                              formattedDate,
+                            ).isAfter(lastWeekStart) &&
+                            DateTime.parse(formattedDate).isBefore(lastWeekEnd);
+                      })
+                      .fold(
+                        0.0,
+                        (sum, sale) =>
+                            sum + (sale.unitSellingPrice * sale.quantity),
+                      );
 
-            if (kDebugMode) {
-              print('total sales for last week: $lastWeekSales.');
-            }
-          }
-        });
-      });
-    });
+                  // if (kDebugMode) {
+                  //   print('total sales for last week: $lastWeekSales.');
+                  // }
+                }
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   FlTitlesData buildFlBarChartTitlesData() {
@@ -416,5 +435,10 @@ class CDashboardController extends GetxController {
       0.0,
       (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
     );
+  }
+
+  String setDefaultSalesFilterPeriod() {
+    defautSalesFilterPeriod.value = salesFilters[0];
+    return defautSalesFilterPeriod.value;
   }
 }

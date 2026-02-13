@@ -1,5 +1,5 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/icon_buttons/circular_icon_btn.dart';
+import 'package:cri_v3/common/widgets/buttons/icon_buttons/circular_icon_btn.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';

@@ -46,6 +46,9 @@ class CAnimatedSearchBar extends StatelessWidget {
               ? 40.0
               : 70.0,
           height: 40.0,
+          padding: const EdgeInsets.only(
+            right: 0.1,
+          ),
           decoration: BoxDecoration(
             borderRadius: searchController.showSearchField.value
                 ? BorderRadius.circular(10.0)

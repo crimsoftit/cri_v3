@@ -238,7 +238,7 @@ class CCheckoutController extends GetxController {
               if (invItem.quantity <= invItem.lowStockNotifierLimit) {
                 var alertBody = '';
                 switch (invItem.quantity) {
-                  case 0:
+                  case 0.0:
                     alertBody = '${invItem.name} is out of stock!!';
                     break;
 
@@ -246,10 +246,10 @@ class CCheckoutController extends GetxController {
                     if (invItem.quantity == 1 &&
                         invItem.calibration == 'units') {
                       alertBody =
-                          'only ${invItem.quantity} ${invItem.calibration} of ${invItem.name} is left!!';
+                          'only ${CFormatter.formatItemQtyDisplays(invItem.quantity, invItem.calibration)} ${invItem.calibration} of ${invItem.name} is left!!';
                     } else {
                       alertBody =
-                          'only ${invItem.quantity} ${CFormatter.formatInventoryMetrics(invItem.productId!)}s of ${invItem.name} are left!!';
+                          'only ${CFormatter.formatItemQtyDisplays(invItem.quantity, invItem.calibration)} ${CFormatter.formatInventoryMetrics(invItem.productId!)}(s) of ${invItem.name} are left!!';
                     }
 
                     break;

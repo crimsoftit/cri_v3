@@ -50,12 +50,14 @@ class CStoreScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
           appBar: CAppBar(
+            horizontalPadding: 0,
             leadingWidget: searchController.showSearchField.value
                 ? null
                 : Padding(
                     padding: const EdgeInsets.only(
                       top: 5.0,
                       left: 10.0,
+                      right: 0.0,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,7 +82,6 @@ class CStoreScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-            horizontalPadding: 1.0,
             showBackArrow: false,
             backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
             title: CAnimatedSearchBar(

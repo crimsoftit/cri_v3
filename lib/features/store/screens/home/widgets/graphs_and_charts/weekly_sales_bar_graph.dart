@@ -1,6 +1,6 @@
+import 'package:cri_v3/common/widgets/buttons/custom_dropdown_btn.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -19,10 +19,6 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
-    final userController = Get.put(CUserController());
-    final userCurrency = CHelperFunctions.formatCurrency(
-      userController.user.value.currencyCode,
-    );
     return Column(
       children: [
         CSectionHeading(
@@ -55,92 +51,112 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
               bgColor: CColors.white,
               borderRadius: CSizes.cardRadiusSm,
               padding: const EdgeInsets.only(
-                top: 15.0,
+                top: 5.0,
               ),
               width: CHelperFunctions.screenWidth(),
               child: Column(
                 children: [
                   SizedBox(
-                    height: 15.0,
+                    height: 50.0,
                     width: CHelperFunctions.screenWidth(),
                     child: Align(
-                      alignment: Alignment.topRight,
+                      alignment: Alignment.topLeft,
                       child: Padding(
                         padding: const EdgeInsets.only(
                           right: 8.0,
                         ),
-                        child: Text(
-                          'weekly sales',
-                          style: Theme.of(context).textTheme.labelMedium!.apply(
-                            color: CNetworkManager.instance.hasConnection.value
-                                ? CColors.darkGrey
-                                : CColors.rBrown,
+                        child: CRoundedContainer(
+                          borderRadius: 3.0,
+                          //height: 0.0,
+                          margin: const EdgeInsets.all(
+                            5.0,
+                          ),
+                          padding: const EdgeInsets.all(
+                            5.0,
+                          ),
+                          showBorder: true,
+                          child: CCustomDropdownBtn(
+                            dropdownItems: dashboardController.salesFilters,
+                            initialValue: dashboardController
+                                .setDefaultSalesFilterPeriod(),
+                            onValueChanged: (value) {},
+                            underlineColor: CColors.rBrown,
+                            underlineHeight: 0,
                           ),
                         ),
+
+                        // Text(
+                        //   'weekly sales',
+                        //   style: Theme.of(context).textTheme.labelMedium!.apply(
+                        //     color: CNetworkManager.instance.hasConnection.value
+                        //         ? CColors.darkGrey
+                        //         : CColors.rBrown,
+                        //   ),
+                        // ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: CHelperFunctions.screenWidth(),
-                    height: 55.0,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top:
-                              dashboardController.currentWeekSales.value > 0 &&
-                                  dashboardController.lastWeekSales.value > 0
-                              ? 30.0
-                              : 0,
-                          right:
-                              dashboardController.currentWeekSales.value > 0 &&
-                                  dashboardController.lastWeekSales.value > 0
-                              ? 27.0
-                              : 5.0,
-                          child: Column(
-                            children: [
-                              Text(
-                                '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                      //color: CColors.black,
-                                      fontSizeDelta:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 1.0
-                                          : 2.0,
-                                      fontWeightDelta:
-                                          dashboardController
-                                                      .currentWeekSales
-                                                      .value >
-                                                  0 &&
-                                              dashboardController
-                                                      .lastWeekSales
-                                                      .value >
-                                                  0
-                                          ? 1
-                                          : 2,
-                                    ),
-                              ),
-                              Text(
-                                '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: CHelperFunctions.screenWidth(),
+                  //   height: 55.0,
+                  //   child: Stack(
+                  //     children: [
+                  //       Positioned(
+                  //         top:
+                  //             dashboardController.currentWeekSales.value > 0 &&
+                  //                 dashboardController.lastWeekSales.value > 0
+                  //             ? 30.0
+                  //             : 0,
+                  //         right:
+                  //             dashboardController.currentWeekSales.value > 0 &&
+                  //                 dashboardController.lastWeekSales.value > 0
+                  //             ? 27.0
+                  //             : 5.0,
+                  //         child: Column(
+                  //           children: [
+                  //             Text(
+                  //               '$userCurrency.${dashboardController.currentWeekSales.value.toStringAsFixed(2)}(this week)',
+                  //               style: Theme.of(context).textTheme.labelSmall!
+                  //                   .apply(
+                  //                     color: CColors.rBrown,
+                  //                     //color: CColors.black,
+                  //                     fontSizeDelta:
+                  //                         dashboardController
+                  //                                     .currentWeekSales
+                  //                                     .value >
+                  //                                 0 &&
+                  //                             dashboardController
+                  //                                     .lastWeekSales
+                  //                                     .value >
+                  //                                 0
+                  //                         ? 1.0
+                  //                         : 2.0,
+                  //                     fontWeightDelta:
+                  //                         dashboardController
+                  //                                     .currentWeekSales
+                  //                                     .value >
+                  //                                 0 &&
+                  //                             dashboardController
+                  //                                     .lastWeekSales
+                  //                                     .value >
+                  //                                 0
+                  //                         ? 1
+                  //                         : 2,
+                  //                   ),
+                  //             ),
+                  //             Text(
+                  //               '$userCurrency.${dashboardController.lastWeekSales.value.toStringAsFixed(2)}(last week)',
+                  //               style: Theme.of(context).textTheme.labelSmall!
+                  //                   .apply(
+                  //                     color: CColors.rBrown,
+                  //                   ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   SizedBox(
                     //width: CHelperFunctions.screenWidth() * .5,
                     height: 150.0,
