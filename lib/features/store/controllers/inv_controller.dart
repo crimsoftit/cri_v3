@@ -211,7 +211,7 @@ class CInventoryController extends GetxController {
       // -- count and monetary value of expired items --
       expiredItemsValue.value = expiredItems.fold(
         0.0,
-        (sum, item) => sum + (item.unitBp * item.quantity),
+        (sum, item) => sum + (item.unitSellingPrice * item.quantity),
       );
 
       // -- initialize inventory summary --

@@ -142,9 +142,12 @@ class CCutomLineChart extends StatelessWidget {
           getTitlesWidget: (value, meta) {
             return Text(
               CFormatter.kSuffixFormatter(value),
+              style: TextStyle(
+                color: CColors.rBrown,
+              ),
             );
           },
-          interval: dashboardController.peakSalesAmount.value / 2,
+          interval: dashboardController.peakSalesAmount.value / 6,
           maxIncluded: true,
           minIncluded: true,
           reservedSize: 40.0,

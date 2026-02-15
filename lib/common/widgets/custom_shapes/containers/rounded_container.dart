@@ -36,7 +36,18 @@ class CRoundedContainer extends StatelessWidget {
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(
-        // boxShadow: boxShadow ?? [CShadowStyle.verticalProductShadow],
+        // boxShadow:
+        //     boxShadow ??
+        //     [
+        //       BoxShadow(
+        //         blurRadius: 3.0,
+        //         color: CColors.grey.withValues(
+        //           alpha: .1,
+        //         ),
+        //         offset: const Offset(0.0, 3.0),
+        //         spreadRadius: 5.0,
+        //       ),
+        //     ],
         boxShadow: boxShadow,
         color: bgColor,
         borderRadius: BorderRadius.circular(borderRadius),

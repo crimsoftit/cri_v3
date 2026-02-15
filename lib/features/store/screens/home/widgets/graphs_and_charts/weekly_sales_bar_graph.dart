@@ -22,7 +22,31 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
     return Column(
       children: [
         CSectionHeading(
-          showActionBtn: false,
+          actionWidget: Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 8.0,
+              ),
+              child: CRoundedContainer(
+                borderRadius: 10.0,
+                height: 40.0,
+                padding: const EdgeInsets.all(
+                  5.0,
+                ),
+                showBorder: true,
+                child: CCustomDropdownBtn(
+                  dropdownItems: dashboardController.salesFilters,
+                  selectedValue: dashboardController
+                      .setDefaultSalesFilterPeriod(),
+                  onValueChanged: (value) {},
+                  underlineColor: CColors.rBrown,
+                  underlineHeight: 0,
+                ),
+              ),
+            ),
+          ),
+          showActionBtn: true,
           title: 'sales summary...',
           txtColor: CNetworkManager.instance.hasConnection.value
               ? CColors.rBrown
@@ -43,59 +67,19 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
             /// -- compare last week's total sales to this week's --
 
             dashboardController.weeklyPercentageChange.value =
-                ((dashboardController.currentWeekSales.value -
-                        dashboardController.lastWeekSales.value) /
-                    dashboardController.lastWeekSales.value) *
+                ((dashboardController.currentWeekSalesAmount.value -
+                        dashboardController.lastWeekSalesAmount.value) /
+                    dashboardController.lastWeekSalesAmount.value) *
                 100;
             return CRoundedContainer(
               bgColor: CColors.white,
-              borderRadius: CSizes.cardRadiusSm,
+              borderRadius: CSizes.cardRadiusSm / 2,
               padding: const EdgeInsets.only(
                 top: 5.0,
               ),
               width: CHelperFunctions.screenWidth(),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 50.0,
-                    width: CHelperFunctions.screenWidth(),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 8.0,
-                        ),
-                        child: CRoundedContainer(
-                          borderRadius: 3.0,
-                          //height: 0.0,
-                          margin: const EdgeInsets.all(
-                            5.0,
-                          ),
-                          padding: const EdgeInsets.all(
-                            5.0,
-                          ),
-                          showBorder: true,
-                          child: CCustomDropdownBtn(
-                            dropdownItems: dashboardController.salesFilters,
-                            initialValue: dashboardController
-                                .setDefaultSalesFilterPeriod(),
-                            onValueChanged: (value) {},
-                            underlineColor: CColors.rBrown,
-                            underlineHeight: 0,
-                          ),
-                        ),
-
-                        // Text(
-                        //   'weekly sales',
-                        //   style: Theme.of(context).textTheme.labelMedium!.apply(
-                        //     color: CNetworkManager.instance.hasConnection.value
-                        //         ? CColors.darkGrey
-                        //         : CColors.rBrown,
-                        //   ),
-                        // ),
-                      ),
-                    ),
-                  ),
                   // SizedBox(
                   //   width: CHelperFunctions.screenWidth(),
                   //   height: 55.0,
@@ -186,7 +170,7 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
                                   .value /
                               4,
                         ),
-                        barGroups: dashboardController.weeklySales
+                        barGroups: dashboardController.thisWeekSalesList
                             .asMap()
                             .entries
                             .map(

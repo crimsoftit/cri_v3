@@ -7,7 +7,9 @@ import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_date_utils/in_date_utils.dart';
@@ -23,8 +25,8 @@ class CDashboardController extends GetxController {
   final RxBool isLoading = false.obs;
 
   final RxBool showSummaryFilterField = false.obs;
-  final RxDouble currentWeekSales = 0.0.obs;
-  final RxDouble lastWeekSales = 0.0.obs;
+  final RxDouble currentWeekSalesAmount = 0.0.obs;
+  final RxDouble lastWeekSalesAmount = 0.0.obs;
 
   final RxDouble salesBtnMidnightTo3 = 0.0.obs;
   final RxDouble salesBtn3to6 = 0.0.obs;
@@ -40,17 +42,14 @@ class CDashboardController extends GetxController {
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
 
-  final RxList<double> weeklySales = <double>[].obs;
+  final RxList<double> monthlySalesList = <double>[].obs;
+  final RxList<DateTime> salesDatesOnly = <DateTime>[].obs;
+  final RxList<double> thisWeekSalesList = <double>[].obs;
 
-  final RxList<String> salesFilters = [
-    'this week',
-    '2026',
-    '2025',
-    '2024',
-    '2023',
-  ].obs;
+  final RxList<String> salesFilters = <String>[].obs;
 
   final RxString defautSalesFilterPeriod = ''.obs;
+  final RxString selectedSalesFilterPeriod = ''.obs;
 
   final txnsController = Get.put(CTxnsController());
 
@@ -64,7 +63,8 @@ class CDashboardController extends GetxController {
           calculateCurrentWeekSales();
           calculateLastWeekSales();
           filterHourlySales();
-          //computeHourlySales();
+          generateSalesFilterItems();
+          //computeMonthlySales();
         });
       });
     });
@@ -80,14 +80,58 @@ class CDashboardController extends GetxController {
       },
     );
 
+    salesFilters.value = <String>[].obs;
+
     super.onInit();
+  }
+
+  List<DateTime> generateSalesFilterItems() {
+    salesDatesOnly.value = txnsController.sales
+        .map(
+          (item) => DateTime.parse(item.lastModified.replaceAll(' @', '')),
+        )
+        .toList();
+
+    int firstYr = salesDatesOnly
+        .map((date) => date.year)
+        .reduce((a, b) => a < b ? a : b);
+
+    int lastYr = salesDatesOnly
+        .map((date) => date.year)
+        .reduce((a, b) => a > b ? a : b);
+
+    // int startYear = 2026;
+    // int endYear = 2020;
+
+    List<String> years = List.generate(
+      firstYr - lastYr + 1,
+      (index) => (firstYr - index).toString(),
+    );
+
+    salesFilters.value = [
+      'this week',
+      '${firstYr + 1}',
+      ...years,
+      '${lastYr - 1}',
+    ];
+
+    // if (kDebugMode) {
+    //   print('<<< >>> \n');
+    //   print('1st yr: $firstYr \n');
+    //   print('last yr: $lastYr \n');
+    //   print('---------\n');
+    //   print('years in descending order: $years');
+    //   print('---------\n');
+    //   print('<<< >>> \n');
+    // }
+    return salesDatesOnly;
   }
 
   /// -- calculate this week's sales --
   void calculateCurrentWeekSales() async {
     // reset weeklySales values to zero
-    weeklySales.value = List<double>.filled(7, 0.0);
-    currentWeekSales.value = 0.0;
+    thisWeekSalesList.value = List<double>.filled(7, 0.0);
+    currentWeekSalesAmount.value = 0.0;
 
     txnsController.fetchSoldItems().then((result) {
       if (result.isNotEmpty) {
@@ -111,8 +155,9 @@ class CDashboardController extends GetxController {
 
             // ensure the index is non-negative
             index = index < 0 ? index + 7 : index;
-            weeklySales[index] += (sale.unitSellingPrice * sale.quantity);
-            currentWeekSales.value += (sale.unitSellingPrice * sale.quantity);
+            thisWeekSalesList[index] += (sale.unitSellingPrice * sale.quantity);
+            currentWeekSalesAmount.value +=
+                (sale.unitSellingPrice * sale.quantity);
 
             // if (kDebugMode) {
             //   print(
@@ -123,8 +168,8 @@ class CDashboardController extends GetxController {
         }
       }
 
-      weeklySalesHighestAmount.value = weeklySales.reduce(max) > 1
-          ? weeklySales.reduce(max)
+      weeklySalesHighestAmount.value = thisWeekSalesList.reduce(max) > 1
+          ? thisWeekSalesList.reduce(max)
           : 1000;
 
       // if (kDebugMode) {
@@ -136,7 +181,7 @@ class CDashboardController extends GetxController {
   /// -- calculate last week's sales --
   void calculateLastWeekSales() {
     // reset lastWeekSales value to zero
-    lastWeekSales.value = 0.0;
+    lastWeekSalesAmount.value = 0.0;
     weeklyPercentageChange.value = 0.0;
 
     final now = DateTime.now();
@@ -164,8 +209,9 @@ class CDashboardController extends GetxController {
                   var demLegitSales = txnsController.sales
                       .where((soldItem) => soldItem.quantity >= 0.001)
                       .toList();
-                  // Filter sales data for last week
-                  lastWeekSales.value = demLegitSales
+
+                  // -- filter sales data for last week --
+                  lastWeekSalesAmount.value = demLegitSales
                       .where((sale) {
                         final String rawSaleDate = sale.lastModified.trim();
                         var formattedDate = rawSaleDate.replaceAll(' @', '');
@@ -182,7 +228,7 @@ class CDashboardController extends GetxController {
                       );
 
                   // if (kDebugMode) {
-                  //   print('total sales for last week: $lastWeekSales.');
+                  //   print('total sales for last week: $lastWeekSalesAmount.');
                   // }
                 }
               },
@@ -438,7 +484,51 @@ class CDashboardController extends GetxController {
   }
 
   String setDefaultSalesFilterPeriod() {
-    defautSalesFilterPeriod.value = salesFilters[0];
+    defautSalesFilterPeriod.value = selectedSalesFilterPeriod.value == ''
+        ? salesFilters[0]
+        : selectedSalesFilterPeriod.value;
     return defautSalesFilterPeriod.value;
+  }
+
+  void onSalesFilterPeriodValueChanged(String? value) {
+    selectedSalesFilterPeriod.value = value!;
+  }
+
+  /// -- calculate monthly sales --
+  void computeMonthlySales() {
+    monthlySalesList.value = List<double>.filled(12, 0.0);
+    if (kDebugMode) {
+      print('monthly sales: $monthlySalesList');
+    }
+
+    for (var monthlySale in txnsController.sales) {
+      final String rawSaleDate = monthlySale.lastModified.trim();
+      var formattedDate = rawSaleDate.replaceAll(' @', '');
+      final DateTime yrSalesStart = CHelperFunctions.getStartOfYear(
+        DateTime.parse(formattedDate),
+      );
+
+      if (yrSalesStart.isBefore(DateTime.parse('2025')) &&
+          yrSalesStart
+              .add(const Duration(days: 30))
+              .isAfter(DateTime.parse('2025'))) {
+        int index = (DateTime.parse(formattedDate).month - 1) % 12;
+
+        // -- ensure the index is non-negative --
+        index = index < 0 ? index + 12 : index;
+        monthlySalesList[index] +=
+            (monthlySale.unitSellingPrice * monthlySale.quantity);
+
+        if (kDebugMode) {
+          print(
+            'date: $formattedDate, current week day: $yrSalesStart, index: $index',
+          );
+        }
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'start of yr (month) is invalid!',
+        );
+      }
+    }
   }
 }

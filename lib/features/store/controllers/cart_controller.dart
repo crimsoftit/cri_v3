@@ -189,57 +189,33 @@ class CCartController extends GetxController {
       (invItem) => invItem.productId == item.productId,
     );
 
-    if (inventoryItem.expiryDate != '') {
-      var itemExpiry = CDateTimeComputations.timeRangeFromNow(
-        inventoryItem.expiryDate.replaceAll('@ ', ''),
+    if (inventoryItem.expiryDate != '' &&
+        CDateTimeComputations.timeRangeFromNow(
+              inventoryItem.expiryDate.replaceAll('@ ', ''),
+            ) <=
+            0) {
+      CPopupSnackBar.warningSnackBar(
+        title: 'item is stale/expired',
+        message: '${inventoryItem.name} has expired!',
       );
-      if (itemExpiry <= 0) {
-        CPopupSnackBar.warningSnackBar(
-          title: 'item is stale/expired',
-          message: '${inventoryItem.name} has expired!',
-        );
-        return;
-      }
-    }
-
-    if (inventoryItem.quantity > 0) {
-      if (itemIndex >= 0) {
-        if (fromQtyTxtField && qtyValue != '') {
-          if (double.parse(qtyValue!) > inventoryItem.quantity) {
-            CPopupSnackBar.warningSnackBar(
-              title: 'oh snap!',
-              message: 'only ${inventoryItem.quantity} items are stocked!',
-            );
-            qtyFieldControllers[itemIndex].text =
-                inventoryItem.calibration == 'units'
-                ? inventoryItem.quantity.toInt().toString()
-                : inventoryItem.quantity.toString();
-            qtyValue = qtyFieldControllers[itemIndex].text;
-            return;
-          }
-          cartItems[itemIndex].quantity = double.parse(qtyValue);
-          updateCart().then(
-            (_) {
+      return;
+    } else {
+      if (inventoryItem.quantity > 0) {
+        if (itemIndex >= 0) {
+          if (fromQtyTxtField && qtyValue != '') {
+            if (double.parse(qtyValue!) > inventoryItem.quantity) {
+              CPopupSnackBar.warningSnackBar(
+                title: 'oh snap!',
+                message: 'only ${inventoryItem.quantity} items are stocked!',
+              );
               qtyFieldControllers[itemIndex].text =
-                  cartItems[itemIndex].itemMetrics == 'units'
-                  ? cartItems[itemIndex].quantity.toInt().toString()
-                  : cartItems[itemIndex].quantity.toString();
-            },
-          );
-        } else {
-          if (cartItems[itemIndex].quantity > inventoryItem.quantity) {
-            CPopupSnackBar.warningSnackBar(
-              title: 'oh snap!',
-              message: 'only ${inventoryItem.quantity} items are stocked!',
-            );
-            qtyFieldControllers[itemIndex].text =
-                inventoryItem.calibration == 'units'
-                ? inventoryItem.quantity.toInt().toString()
-                : inventoryItem.quantity.toString();
-            return;
-          } else {
-            cartItems[itemIndex].quantity +=
-                cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
+                  inventoryItem.calibration == 'units'
+                  ? inventoryItem.quantity.toInt().toString()
+                  : inventoryItem.quantity.toString();
+              qtyValue = qtyFieldControllers[itemIndex].text;
+              return;
+            }
+            cartItems[itemIndex].quantity = double.parse(qtyValue);
             updateCart().then(
               (_) {
                 qtyFieldControllers[itemIndex].text =
@@ -248,26 +224,49 @@ class CCartController extends GetxController {
                     : cartItems[itemIndex].quantity.toString();
               },
             );
+          } else {
+            if (cartItems[itemIndex].quantity > inventoryItem.quantity) {
+              CPopupSnackBar.warningSnackBar(
+                title: 'oh snap!',
+                message: 'only ${inventoryItem.quantity} items are stocked!',
+              );
+              qtyFieldControllers[itemIndex].text =
+                  inventoryItem.calibration == 'units'
+                  ? inventoryItem.quantity.toInt().toString()
+                  : inventoryItem.quantity.toString();
+              return;
+            } else {
+              cartItems[itemIndex].quantity +=
+                  cartItems[itemIndex].itemMetrics == 'units' ? 1 : .25;
+              updateCart().then(
+                (_) {
+                  qtyFieldControllers[itemIndex].text =
+                      cartItems[itemIndex].itemMetrics == 'units'
+                      ? cartItems[itemIndex].quantity.toInt().toString()
+                      : cartItems[itemIndex].quantity.toString();
+                },
+              );
+            }
           }
+        } else {
+          cartItems.add(item);
+          updateCart();
+          qtyFieldControllers.add(
+            TextEditingController(
+              text: item.itemMetrics == 'units'
+                  ? item.quantity.toInt().toString()
+                  : item.quantity.toStringAsFixed(2),
+            ),
+          );
         }
       } else {
-        cartItems.add(item);
-        updateCart();
-        qtyFieldControllers.add(
-          TextEditingController(
-            text: item.itemMetrics == 'units'
-                ? item.quantity.toInt().toString()
-                : item.quantity.toStringAsFixed(2),
-          ),
+        CPopupSnackBar.warningSnackBar(
+          title: 'oh snap!',
+          message: '${cartItems[itemIndex].pName} is out of stock!',
         );
       }
-    } else {
-      CPopupSnackBar.warningSnackBar(
-        title: 'oh snap!',
-        message: '${cartItems[itemIndex].pName} is out of stock!',
-      );
+      updateCart();
     }
-    //updateCart();
   }
 
   /// -- decrement cart item qty/remove a single item from the cart --

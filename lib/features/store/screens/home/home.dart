@@ -148,7 +148,6 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            //CDateRangePickerWidget(),
                             const SizedBox(
                               height: CSizes.defaultSpace / 6,
                             ),
@@ -187,7 +186,7 @@ class HomeScreen extends StatelessWidget {
                           height: CSizes.defaultSpace * .5,
                         ),
 
-                        /// -- weekly sales bar graph --
+                        /// -- sales summary bar graph --
                         WeeklySalesBarGraphWidget(),
 
                         const SizedBox(

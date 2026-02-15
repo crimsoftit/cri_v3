@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CSectionHeading extends StatelessWidget {
   const CSectionHeading({
     super.key,
+    this.actionWidget,
     this.txtColor,
     required this.showActionBtn,
     required this.title,
@@ -20,6 +21,7 @@ class CSectionHeading extends StatelessWidget {
   final FontWeight? fWeight;
   final String title, btnTitle;
   final void Function()? onPressed;
+  final Widget? actionWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +50,17 @@ class CSectionHeading extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
         if (showActionBtn)
-          TextButton(
-            onPressed: onPressed,
-            child: Text(
-              btnTitle,
-              style: Theme.of(context).textTheme.labelMedium!.apply(
-                color: txtColor,
-                //fontSizeFactor: 0.75,
+          actionWidget ??
+              TextButton(
+                onPressed: onPressed,
+                child: Text(
+                  btnTitle,
+                  style: Theme.of(context).textTheme.labelMedium!.apply(
+                    color: txtColor,
+                    //fontSizeFactor: 0.75,
+                  ),
+                ),
               ),
-            ),
-          ),
       ],
     );
   }

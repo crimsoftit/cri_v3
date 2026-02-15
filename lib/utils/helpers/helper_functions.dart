@@ -38,6 +38,33 @@ class CHelperFunctions {
     return weekStart;
   }
 
+  /// -- get start of year --
+  static DateTime getStartOfYear(DateTime date) {
+    final int daysUntilJan = date.month - 1;
+    final DateTime startOfYr = date.subtract(Duration(days: daysUntilJan));
+
+    var yrStart = DateTime(
+      startOfYr.year,
+      startOfYr.month,
+      startOfYr.day,
+      startOfYr.weekday,
+      startOfYr.hour,
+      startOfYr.minute,
+      0,
+      0,
+    );
+
+    if (kDebugMode) {
+      print('----------\n');
+      print('start of yr: $startOfYr \n');
+      print('----------\n');
+      print('----------\n');
+      print('month: ${startOfYr.month} \n');
+      print('----------\n');
+    }
+    return yrStart;
+  }
+
   static void showSnackBar(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(content: Text(message)),

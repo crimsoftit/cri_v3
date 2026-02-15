@@ -179,7 +179,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         height: 55.0,
                         child: CCustomDropdownBtn(
                           dropdownItems: invController.demMetrics,
-                          initialValue: invController.setItemMetrics(),
+                          selectedValue: invController.setItemMetrics(),
                           onValueChanged: (value) {
                             if (value != '') {
                               invController.itemMetrics.value = value!;

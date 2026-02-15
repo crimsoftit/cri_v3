@@ -121,13 +121,7 @@ class CStoreSummary extends StatelessWidget {
                     // titleTxt:
                     //     '$userCurrency.${invController.totalInventoryValue.value..toStringAsFixed(1)}',
                   ),
-                  CStoreSummaryCard(
-                    //iconColor: Colors.redAccent,
-                    iconData: Iconsax.user_add,
-                    subTitleTxt: 'new customers',
 
-                    titleTxt: '0',
-                  ),
                   CStoreSummaryCard(
                     iconColor: invController.expiredItemsValue.value == 0
                         ? Colors.green
@@ -147,6 +141,13 @@ class CStoreSummary extends StatelessWidget {
                     titleTxtColor: invController.expiredItemsValue.value == 0
                         ? Colors.green
                         : CColors.error,
+                  ),
+                  CStoreSummaryCard(
+                    //iconColor: Colors.redAccent,
+                    iconData: Iconsax.user_add,
+                    subTitleTxt: 'new customers',
+
+                    titleTxt: '0',
                   ),
                 ],
               ),
