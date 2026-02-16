@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
+import 'package:cri_v3/features/store/models/monthly_sales_model.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
-import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,8 @@ class CDashboardController extends GetxController {
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
 
-  final RxList<double> monthlySalesList = <double>[].obs;
+  final RxList<CMonthlySalesModel> monthlySalesList =
+      <CMonthlySalesModel>[].obs;
   final RxList<DateTime> salesDatesOnly = <DateTime>[].obs;
   final RxList<double> thisWeekSalesList = <double>[].obs;
 
@@ -55,15 +56,17 @@ class CDashboardController extends GetxController {
 
   @override
   void onInit() async {
+    salesFilters.value = <String>[].obs;
     showSummaryFilterField.value = false;
     weeklySalesHighestAmount.value = 1000.0;
     Future.delayed(Duration.zero, () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await txnsController.fetchSoldItems().then((result) async {
+          generateSalesFilterItems();
           calculateCurrentWeekSales();
           calculateLastWeekSales();
           filterHourlySales();
-          generateSalesFilterItems();
+
           //computeMonthlySales();
         });
       });
@@ -79,8 +82,6 @@ class CDashboardController extends GetxController {
         );
       },
     );
-
-    salesFilters.value = <String>[].obs;
 
     super.onInit();
   }
@@ -133,49 +134,54 @@ class CDashboardController extends GetxController {
     thisWeekSalesList.value = List<double>.filled(7, 0.0);
     currentWeekSalesAmount.value = 0.0;
 
-    txnsController.fetchSoldItems().then((result) {
-      if (result.isNotEmpty) {
-        var demLegitSales = txnsController.sales
-            .where((soldItem) => soldItem.quantity >= 0.01)
-            .toList();
-        for (var sale in demLegitSales) {
-          final String rawSaleDate = sale.lastModified.trim();
-          var formattedDate = rawSaleDate.replaceAll(' @', '');
-          final DateTime currentWeekSalesStart =
-              CHelperFunctions.getStartOfCurrentWeek(
-                DateTime.parse(formattedDate),
-              );
+    txnsController.fetchSoldItems().then(
+      (result) {
+        if (result.isNotEmpty) {
+          var demLegitSales = txnsController.sales
+              .where((soldItem) => soldItem.quantity >= 0.01)
+              .toList();
+          for (var sale in demLegitSales) {
+            final String rawSaleDate = sale.lastModified.trim();
+            var formattedDate = rawSaleDate.replaceAll(' @', '');
+            final DateTime currentWeekSalesStart =
+                CHelperFunctions.getStartOfCurrentWeek(
+                  DateTime.parse(formattedDate),
+                );
 
-          // check if sale date is within the current week
-          if (currentWeekSalesStart.isBefore(clock.now()) &&
-              currentWeekSalesStart
-                  .add(const Duration(days: 7))
-                  .isAfter(clock.now())) {
-            int index = (DateTime.parse(formattedDate).weekday - 1) % 7;
+            // check if sale date is within the current week
+            if (currentWeekSalesStart.isBefore(clock.now()) &&
+                currentWeekSalesStart
+                    .add(const Duration(days: 7))
+                    .isAfter(clock.now())) {
+              int index = (DateTime.parse(formattedDate).weekday - 1) % 7;
 
-            // ensure the index is non-negative
-            index = index < 0 ? index + 7 : index;
-            thisWeekSalesList[index] += (sale.unitSellingPrice * sale.quantity);
-            currentWeekSalesAmount.value +=
-                (sale.unitSellingPrice * sale.quantity);
+              // ensure the index is non-negative
+              index = index < 0 ? index + 7 : index;
+              thisWeekSalesList[index] +=
+                  (sale.unitSellingPrice * sale.quantity);
+              currentWeekSalesAmount.value +=
+                  (sale.unitSellingPrice * sale.quantity);
 
-            // if (kDebugMode) {
-            //   print(
-            //     'date: $formattedDate, current week day: $currentWeekSalesStart, index: $index',
-            //   );
-            // }
+              // if (kDebugMode) {
+              //   print(
+              //     'date: $formattedDate, current week day: $currentWeekSalesStart, index: $index',
+              //   );
+              // }
+            }
           }
         }
-      }
 
-      weeklySalesHighestAmount.value = thisWeekSalesList.reduce(max) > 1
-          ? thisWeekSalesList.reduce(max)
-          : 1000;
+        weeklySalesHighestAmount.value = thisWeekSalesList.reduce(max) > 1
+            ? thisWeekSalesList.reduce(max)
+            : 1000;
 
-      // if (kDebugMode) {
-      //   print('weekly sales: $weeklySales');
-      // }
-    });
+        if (kDebugMode) {
+          print('===========\n');
+          print('weekly sales: $thisWeekSalesList');
+          print('===========\n');
+        }
+      },
+    );
   }
 
   /// -- calculate last week's sales --
@@ -237,6 +243,20 @@ class CDashboardController extends GetxController {
         );
       },
     );
+
+    final monthlySales = generateMonthlySalesWithoutMonths(2026);
+
+    if (kDebugMode) {
+      print('********** \n');
+      print('monthly sales: $monthlySales');
+      print('********** \n');
+    }
+
+    // for (var sale in monthlySales) {
+    //   if (kDebugMode) {
+    //     print(sale.totalSales);
+    //   }
+    // }
   }
 
   FlTitlesData buildFlBarChartTitlesData() {
@@ -494,41 +514,79 @@ class CDashboardController extends GetxController {
     selectedSalesFilterPeriod.value = value!;
   }
 
-  /// -- calculate monthly sales --
-  void computeMonthlySales() {
-    monthlySalesList.value = List<double>.filled(12, 0.0);
-    if (kDebugMode) {
-      print('monthly sales: $monthlySalesList');
-    }
+  List<CMonthlySalesModel> generateMonthlySalesWithoutMonths(int yr) {
+    final Map<int, double> monthlyTotals = {};
 
-    for (var monthlySale in txnsController.sales) {
-      final String rawSaleDate = monthlySale.lastModified.trim();
-      var formattedDate = rawSaleDate.replaceAll(' @', '');
-      final DateTime yrSalesStart = CHelperFunctions.getStartOfYear(
-        DateTime.parse(formattedDate),
-      );
+    for (var monthSales in txnsController.sales) {
+      final String rawSaleDate = monthSales.lastModified.trim();
+      var formattedDate = DateTime.parse(rawSaleDate.replaceAll(' @', ''));
 
-      if (yrSalesStart.isBefore(DateTime.parse('2025')) &&
-          yrSalesStart
-              .add(const Duration(days: 30))
-              .isAfter(DateTime.parse('2025'))) {
-        int index = (DateTime.parse(formattedDate).month - 1) % 12;
-
-        // -- ensure the index is non-negative --
-        index = index < 0 ? index + 12 : index;
-        monthlySalesList[index] +=
-            (monthlySale.unitSellingPrice * monthlySale.quantity);
-
-        if (kDebugMode) {
-          print(
-            'date: $formattedDate, current week day: $yrSalesStart, index: $index',
-          );
-        }
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'start of yr (month) is invalid!',
-        );
+      if (formattedDate.year == yr) {
+        final monthIndex = formattedDate.month;
+        monthlyTotals[monthIndex] =
+            (monthlyTotals[monthIndex] ?? 0) +
+            (monthSales.unitSellingPrice * monthSales.quantity);
       }
     }
+
+    /// -- create the results list with month names and sales totals --
+    return List.generate(
+      12,
+      (index) {
+        final monthIndex = index + 1;
+        final salesAmount = monthlyTotals[monthIndex] ?? 0.0;
+
+        var returnValueWithoutMonths = CMonthlySalesModel(
+          totalSales: salesAmount,
+        );
+        return returnValueWithoutMonths;
+      },
+    );
+  }
+
+  List<CMonthlySalesModel> generateMonthlySalesWithMonths(int yr) {
+    final monthNames = [
+      'jan',
+      'feb',
+      'mar',
+      'apr',
+      'may',
+      'jun',
+      'jul',
+      'aug',
+      'sep',
+      'oct',
+      'nov',
+      'dec',
+    ];
+    final Map<int, double> monthlyTotals = {};
+
+    for (var monthSales in txnsController.sales) {
+      final String rawSaleDate = monthSales.lastModified.trim();
+      var formattedDate = DateTime.parse(rawSaleDate.replaceAll(' @', ''));
+
+      if (formattedDate.year == yr) {
+        final monthIndex = formattedDate.month;
+        monthlyTotals[monthIndex] =
+            (monthlyTotals[monthIndex] ?? 0) +
+            (monthSales.unitSellingPrice * monthSales.quantity);
+      }
+    }
+
+    /// -- create the results list with month names and sales totals --
+    return List.generate(
+      12,
+      (index) {
+        final monthIndex = index + 1;
+        final salesAmount = monthlyTotals[monthIndex] ?? 0.0;
+
+        var returnValueWithMonths = CMonthlySalesModel.withMonth(
+          month: monthNames[index],
+          totalSales: salesAmount,
+        );
+
+        return returnValueWithMonths;
+      },
+    );
   }
 }

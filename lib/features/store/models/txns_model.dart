@@ -70,6 +70,8 @@ class CTxnsModel {
     this._txnStatus,
   );
 
+  CTxnsModel.monthlySales(this._lastModified);
+
   CTxnsModel.withId(
     this._soldItemId,
     this._txnId,
