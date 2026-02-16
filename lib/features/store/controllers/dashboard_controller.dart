@@ -8,6 +8,7 @@ import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
+import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class CDashboardController extends GetxController {
 
   final RxDouble peakSalesAmount = 0.0.obs;
 
+  final RxDouble monthlySalesHighestAmount = 0.0.obs;
   final RxDouble weeklyPercentageChange = 0.0.obs;
   final RxDouble weeklySalesHighestAmount = 0.0.obs;
 
@@ -49,6 +51,23 @@ class CDashboardController extends GetxController {
 
   final RxList<String> salesFilters = <String>[].obs;
 
+  final RxList<String> monthNames = [
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'oct',
+    'nov',
+    'dec',
+  ].obs;
+
+  final RxMap<int, double> monthlyTotals = <int, double>{}.obs;
+
   final RxString defautSalesFilterPeriod = ''.obs;
   final RxString selectedSalesFilterPeriod = ''.obs;
 
@@ -58,6 +77,7 @@ class CDashboardController extends GetxController {
   void onInit() async {
     salesFilters.value = <String>[].obs;
     showSummaryFilterField.value = false;
+    monthlySalesHighestAmount.value = 1000.0;
     weeklySalesHighestAmount.value = 1000.0;
     Future.delayed(Duration.zero, () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -244,13 +264,13 @@ class CDashboardController extends GetxController {
       },
     );
 
-    final monthlySales = generateMonthlySalesWithoutMonths(2026);
+    // final monthlySales = generateMonthlySalesWithoutMonths(2026);
 
-    if (kDebugMode) {
-      print('********** \n');
-      print('monthly sales: $monthlySales');
-      print('********** \n');
-    }
+    // if (kDebugMode) {
+    //   print('********** \n');
+    //   print('monthly sales: $monthlySales');
+    //   print('********** \n');
+    // }
 
     // for (var sale in monthlySales) {
     //   if (kDebugMode) {
@@ -259,7 +279,7 @@ class CDashboardController extends GetxController {
     // }
   }
 
-  FlTitlesData buildFlBarChartTitlesData() {
+  FlTitlesData buildFlBarChartTitlesData(bool forAnnualData) {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     // final userController = Get.put(CUserController());
@@ -273,20 +293,22 @@ class CDashboardController extends GetxController {
           showTitles: true,
           getTitlesWidget: (value, meta) {
             // map index to the desired day of the week
-            final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            final period = forAnnualData
+                ? monthNames
+                : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
-            // calculate the index and ensure it wraps around the corresponding day of the week
-            final index = value.toInt() % days.length;
+            // calculate the index and ensure it wraps around the corresponding day of the week or month of they year
+            final index = value.toInt() % period.length;
 
             // get the day corresponding to the calculated index
-            final day = days[index];
+            final periodLabel = period[index];
 
             return SideTitleWidget(
               space: 0,
               fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
               meta: meta,
               child: Text(
-                day,
+                periodLabel,
                 style: TextStyle(
                   color: isConnectedToInternet
                       ? CColors.rBrown
@@ -300,7 +322,9 @@ class CDashboardController extends GetxController {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: weeklySalesHighestAmount.value / 2,
+          interval: forAnnualData
+              ? monthlySalesHighestAmount.value / 4
+              : weeklySalesHighestAmount.value / 2,
           reservedSize: 40.0,
           getTitlesWidget: (value, TitleMeta meta) {
             return SideTitleWidget(
@@ -330,10 +354,104 @@ class CDashboardController extends GetxController {
           },
         ),
       ),
-      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: const AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
+      ),
+      topTitles: const AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
+      ),
     );
   }
+
+  /// -- build grid data --
+  FlGridData buildFlBarChartGridData() {
+    return FlGridData(
+      drawHorizontalLine: true,
+      drawVerticalLine: true,
+      horizontalInterval: monthlySalesHighestAmount.value / 4,
+      verticalInterval: monthlySalesHighestAmount.value / 4,
+    );
+  }
+
+  // FlTitlesData buildFlBarChartTitlesDataRaw() {
+  //   final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
+  //   // final userController = Get.put(CUserController());
+  //   // final userCurrency = CHelperFunctions.formatCurrency(
+  //   //   userController.user.value.currencyCode,
+  //   // );
+  //   return FlTitlesData(
+  //     show: true,
+  //     bottomTitles: AxisTitles(
+  //       sideTitles: SideTitles(
+  //         showTitles: true,
+  //         getTitlesWidget: (value, meta) {
+  //           // map index to the desired day of the week
+  //           final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+  //           // calculate the index and ensure it wraps around the corresponding day of the week
+  //           final index = value.toInt() % days.length;
+
+  //           // get the day corresponding to the calculated index
+  //           final day = days[index];
+
+  //           return SideTitleWidget(
+  //             space: 0,
+  //             fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+  //             meta: meta,
+  //             child: Text(
+  //               day,
+  //               style: TextStyle(
+  //                 color: isConnectedToInternet
+  //                     ? CColors.rBrown
+  //                     : CColors.darkGrey,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //     leftTitles: AxisTitles(
+  //       sideTitles: SideTitles(
+  //         showTitles: true,
+  //         interval: weeklySalesHighestAmount.value / 2,
+  //         reservedSize: 40.0,
+  //         getTitlesWidget: (value, TitleMeta meta) {
+  //           return SideTitleWidget(
+  //             meta: meta,
+  //             space: 0,
+  //             fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+  //             child: Text(
+  //               CFormatter.kSuffixFormatter(value),
+  //               style: TextStyle(
+  //                 color: isConnectedToInternet
+  //                     ? CColors.rBrown
+  //                     : CColors.darkGrey,
+  //                 fontSize: 10.0,
+  //               ),
+  //             ),
+
+  //             // Text(
+  //             //   '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
+  //             //   style: TextStyle(
+  //             //     color: isConnectedToInternet
+  //             //         ? CColors.rBrown
+  //             //         : CColors.darkGrey,
+  //             //     fontSize: 10.0,
+  //             //   ),
+  //             // ),
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+  //     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+  //   );
+  // }
 
   /// -- update carousel slider index --
   void updateCarouselSliderIndex(int index) {
@@ -515,8 +633,6 @@ class CDashboardController extends GetxController {
   }
 
   List<CMonthlySalesModel> generateMonthlySalesWithoutMonths(int yr) {
-    final Map<int, double> monthlyTotals = {};
-
     for (var monthSales in txnsController.sales) {
       final String rawSaleDate = monthSales.lastModified.trim();
       var formattedDate = DateTime.parse(rawSaleDate.replaceAll(' @', ''));
@@ -526,6 +642,13 @@ class CDashboardController extends GetxController {
         monthlyTotals[monthIndex] =
             (monthlyTotals[monthIndex] ?? 0) +
             (monthSales.unitSellingPrice * monthSales.quantity);
+        monthlySalesHighestAmount.value = monthlyTotals.values.reduce(max) > 1
+            ? monthlyTotals.values.reduce(max)
+            : 1000;
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'invalid yr',
+        );
       }
     }
 
@@ -545,22 +668,6 @@ class CDashboardController extends GetxController {
   }
 
   List<CMonthlySalesModel> generateMonthlySalesWithMonths(int yr) {
-    final monthNames = [
-      'jan',
-      'feb',
-      'mar',
-      'apr',
-      'may',
-      'jun',
-      'jul',
-      'aug',
-      'sep',
-      'oct',
-      'nov',
-      'dec',
-    ];
-    final Map<int, double> monthlyTotals = {};
-
     for (var monthSales in txnsController.sales) {
       final String rawSaleDate = monthSales.lastModified.trim();
       var formattedDate = DateTime.parse(rawSaleDate.replaceAll(' @', ''));

@@ -1,3 +1,5 @@
+import 'package:cri_v3/common/widgets/buttons/custom_dropdown_btn.dart';
+import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:cri_v3/common/widgets/dates/date_range_picker_widget.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
 import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
@@ -11,6 +13,7 @@ import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/fresh_dashboard.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/cutom_line_chart.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/monthly_sales_bar_graph.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/weekly_sales_bar_graph.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
@@ -186,7 +189,56 @@ class HomeScreen extends StatelessWidget {
                           height: CSizes.defaultSpace * .5,
                         ),
 
+                        CSectionHeading(
+                          actionWidget: Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 8.0,
+                              ),
+                              child: CRoundedContainer(
+                                borderRadius: 10.0,
+                                height: 40.0,
+                                padding: const EdgeInsets.all(
+                                  5.0,
+                                ),
+                                showBorder: true,
+                                child: CCustomDropdownBtn(
+                                  dropdownItems:
+                                      dashboardController.salesFilters,
+                                  selectedValue: dashboardController
+                                      .setDefaultSalesFilterPeriod(),
+                                  onValueChanged: (value) {
+                                    dashboardController
+                                        .onSalesFilterPeriodValueChanged(value);
+                                  },
+                                  underlineColor: CColors.rBrown,
+                                  underlineHeight: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          showActionBtn: true,
+                          title: 'sales summary...',
+                          txtColor: CNetworkManager.instance.hasConnection.value
+                              ? CColors.rBrown
+                              : CColors.darkGrey,
+
+                          btnTitle: '',
+                          btnTxtColor: CColors.rBrown,
+                          editFontSize: true,
+                          fWeight: FontWeight.w400,
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          height: CSizes.defaultSpace / 2,
+                        ),
+
                         /// -- sales summary bar graph --
+                        CCustomMonthlySalesBarGraph(),
+                        const SizedBox(
+                          height: CSizes.defaultSpace * .5,
+                        ),
                         WeeklySalesBarGraphWidget(),
 
                         const SizedBox(
