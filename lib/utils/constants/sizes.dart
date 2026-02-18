@@ -22,10 +22,10 @@ class CSizes {
   static const fontSizeLg = 16.0;
 
   // -- button sizes
+  static const btnElevation = 4.0;
   static const btnHeight = 18.0;
   static const btnRadius = 10.0;
   static const btnWidth = 120.0;
-  static const btnElevation = 4.0;
 
   // -- image sizes
   static const imgThumbSize = 80.0;
@@ -65,9 +65,12 @@ class CSizes {
   // -- grid view spacing --
   static const gridViewSpacing = 16.0;
 
+  // -- charts, graphs manenozzz --
+  static const barRodWidth = 15.0;
+
   // -- responsive screen sizes --
-  static const double desktopScreenSize = 1366.0;
-  static const double tabletScreenSize = 768.0;
-  static const double mobileScreenSize = 360.0;
   static const double customScreenSize = 1100.0;
+  static const double desktopScreenSize = 1366.0;
+  static const double mobileScreenSize = 360.0;
+  static const double tabletScreenSize = 768.0;
 }

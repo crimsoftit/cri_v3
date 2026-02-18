@@ -179,12 +179,18 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         height: 55.0,
                         child: CCustomDropdownBtn(
                           dropdownItems: invController.demMetrics,
-                          selectedValue: invController.setItemMetrics(),
+                          defaultItemColor: isDarkTheme
+                              ? CColors.white
+                              : CColors.rBrown,
+                          iconColor: isDarkTheme
+                              ? CColors.white
+                              : CColors.rBrown,
                           onValueChanged: (value) {
                             if (value != '') {
                               invController.itemMetrics.value = value!;
                             }
                           },
+                          selectedValue: invController.setItemMetrics(),
                         ),
                       ),
 

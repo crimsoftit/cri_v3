@@ -3,6 +3,7 @@ import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
+import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     return Column(
       children: [
@@ -20,7 +22,7 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
           () {
             return CRoundedContainer(
               bgColor: CColors.white,
-              borderRadius: CSizes.cardRadiusSm,
+              borderRadius: CSizes.cardRadiusSm / 2,
               boxShadow: [
                 BoxShadow(
                   blurRadius: 3.0,
@@ -31,6 +33,7 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
                   spreadRadius: 5.0,
                 ),
               ],
+
               padding: const EdgeInsets.only(
                 top: 5.0,
               ),
@@ -38,18 +41,24 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
+                    height: 30.0,
+                  ),
+                  SizedBox(
                     height: 150.0,
                     child: BarChart(
                       BarChartData(
                         barGroups: dashboardController
-                            .generateMonthlySalesWithoutMonths(2026)
+                            .generateMonthlySalesWithoutMonths(
+                              int.parse(
+                                dashboardController
+                                    .selectedSalesFilterPeriod
+                                    .value,
+                              ),
+                            )
                             .asMap()
                             .entries
                             .map(
                               (entry) {
-                                // var monthlySales = dashboardController
-                                //     .generateMonthlySalesWithoutMonths(2016);
-
                                 return BarChartGroupData(
                                   x: entry.key,
                                   barRods: [
@@ -57,7 +66,9 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(
                                         CSizes.sm / 4,
                                       ),
-                                      color: CColors.rBrown,
+                                      color: isConnectedToInternet
+                                          ? CColors.rBrown
+                                          : CColors.darkerGrey,
                                       toY: entry.value.totalSales,
                                       width: 15.0,
                                     ),

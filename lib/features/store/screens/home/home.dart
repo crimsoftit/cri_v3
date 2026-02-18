@@ -11,10 +11,10 @@ import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/home/fresh_dashboard.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/charts/bar_charts/monthly_sales_bar_graph.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/charts/bar_charts/weekly_sales_bar_graph.dart';
+import 'package:cri_v3/features/store/screens/home/widgets/charts/line_charts/cutom_line_chart.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/dashboard_header.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/cutom_line_chart.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/monthly_sales_bar_graph.dart';
-import 'package:cri_v3/features/store/screens/home/widgets/graphs_and_charts/weekly_sales_bar_graph.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/store_summary.dart';
 import 'package:cri_v3/features/store/screens/home/widgets/top_sellers.dart';
 import 'package:cri_v3/nav_menu.dart';
@@ -27,8 +27,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-
-/// -- TODO: set widget for a freshly registered account -with no sales --
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -175,7 +173,9 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                             CTopSellers(),
-                            const SizedBox(height: CSizes.defaultSpace / 4),
+                            const SizedBox(
+                              height: CSizes.defaultSpace / 4,
+                            ),
                           ],
                         ),
 
@@ -189,6 +189,11 @@ class HomeScreen extends StatelessWidget {
                           height: CSizes.defaultSpace * .5,
                         ),
 
+                        /// -- sales summary bar graph --
+                        // CCustomBarChart(
+                        //   selectedFilterPeriod: dashboardController
+                        //       .setDefaultSalesFilterPeriod(),
+                        // ),
                         CSectionHeading(
                           actionWidget: Align(
                             alignment: Alignment.topLeft,
@@ -210,7 +215,9 @@ class HomeScreen extends StatelessWidget {
                                       .setDefaultSalesFilterPeriod(),
                                   onValueChanged: (value) {
                                     dashboardController
-                                        .onSalesFilterPeriodValueChanged(value);
+                                        .onSalesFilterPeriodValueChanged(
+                                          value,
+                                        );
                                   },
                                   underlineColor: CColors.rBrown,
                                   underlineHeight: 0,
@@ -233,14 +240,15 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(
                           height: CSizes.defaultSpace / 2,
                         ),
+                        dashboardController.setDefaultSalesFilterPeriod() ==
+                                'this week'
+                            ? WeeklySalesBarGraphWidget()
+                            : CCustomMonthlySalesBarGraph(),
 
-                        /// -- sales summary bar graph --
-                        CCustomMonthlySalesBarGraph(),
-                        const SizedBox(
-                          height: CSizes.defaultSpace * .5,
-                        ),
-                        WeeklySalesBarGraphWidget(),
-
+                        // const SizedBox(
+                        //   height: CSizes.defaultSpace * .5,
+                        // ),
+                        // WeeklySalesBarGraphWidget(),
                         const SizedBox(
                           height: CSizes.defaultSpace * .5,
                         ),

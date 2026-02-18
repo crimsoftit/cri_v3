@@ -38,8 +38,11 @@ class WeeklySalesBarGraphWidget extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
+                    height: 30.0,
+                  ),
+                  SizedBox(
                     //width: CHelperFunctions.screenWidth() * .5,
-                    height: 200.0,
+                    height: 150.0,
                     child: BarChart(
                       BarChartData(
                         titlesData: dashboardController

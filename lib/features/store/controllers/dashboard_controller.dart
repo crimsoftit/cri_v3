@@ -79,6 +79,7 @@ class CDashboardController extends GetxController {
     showSummaryFilterField.value = false;
     monthlySalesHighestAmount.value = 1000.0;
     weeklySalesHighestAmount.value = 1000.0;
+
     Future.delayed(Duration.zero, () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await txnsController.fetchSoldItems().then((result) async {
@@ -86,7 +87,7 @@ class CDashboardController extends GetxController {
           calculateCurrentWeekSales();
           calculateLastWeekSales();
           filterHourlySales();
-
+          setDefaultSalesFilterPeriod();
           //computeMonthlySales();
         });
       });
@@ -131,7 +132,6 @@ class CDashboardController extends GetxController {
 
     salesFilters.value = [
       'this week',
-      '${firstYr + 1}',
       ...years,
       '${lastYr - 1}',
     ];
@@ -313,6 +313,7 @@ class CDashboardController extends GetxController {
                   color: isConnectedToInternet
                       ? CColors.rBrown
                       : CColors.darkGrey,
+                  fontSize: 10.0,
                 ),
               ),
             );
@@ -372,8 +373,12 @@ class CDashboardController extends GetxController {
     return FlGridData(
       drawHorizontalLine: true,
       drawVerticalLine: true,
-      horizontalInterval: monthlySalesHighestAmount.value / 4,
-      verticalInterval: monthlySalesHighestAmount.value / 4,
+      horizontalInterval: defautSalesFilterPeriod.value == 'this week'
+          ? weeklySalesHighestAmount.value / 4
+          : monthlySalesHighestAmount.value / 4,
+      verticalInterval: defautSalesFilterPeriod.value == 'this week'
+          ? weeklySalesHighestAmount.value / 4
+          : monthlySalesHighestAmount.value / 4,
     );
   }
 
@@ -630,6 +635,7 @@ class CDashboardController extends GetxController {
 
   void onSalesFilterPeriodValueChanged(String? value) {
     selectedSalesFilterPeriod.value = value!;
+    setDefaultSalesFilterPeriod();
   }
 
   List<CMonthlySalesModel> generateMonthlySalesWithoutMonths(int yr) {
