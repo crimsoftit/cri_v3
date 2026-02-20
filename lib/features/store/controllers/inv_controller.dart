@@ -577,8 +577,6 @@ class CInventoryController extends GetxController {
       }
 
       if (forDeleteCartItemIndex >= 0) {
-        // cartController.cartItems.removeAt(forDeleteCartItemIndex);
-        // cartController.updateCart();
         cartController.cartItems.clear();
         cartController.updateCart();
       }
@@ -1172,7 +1170,7 @@ class CInventoryController extends GetxController {
     txtId.text = "";
     txtNameController.text = "";
     txtCode.text = "";
-    
+
     txtQty.text = "";
     txtBP.text = "";
     unitBP.value = 0.0;

@@ -1,4 +1,6 @@
+import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';
+import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
@@ -21,6 +23,7 @@ class CStoreScreenHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
+    final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final syncController = Get.put(CSyncController());
@@ -95,50 +98,6 @@ class CStoreScreenHeader extends StatelessWidget {
                   ),
                 ),
 
-                /// -- sync control btn --
-                // syncController.processingSync.value
-                //     ? CShimmerEffect(
-                //         width: 40.0,
-                //         height: 40.0,
-                //         radius: 40.0,
-                //       )
-                //     : FloatingActionButton(
-                //         elevation: 0, // -- removes shadow
-                //         onPressed: invController.unSyncedAppends.isEmpty &&
-                //                 invController.unSyncedUpdates.isEmpty &&
-                //                 txnsController.unsyncedTxnAppends.isEmpty &&
-                //                 txnsController.unsyncedTxnUpdates.isEmpty
-                //             ? null
-                //             : () async {
-                //                 // -- check internet connectivity --
-                //                 final internetIsConnected =
-                //                     await CNetworkManager.instance
-                //                         .isConnected();
-
-                //                 if (internetIsConnected) {
-                //                   syncController.processSync();
-                //                 } else {
-                //                   CPopupSnackBar.customToast(
-                //                     message:
-                //                         'internet connection required for cloud sync!',
-                //                     forInternetConnectivityStatus: true,
-                //                   );
-                //                 }
-                //               },
-                //         backgroundColor: CColors.transparent,
-                //         foregroundColor: isConnectedToInternet
-                //             ? CColors.rBrown
-                //             : CColors.darkGrey,
-                //         heroTag: 'sync',
-                //         child: Icon(
-                //           invController.unSyncedAppends.isEmpty &&
-                //                   invController.unSyncedUpdates.isEmpty &&
-                //                   txnsController.unsyncedTxnAppends.isEmpty &&
-                //                   txnsController.unsyncedTxnUpdates.isEmpty
-                //               ? Iconsax.cloud_add
-                //               : Iconsax.cloud_change,
-                //         ),
-                //       ),
                 invController.unSyncedAppends.isEmpty &&
                         invController.unSyncedUpdates.isEmpty &&
                         txnsController.unsyncedTxnAppends.isEmpty &&
@@ -210,6 +169,14 @@ class CStoreScreenHeader extends StatelessWidget {
                         heroTag: 'sync',
                         child: Icon(Iconsax.cloud_change),
                       ),
+
+                /// -- checkout --
+                if (cartController.cartItems.isEmpty)
+                  CCartCounterIcon(
+                    iconColor: isConnectedToInternet
+                        ? CColors.rBrown
+                        : CColors.darkGrey,
+                  ),
 
                 // -- scan item for checkout btn --
                 CCheckoutScanFAB(

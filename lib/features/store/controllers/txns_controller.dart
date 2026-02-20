@@ -30,7 +30,6 @@ import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
-/// TODO: get summary data
 class CTxnsController extends GetxController {
   static CTxnsController get instance {
     return Get.find();
@@ -251,6 +250,7 @@ class CTxnsController extends GetxController {
   /// -- fetch txns from sqflite db --
   Future<List<CTxnsModel>> fetchTxns() async {
     try {
+      final dashboardController = Get.put(CDashboardController());
       // start loader while txns are fetched
       isLoading.value = true;
       //await dbHelper.openDb();
@@ -291,6 +291,12 @@ class CTxnsController extends GetxController {
 
       // stop loader
       isLoading.value = false;
+
+      dashboardController.generateSalesFilterItems().then(
+        (_) {
+          dashboardController.setDefaultSalesFilterPeriod();
+        },
+      );
 
       return txns;
     } catch (e) {

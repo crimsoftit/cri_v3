@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+
 class CValidator {
   /* ========== empty text validation ========== */
   static String? validateEmptyText(String? fieldName, String? value) {
@@ -31,29 +33,32 @@ class CValidator {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
     }
-    if (double.parse(value) < 0.09) {
+    if (double.parse(value) < 0.00001) {
       return 'invalid value for $fieldName';
     }
 
     return null;
   }
 
-  // static String? validateNumber(String? fieldName, String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return '$fieldName field is required!';
-  //   }
-  //   if (fieldName == 'buying price' || fieldName == 'usp') {
-  //     if (double.parse(value) < 1.0) {
-  //       return 'invalid value for $fieldName';
-  //     }
-  //   } else {
-  //     if (int.parse(value) < 1) {
-  //       return 'invalid value';
-  //     }
-  //   }
+  /* ===== validation for email ===== */
+  static bool isValidEmail(String input) {
+    return EmailValidator.validate(input);
+  }
 
-  //   return null;
-  // }
+  /* ===== validation for intl phone number ===== */
+  static bool isValidPhoneNumber(String input) {
+    return RegExp(
+      r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+    ).hasMatch(input);
+  }
+
+  /* ===== validation for both intl phone number && email ===== */
+  static String? validateEmailAndPhoneNumber(String input) {
+    if (!isValidEmail(input) && isValidPhoneNumber(input)) {
+      return 'Please enter a valid email or phone number!';
+    }
+    return null;
+  }
 
   /* ========== customer balance field validation ========== */
   static String? validateCustomerBal(

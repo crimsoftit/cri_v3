@@ -24,9 +24,7 @@ class CInvDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
-    //final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
-    //final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final userController = Get.put(CUserController());

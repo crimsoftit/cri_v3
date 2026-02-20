@@ -32,6 +32,7 @@ class DbHelper extends GetxController {
 
   final userController = Get.put(CUserController());
 
+  final contactsTable = 'contactsTable';
   final invDelsForSyncTable = 'invDelsForSyncTable';
   final invTable = 'inventory';
   final notificationsTable = 'notifications';
@@ -146,6 +147,8 @@ class DbHelper extends GetxController {
             FOREIGN KEY(productId) REFERENCES inventory(productId)
           )
         ''');
+
+        // -- create contacts table --
       },
       version: version,
     );

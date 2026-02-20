@@ -8,16 +8,17 @@ import 'package:iconsax/iconsax.dart';
 class CCartCounterIcon extends StatelessWidget {
   const CCartCounterIcon({
     super.key,
-    this.iconColor,
+    this.cartCounterRightPosition,
     this.counterBgColor,
     this.counterTxtColor,
+    this.iconColor,
   });
 
   final Color? iconColor, counterBgColor, counterTxtColor;
+  final double? cartCounterRightPosition;
 
   @override
   Widget build(BuildContext context) {
-    //cartController.fetchCartItems();
     final checkoutController = Get.put(CCheckoutController());
 
     return Stack(
@@ -26,11 +27,15 @@ class CCartCounterIcon extends StatelessWidget {
           onPressed: () async {
             checkoutController.handleNavToCheckout();
           },
-          icon: Icon(Iconsax.shopping_bag, color: iconColor),
+          icon: Icon(
+            Iconsax.shopping_bag,
+            color: iconColor,
+          ),
         ),
         CPositionedCartCounterWidget(
           counterBgColor: CColors.white,
           counterTxtColor: CColors.rBrown,
+          rightPosition: cartCounterRightPosition ?? 5.0,
         ),
       ],
     );

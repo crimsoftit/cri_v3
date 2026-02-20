@@ -456,6 +456,16 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields,
                             ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                'supplier details...',
+                                style: Theme.of(context).textTheme.labelMedium,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: CSizes.spaceBtnInputFields,
+                            ),
                             TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
@@ -476,11 +486,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               style: const TextStyle(
                                 fontWeight: FontWeight.normal,
                               ),
+                              validator: (value) {
+                                return CValidator.validateEmptyText(
+                                  'supplier name',
+                                  value,
+                                );
+                              },
                             ),
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields / 2,
                             ),
                             TextFormField(
+                              // autovalidateMode: AutovalidateMode.always,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               controller: invController.txtSupplierContacts,
                               decoration: InputDecoration(
                                 filled: true,
@@ -491,7 +510,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 //   color: CColors.darkGrey,
                                 //   inherit: true,
                                 // ),
-                                labelText: 'supplier contacts:',
+                                labelText: 'supplier email or phone no.:',
 
                                 prefixIcon: Icon(
                                   Icons.contact_mail,
@@ -502,6 +521,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               style: const TextStyle(
                                 fontWeight: FontWeight.normal,
                               ),
+                              validator: (value) {
+                                if (value == null ||
+                                    value == '' ||
+                                    (!CValidator.isValidEmail(value.trim()) &&
+                                        !CValidator.isValidPhoneNumber(
+                                          value.trim(),
+                                        ))) {
+                                  return 'please enter a valid email or phone no.!';
+                                }
+                                return null;
+                              },
                             ),
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields / 2,
@@ -635,7 +665,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context, true);
                             invController.resetInvFields();
-                            //invController.fetchUserInventoryItems();
                           },
                         ),
                       ),

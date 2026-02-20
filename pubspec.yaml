@@ -171,6 +171,9 @@ dependencies:
 
   double_tap_back_exit: any
 
+  # -- validators --
+  email_validator: ^3.0.0
+
 dependency_overrides:
   intl: ^0.20.0
 

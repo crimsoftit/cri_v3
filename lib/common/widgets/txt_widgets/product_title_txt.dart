@@ -23,8 +23,12 @@ class CProductTitleText extends StatelessWidget {
       child: Text(
         title,
         style: smallSize
-            ? Theme.of(context).textTheme.labelSmall!.apply(color: txtColor)
-            : Theme.of(context).textTheme.titleSmall!.apply(color: txtColor),
+            ? Theme.of(context).textTheme.labelSmall!.apply(
+                color: txtColor,
+              )
+            : Theme.of(context).textTheme.titleSmall!.apply(
+                color: txtColor,
+              ),
         overflow: TextOverflow.ellipsis,
         maxLines: maxLines,
         textAlign: txtAlign,

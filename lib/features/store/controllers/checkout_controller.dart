@@ -57,6 +57,7 @@ class CCheckoutController extends GetxController {
     selectedPaymentMethod.value.platformName == 'cash';
     setFocusOnAmtIssuedField.value = false;
     includeAmtIssuedFieldonModal.value = false;
+    
     CLocationServices.instance.getUserLocation(
       locationController: locationController,
     );
@@ -704,7 +705,6 @@ class CCheckoutController extends GetxController {
     Get.offAll(() => NavMenu());
   }
 
-  /// -- TODO: update stock count when item is sold o credit
   onCheckoutBtnPressed() async {
     try {
       if (selectedPaymentMethod.value.platformName == 'cash') {

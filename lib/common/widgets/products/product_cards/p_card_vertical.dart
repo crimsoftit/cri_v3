@@ -40,12 +40,13 @@ class CProductCardVertical extends StatelessWidget {
     this.qtyRefunded,
     this.qtySold,
     this.syncAction,
+    this.titleColor,
     this.usp,
     required this.containerHeight,
   });
 
   final double containerHeight;
-  final Color? expiryColor, favIconColor;
+  final Color? expiryColor, favIconColor, titleColor;
   final double? lowStockNotifierLimit;
   final int pId;
   final IconData? favIconData;
@@ -124,13 +125,14 @@ class CProductCardVertical extends StatelessWidget {
                       )
                     : CCircleAvatar(
                         avatarInitial: itemAvatar!,
-                        // bgColor: int.parse(qtyAvailable!) <
-                        //         lowStockNotifierLimit!
-                        //     ? Colors.red
-                        //     : CColors.rBrown,
+
                         bgColor: CColors.transparent,
                         editIconColor:
-                            double.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            (expiryColor == CColors.error ||
+                                expiryColor == CColors.warning)
+                            ? expiryColor
+                            : (double.parse(qtyAvailable!) <=
+                                  lowStockNotifierLimit!)
                             ? Colors.red
                             : isDarkTheme
                             ? CColors.white
@@ -138,7 +140,11 @@ class CProductCardVertical extends StatelessWidget {
                         includeEditBtn: true,
                         onEdit: onAvatarIconTap,
                         txtColor:
-                            double.parse(qtyAvailable!) < lowStockNotifierLimit!
+                            (expiryColor == CColors.error ||
+                                expiryColor == CColors.warning)
+                            ? expiryColor
+                            : (double.parse(qtyAvailable!) <=
+                                  lowStockNotifierLimit!)
                             ? Colors.red
                             : isDarkTheme
                             ? CColors.white
@@ -213,30 +219,30 @@ class CProductCardVertical extends StatelessWidget {
               title:
                   CHelperFunctions.txtExceedsTwoLines(
                     "${itemName.toUpperCase()} (${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked, $qtySold sold)",
-                    Theme.of(context).textTheme.labelSmall!,
+                    Theme.of(context).textTheme.labelSmall!.apply(
+                      color:
+                          titleColor ??
+                          (isDarkTheme ? CColors.white : CColors.rBrown),
+                    ),
                   )
                   ? "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked; $qtySold sold)"
                   : "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s) stocked; $qtySold ${CFormatter.formatItemMetrics(itemMetrics!)}(s) sold)",
-              // title: CHelperFunctions.txtExceedsTwoLines(
-              //   "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold sold)",
-              //   Theme.of(context).textTheme.labelSmall!,
-              // )
-              // ? "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold sold)"
-              // : "${itemName.toUpperCase()} ($qtyAvailable ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} stocked, $qtySold ${itemMetrics == 'units' ? itemMetrics : '${CFormatter.formatItemMetrics(itemMetrics!)}(s)'} sold)",
-              txtColor: double.parse(qtyAvailable!) < lowStockNotifierLimit!
-                  ? Colors.red
+
+              txtColor:
+                  (expiryColor == CColors.error ||
+                      expiryColor == CColors.warning)
+                  ? expiryColor
+                  : (double.parse(qtyAvailable!) <= lowStockNotifierLimit! &&
+                        double.parse(qtyAvailable!) > 0)
+                  ? CColors.warning
+                  : double.parse(qtyAvailable!) <= 0
+                  ? CColors.error
                   : isDarkTheme
                   ? CColors.white
                   : CColors.rBrown,
               maxLines: 2,
             ),
 
-            // Text(
-            //   '($qtyRefunded ${itemCalibration == 'units' ? itemCalibration : '${itemCalibration}s'} refunded)',
-            //   style: Theme.of(context).textTheme.labelSmall!.apply(
-            //     color: isDarkTheme ? CColors.white : CColors.darkGrey,
-            //   ),
-            // ),
             Text(
               '($qtyRefunded ${CFormatter.formatItemMetrics(itemMetrics!)}(s) refunded)',
               style: Theme.of(context).textTheme.labelSmall!.apply(

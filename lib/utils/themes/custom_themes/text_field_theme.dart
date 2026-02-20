@@ -20,7 +20,9 @@ class CTextFormFieldTheme {
       color: CColors.rBrown,
       fontWeight: FontWeight.normal,
     ),
-    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.italic),
+    errorStyle: const TextStyle().copyWith(
+      fontStyle: FontStyle.italic,
+    ),
     floatingLabelStyle: const TextStyle().copyWith(
       //color: CColors.rBrown.withOpacity(0.8),
       color: CColors.rBrown.withValues(alpha: 0.8),
@@ -32,7 +34,7 @@ class CTextFormFieldTheme {
         color: CColors.rBrown.withValues(alpha: .5),
       ),
     ),
-    enabledBorder: const OutlineInputBorder().copyWith(
+    enabledBorder: OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),
       borderSide: BorderSide(
         width: 1.0,
@@ -45,7 +47,7 @@ class CTextFormFieldTheme {
     ),
     errorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(2.0),
-      borderSide: const BorderSide(width: 1.0, color: Colors.red),
+      borderSide: const BorderSide(width: 1.0, color: Colors.red,),
     ),
     focusedErrorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(2.0),

@@ -93,15 +93,12 @@ class CLocationServices {
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
-    if (isConnectedToInternet) {
-      // var myAddress =
-      //     'locality:${userAddress.locality}, subLocality:${userAddress.subLocality}, adminArea:${userAddress.administrativeArea}, subAdminArea:${userAddress.subAdministrativeArea}, addressLine:${userAddress.administrativeArea}, thoroughfare:${userAddress.thoroughfare}, subThoroughfare:${userAddress.subThoroughfare}, street:${userAddress.street}, name:${userAddress.name}, postalCode:${userAddress.postalCode}';
+    if (isConnectedToInternet ) {
+     
 
       var myAddress =
           'locality:${userAddress.locality}, subLocality:${userAddress.subLocality}, adminArea:${userAddress.administrativeArea}, subAdminArea:${userAddress.subAdministrativeArea}, thoroughfare:${userAddress.thoroughfare}, subThoroughfare:${userAddress.subThoroughfare}, street:${userAddress.street}, name:${userAddress.name}, postalCode:${userAddress.postalCode}';
 
-      // locationController.uAddress.value =
-      //     'locality:${userAddress.locality} subLocality:${userAddress.subLocality}, street:${userAddress.street}';
       locationController.uAddress.value = myAddress;
 
       locationController.uCountry.value = userAddress.country!;

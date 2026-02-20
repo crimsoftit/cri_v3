@@ -183,6 +183,13 @@ class CCartController extends GetxController {
       (cartItem) => cartItem.productId == item.productId,
     );
 
+    switch (itemIndex) {
+      case < 0:
+        
+        break;
+      default:
+    }
+
     // -- check stock qty --
     final invController = Get.put(CInventoryController());
     final inventoryItem = invController.inventoryItems.firstWhere(

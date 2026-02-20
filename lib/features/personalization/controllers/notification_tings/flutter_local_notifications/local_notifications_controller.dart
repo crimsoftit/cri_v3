@@ -21,7 +21,6 @@ class CLocalNotificationsController extends GetxController {
   @override
   void onInit() async {
     await fetchUserNotifications();
-    // TODO: implement onInit
     super.onInit();
   }
 

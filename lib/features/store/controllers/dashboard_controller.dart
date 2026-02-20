@@ -8,9 +8,7 @@ import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:clock/clock.dart';
-import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_date_utils/in_date_utils.dart';
@@ -80,18 +78,22 @@ class CDashboardController extends GetxController {
     monthlySalesHighestAmount.value = 1000.0;
     weeklySalesHighestAmount.value = 1000.0;
 
-    Future.delayed(Duration.zero, () {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await txnsController.fetchSoldItems().then((result) async {
-          generateSalesFilterItems();
-          calculateCurrentWeekSales();
-          calculateLastWeekSales();
-          filterHourlySales();
-          setDefaultSalesFilterPeriod();
-          //computeMonthlySales();
-        });
-      });
-    });
+    Future.delayed(
+      Duration.zero,
+      () {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) async {
+            await txnsController.fetchSoldItems().then(
+              (result) async {
+                calculateCurrentWeekSales();
+                calculateLastWeekSales();
+                filterHourlySales();
+              },
+            );
+          },
+        );
+      },
+    );
 
     Future.delayed(
       Duration.zero,
@@ -107,7 +109,7 @@ class CDashboardController extends GetxController {
     super.onInit();
   }
 
-  List<DateTime> generateSalesFilterItems() {
+  Future<List<DateTime>> generateSalesFilterItems() async {
     salesDatesOnly.value = txnsController.sales
         .map(
           (item) => DateTime.parse(item.lastModified.replaceAll(' @', '')),
@@ -136,15 +138,6 @@ class CDashboardController extends GetxController {
       '${lastYr - 1}',
     ];
 
-    // if (kDebugMode) {
-    //   print('<<< >>> \n');
-    //   print('1st yr: $firstYr \n');
-    //   print('last yr: $lastYr \n');
-    //   print('---------\n');
-    //   print('years in descending order: $years');
-    //   print('---------\n');
-    //   print('<<< >>> \n');
-    // }
     return salesDatesOnly;
   }
 
@@ -195,11 +188,11 @@ class CDashboardController extends GetxController {
             ? thisWeekSalesList.reduce(max)
             : 1000;
 
-        if (kDebugMode) {
-          print('===========\n');
-          print('weekly sales: $thisWeekSalesList');
-          print('===========\n');
-        }
+        // if (kDebugMode) {
+        //   print('===========\n');
+        //   print('weekly sales: $thisWeekSalesList');
+        //   print('===========\n');
+        // }
       },
     );
   }
@@ -252,10 +245,6 @@ class CDashboardController extends GetxController {
                         (sum, sale) =>
                             sum + (sale.unitSellingPrice * sale.quantity),
                       );
-
-                  // if (kDebugMode) {
-                  //   print('total sales for last week: $lastWeekSalesAmount.');
-                  // }
                 }
               },
             );
@@ -263,29 +252,11 @@ class CDashboardController extends GetxController {
         );
       },
     );
-
-    // final monthlySales = generateMonthlySalesWithoutMonths(2026);
-
-    // if (kDebugMode) {
-    //   print('********** \n');
-    //   print('monthly sales: $monthlySales');
-    //   print('********** \n');
-    // }
-
-    // for (var sale in monthlySales) {
-    //   if (kDebugMode) {
-    //     print(sale.totalSales);
-    //   }
-    // }
   }
 
   FlTitlesData buildFlBarChartTitlesData(bool forAnnualData) {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
-    // final userController = Get.put(CUserController());
-    // final userCurrency = CHelperFunctions.formatCurrency(
-    //   userController.user.value.currencyCode,
-    // );
     return FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -341,16 +312,6 @@ class CDashboardController extends GetxController {
                   fontSize: 10.0,
                 ),
               ),
-
-              // Text(
-              //   '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
-              //   style: TextStyle(
-              //     color: isConnectedToInternet
-              //         ? CColors.rBrown
-              //         : CColors.darkGrey,
-              //     fontSize: 10.0,
-              //   ),
-              // ),
             );
           },
         ),
@@ -381,82 +342,6 @@ class CDashboardController extends GetxController {
           : monthlySalesHighestAmount.value / 4,
     );
   }
-
-  // FlTitlesData buildFlBarChartTitlesDataRaw() {
-  //   final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
-
-  //   // final userController = Get.put(CUserController());
-  //   // final userCurrency = CHelperFunctions.formatCurrency(
-  //   //   userController.user.value.currencyCode,
-  //   // );
-  //   return FlTitlesData(
-  //     show: true,
-  //     bottomTitles: AxisTitles(
-  //       sideTitles: SideTitles(
-  //         showTitles: true,
-  //         getTitlesWidget: (value, meta) {
-  //           // map index to the desired day of the week
-  //           final days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-  //           // calculate the index and ensure it wraps around the corresponding day of the week
-  //           final index = value.toInt() % days.length;
-
-  //           // get the day corresponding to the calculated index
-  //           final day = days[index];
-
-  //           return SideTitleWidget(
-  //             space: 0,
-  //             fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
-  //             meta: meta,
-  //             child: Text(
-  //               day,
-  //               style: TextStyle(
-  //                 color: isConnectedToInternet
-  //                     ? CColors.rBrown
-  //                     : CColors.darkGrey,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //     leftTitles: AxisTitles(
-  //       sideTitles: SideTitles(
-  //         showTitles: true,
-  //         interval: weeklySalesHighestAmount.value / 2,
-  //         reservedSize: 40.0,
-  //         getTitlesWidget: (value, TitleMeta meta) {
-  //           return SideTitleWidget(
-  //             meta: meta,
-  //             space: 0,
-  //             fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
-  //             child: Text(
-  //               CFormatter.kSuffixFormatter(value),
-  //               style: TextStyle(
-  //                 color: isConnectedToInternet
-  //                     ? CColors.rBrown
-  //                     : CColors.darkGrey,
-  //                 fontSize: 10.0,
-  //               ),
-  //             ),
-
-  //             // Text(
-  //             //   '$userCurrency.${CFormatter.kSuffixFormatter(value)}',
-  //             //   style: TextStyle(
-  //             //     color: isConnectedToInternet
-  //             //         ? CColors.rBrown
-  //             //         : CColors.darkGrey,
-  //             //     fontSize: 10.0,
-  //             //   ),
-  //             // ),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //   );
-  // }
 
   /// -- update carousel slider index --
   void updateCarouselSliderIndex(int index) {
@@ -651,11 +536,13 @@ class CDashboardController extends GetxController {
         monthlySalesHighestAmount.value = monthlyTotals.values.reduce(max) > 1
             ? monthlyTotals.values.reduce(max)
             : 1000;
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'invalid yr',
-        );
       }
+      // else {
+      //   CPopupSnackBar.errorSnackBar(
+      //     message: 'invalid yr!',
+      //     title: 'invalid yr!',
+      //   );
+      // }
     }
 
     /// -- create the results list with month names and sales totals --
