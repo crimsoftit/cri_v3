@@ -47,7 +47,8 @@ class CStoreScreenHeader extends StatelessWidget {
               ),
             ),
             Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 /// -- button to add inventory item --
                 FloatingActionButton(
@@ -176,6 +177,7 @@ class CStoreScreenHeader extends StatelessWidget {
                     iconColor: isConnectedToInternet
                         ? CColors.rBrown
                         : CColors.darkGrey,
+                    showCounterWidget: cartController.cartItems.isNotEmpty,
                   ),
 
                 // -- scan item for checkout btn --

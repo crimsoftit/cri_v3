@@ -1604,4 +1604,13 @@ class CTxnsController extends GetxController {
       rethrow;
     }
   }
+
+  bool salesExistForAnnualPeriod(String yr) {
+    var yrSales = sales.where(
+      (annualSale) =>
+          annualSale.lastModified.toLowerCase().contains(yr.toLowerCase()),
+    );
+
+    return yrSales.isNotEmpty;
+  }
 }

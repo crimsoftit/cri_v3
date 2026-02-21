@@ -48,6 +48,7 @@ class CFreshDashboardScreen extends StatelessWidget {
                 ),
                 CCartCounterIcon(
                   iconColor: CColors.rBrown,
+                  showCounterWidget: true,
                 ),
               ],
             ),

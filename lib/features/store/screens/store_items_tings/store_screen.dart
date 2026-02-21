@@ -107,12 +107,17 @@ class CStoreScreen extends StatelessWidget {
                   backgroundColor: CColors.transparent,
                   expandedHeight: 50.0,
                   flexibleSpace: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    padding: const EdgeInsets.only(
+                      left: 10.0,
+                      right: 10.0,
+                    ),
                     child: ListView(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       children: [
-                        CStoreScreenHeader(title: 'Store'),
+                        CStoreScreenHeader(
+                          title: 'Store',
+                        ),
                         SizedBox(height: 1.0),
                       ],
                     ),
@@ -165,7 +170,7 @@ class CStoreScreen extends StatelessWidget {
                       cartController.cartItems.isEmpty
                   ? SizedBox.shrink()
                   : Stack(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.bottomCenter,
                       children: [
                         FloatingActionButton.extended(
                           label: Text(

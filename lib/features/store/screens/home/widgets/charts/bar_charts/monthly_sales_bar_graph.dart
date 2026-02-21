@@ -1,6 +1,9 @@
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/common/widgets/loaders/animated_loader.dart';
 import 'package:cri_v3/features/store/controllers/dashboard_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/helpers/network_manager.dart';
@@ -15,11 +18,32 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+    final txnsController = Get.put(CTxnsController());
 
     return Column(
       children: [
         Obx(
           () {
+            /// -- empty data widget --
+            final noDataWidget = CAnimatedLoaderWidget(
+              animation: CImages.noDataLottie,
+              lottieAssetWidth: 100.0,
+              showActionBtn: false,
+              text:
+                  'no sales for the period: ${dashboardController.selectedSalesFilterPeriod.value}'
+                      .toUpperCase(),
+            );
+
+            if (dashboardController.selectedSalesFilterPeriod.value !=
+                    'this week' &&
+                !txnsController.salesExistForAnnualPeriod(
+                  dashboardController.setDefaultSalesFilterPeriod(),
+                )) {
+              return CRoundedContainer(
+                borderRadius: CSizes.cardRadiusSm / 2,
+                child: noDataWidget,
+              );
+            }
             return CRoundedContainer(
               bgColor: CColors.white,
               borderRadius: CSizes.cardRadiusSm / 2,
@@ -51,8 +75,7 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
                             .generateMonthlySalesWithoutMonths(
                               int.parse(
                                 dashboardController
-                                    .selectedSalesFilterPeriod
-                                    .value,
+                                    .setDefaultSalesFilterPeriod(),
                               ),
                             )
                             .asMap()

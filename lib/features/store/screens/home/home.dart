@@ -65,6 +65,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 CCartCounterIcon(
                   iconColor: CColors.rBrown,
+                  showCounterWidget: true,
                 ),
               ],
             ),

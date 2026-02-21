@@ -12,8 +12,10 @@ class CCartCounterIcon extends StatelessWidget {
     this.counterBgColor,
     this.counterTxtColor,
     this.iconColor,
+    required this.showCounterWidget,
   });
 
+  final bool showCounterWidget;
   final Color? iconColor, counterBgColor, counterTxtColor;
   final double? cartCounterRightPosition;
 
@@ -32,11 +34,13 @@ class CCartCounterIcon extends StatelessWidget {
             color: iconColor,
           ),
         ),
-        CPositionedCartCounterWidget(
-          counterBgColor: CColors.white,
-          counterTxtColor: CColors.rBrown,
-          rightPosition: cartCounterRightPosition ?? 5.0,
-        ),
+        showCounterWidget
+            ? CPositionedCartCounterWidget(
+                counterBgColor: CColors.white,
+                counterTxtColor: CColors.rBrown,
+                rightPosition: cartCounterRightPosition ?? 5.0,
+              )
+            : SizedBox.shrink(),
       ],
     );
   }

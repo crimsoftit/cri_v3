@@ -515,7 +515,8 @@ class CDashboardController extends GetxController {
     defautSalesFilterPeriod.value = selectedSalesFilterPeriod.value == ''
         ? salesFilters[0]
         : selectedSalesFilterPeriod.value;
-    return defautSalesFilterPeriod.value;
+    selectedSalesFilterPeriod.value = defautSalesFilterPeriod.value;
+    return selectedSalesFilterPeriod.value;
   }
 
   void onSalesFilterPeriodValueChanged(String? value) {

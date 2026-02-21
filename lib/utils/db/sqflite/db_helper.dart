@@ -149,6 +149,19 @@ class DbHelper extends GetxController {
         ''');
 
         // -- create contacts table --
+        database.execute('''
+          CREATE TABLE IF NOT EXISTS $contactsTable (
+            contactId INTEGER PRIMARY KEY AUTOINCREMENT,
+            productId INTEGER NOT NULL,
+            contactName TEXT NOT NULL,
+            contactPhone TEXT NOT NULL,
+            contactEmail TEXT NOT NULL,
+            contactCategory TEXT NOT NULL,
+            lastModified TEXT NOT NULL,
+            createdAt TEXT NOT NULL,
+            FOREIGN KEY(productId) REFERENCES inventory(productId)
+          )
+        ''');
       },
       version: version,
     );
