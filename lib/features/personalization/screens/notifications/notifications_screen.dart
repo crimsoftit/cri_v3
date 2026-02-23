@@ -84,7 +84,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                     ],
                   );
                 }),
-                const SizedBox(height: CSizes.spaceBtnSections),
+                const SizedBox(height: CSizes.spaceBtnSections,),
 
                 // -- list notifications on an ExpansionPanelList.radio widget --
                 CAlertsListView(),

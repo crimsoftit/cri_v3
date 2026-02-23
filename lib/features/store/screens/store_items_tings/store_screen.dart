@@ -2,7 +2,6 @@ import 'package:cri_v3/common/widgets/appbar/app_bar.dart';
 import 'package:cri_v3/common/widgets/appbar/tab_bar.dart';
 import 'package:cri_v3/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:cri_v3/common/widgets/search_bar/animated_search_bar.dart';
-import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/checkout_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
@@ -23,7 +22,7 @@ class CStoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.put(CCartController());
+    //final cartController = Get.put(CCartController()); TODO:<INTERFERES WITH SEARCH BOX>
     final checkoutController = Get.put(CCheckoutController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
@@ -45,12 +44,14 @@ class CStoreScreen extends StatelessWidget {
 
     return DefaultTabController(
       animationDuration: Duration(
-        milliseconds: 800,
+        milliseconds: 300,
       ),
       length: 5,
       child: Obx(() {
         return Scaffold(
-          backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
+          backgroundColor: CColors.rBrown.withValues(
+            alpha: 0.2,
+          ),
           appBar: CAppBar(
             horizontalPadding: 0,
             leadingWidget: searchController.showSearchField.value
@@ -118,7 +119,7 @@ class CStoreScreen extends StatelessWidget {
                         CStoreScreenHeader(
                           title: 'Store',
                         ),
-                        SizedBox(height: 1.0),
+                        SizedBox(height: 1.0,),
                       ],
                     ),
                   ),
@@ -166,8 +167,7 @@ class CStoreScreen extends StatelessWidget {
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              invController.inventoryItems.isEmpty ||
-                      cartController.cartItems.isEmpty
+              invController.inventoryItems.isEmpty
                   ? SizedBox.shrink()
                   : Stack(
                       alignment: Alignment.bottomCenter,

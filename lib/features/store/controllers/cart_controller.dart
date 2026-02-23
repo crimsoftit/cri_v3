@@ -172,7 +172,6 @@ class CCartController extends GetxController {
   }
 
   /// -- add a single item to cart --
-  /// TODO: don't add items that have expired to cart --
   Future<void> addSingleItemToCart(
     CCartItemModel item,
     bool fromQtyTxtField,
@@ -185,7 +184,6 @@ class CCartController extends GetxController {
 
     switch (itemIndex) {
       case < 0:
-        
         break;
       default:
     }

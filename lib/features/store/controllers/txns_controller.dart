@@ -124,7 +124,6 @@ class CTxnsController extends GetxController {
   @override
   void onInit() async {
     dateRangeFieldController.text = '';
-    //dbHelper.openDb();
 
     if (await CNetworkManager.instance.isConnected()) {
       StoreSheetsApi.initSpreadSheets();

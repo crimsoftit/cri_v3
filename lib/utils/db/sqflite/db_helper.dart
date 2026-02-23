@@ -1,4 +1,5 @@
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/models/contacts_model.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/models/best_sellers_model.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
@@ -787,6 +788,51 @@ class DbHelper extends GetxController {
         CPopupSnackBar.errorSnackBar(
           title: 'error updating notification item',
           message: e.toString(),
+        );
+      }
+      rethrow;
+    }
+  }
+
+  /// -- add a contact to sqflite db --
+  Future<void> addContact(CContactsModel contact) async {
+    try {
+      // get a reference to the database
+      final db = _db;
+      await db?.insert(
+        contactsTable,
+        contact.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('error adding contact: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'an error occurred while adding contact: $e',
+          title: 'error adding contact!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  /// -- fetch contacts from local db --
+  Future<List<CContactsModel>> fetchContacts() async {
+    try {
+      final db = _db;
+
+      final result = await db!.rawQuery(
+        'select * from $contactsTable order by lastModified DESC',
+      );
+
+      // -- convert the List<Map<String, dynamic> into a List<CContactsModel>.
+      return result.map((json) => CContactsModel.fromMapObject(json)).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('error fetching contacts: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching contacts: $e',
+          title: 'error fetching contacts!',
         );
       }
       rethrow;

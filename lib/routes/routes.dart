@@ -1,5 +1,6 @@
 class CRoutes {
   static const checkoutScreen = '/checkout';
+  static const contactsScreen = '/my_contacts';
   static const forgotPassword = '/forgot_password';
   static const home = '/';
   static const homeRaw = '/home_raw/';

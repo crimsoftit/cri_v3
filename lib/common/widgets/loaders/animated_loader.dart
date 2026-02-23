@@ -20,14 +20,16 @@ class CAnimatedLoaderWidget extends StatelessWidget {
     super.key,
     required this.text,
     required this.animation,
-    this.showActionBtn = false,
     this.actionBtnText,
     this.actionBtnWidth = 250.0,
     this.lottieAssetWidth,
     this.onActionBtnPressed,
+    this.showActionBtn = false,
+    this.txtColor,
   });
 
   final bool showActionBtn;
+  final Color? txtColor;
   final double? actionBtnWidth, lottieAssetWidth;
   final String text, animation;
   final String? actionBtnText;
@@ -48,7 +50,9 @@ class CAnimatedLoaderWidget extends StatelessWidget {
           const SizedBox(height: CSizes.defaultSpace),
           Text(
             text,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium!.apply(color: txtColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: CSizes.defaultSpace),

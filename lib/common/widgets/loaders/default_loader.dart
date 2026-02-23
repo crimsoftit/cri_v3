@@ -15,8 +15,14 @@ class DefaultLoaderScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: isConnectedToInternet
             ? CColors.rBrown
-            : CColors.black.withValues(alpha: 0.3),
-        body: Center(child: CircularProgressIndicator(color: CColors.white)),
+            : CColors.black.withValues(
+                alpha: 0.3,
+              ),
+        body: Center(
+          child: CircularProgressIndicator(
+            color: CColors.white,
+          ),
+        ),
       );
     });
   }

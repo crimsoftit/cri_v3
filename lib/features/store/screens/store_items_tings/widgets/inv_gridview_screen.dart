@@ -88,14 +88,16 @@ class CInvGridviewScreen extends StatelessWidget {
           ),
         );
 
-        if (invController.foundInventoryItems.isEmpty &&
-            searchController.showSearchField.value &&
+        if (invController.inventoryItems.isEmpty &&
             !invController.isLoading.value) {
-          return const NoSearchResultsScreen();
+          return noDataWidget;
         }
 
-        if (invController.inventoryItems.isEmpty) {
-          return noDataWidget;
+        if (invController.foundInventoryItems.isEmpty &&
+            searchController.showSearchField.value &&
+            searchController.txtSearchField.text != '' &&
+            !invController.isLoading.value) {
+          return const NoSearchResultsScreen();
         }
 
         return ListView(

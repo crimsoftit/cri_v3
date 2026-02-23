@@ -1,4 +1,5 @@
 import 'package:cri_v3/common/widgets/buttons/custom_dropdown_btn.dart';
+import 'package:cri_v3/features/personalization/controllers/contacts_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
@@ -32,6 +33,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final contactsController = Get.put(CContactsController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final navController = Get.put(CNavMenuController());
     final userController = Get.put(CUserController());
@@ -622,6 +624,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             if (await invController.addOrUpdateInventoryItem(
                               inventoryItem,
                             )) {
+                              if (!invController.itemExists.value &&
+                                  (invController
+                                      .includeSupplierDetails
+                                      .value)) {
+                                contactsController.addContact(
+                                  true,
+                                  null,
+                                  inventoryItem.productId!,
+                                );
+                              }
+
                               switch (fromHomeScreen) {
                                 case true:
                                   navController.selectedIndex.value = 1;

@@ -35,9 +35,6 @@ class NavMenu extends StatelessWidget {
       });
     });
 
-    // invController.onInit();
-    // cartController.fetchCartItems();
-
     GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 
     return Obx(() {
@@ -89,14 +86,24 @@ class NavMenu extends StatelessWidget {
               ? CColors.rBrown.withValues(alpha: 0.3)
               : CColors.black.withValues(alpha: 0.3),
           destinations: [
-            NavigationDestination(icon: Icon(Iconsax.home), label: 'home'),
+            NavigationDestination(
+              icon: Icon(
+                Iconsax.home,
+              ),
+              label: 'home',
+            ),
             // NavigationDestination(
             //   icon: Icon(
             //     Iconsax.home,
             //   ),
             //   label: 'homeRaw',
             // ),
-            NavigationDestination(icon: Icon(Iconsax.shop), label: 'store'),
+            NavigationDestination(
+              icon: Icon(
+                Iconsax.shop,
+              ),
+              label: 'store',
+            ),
 
             // NavigationDestination(
             //   icon: Icon(Iconsax.empty_wallet_time),
@@ -111,7 +118,17 @@ class NavMenu extends StatelessWidget {
               label: 'account',
             ),
 
-            NavigationDestination(icon: Icon(Iconsax.user), label: 'profile'),
+            NavigationDestination(
+              icon: Icon(Iconsax.user),
+              label: 'profile',
+            ),
+
+            NavigationDestination(
+              icon: Icon(
+                Iconsax.user,
+              ),
+              label: 'contacts',
+            ),
             SizedBox(
               child: Stack(
                 children: [

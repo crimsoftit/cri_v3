@@ -18,6 +18,7 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardController = Get.put(CDashboardController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
 
     return Column(
@@ -27,11 +28,12 @@ class CCustomMonthlySalesBarGraph extends StatelessWidget {
             /// -- empty data widget --
             final noDataWidget = CAnimatedLoaderWidget(
               animation: CImages.noDataLottie,
-              lottieAssetWidth: 100.0,
+              lottieAssetWidth: 110.0,
               showActionBtn: false,
               text:
                   'no sales for the period: ${dashboardController.selectedSalesFilterPeriod.value}'
                       .toUpperCase(),
+              txtColor: CColors.rBrown,
             );
 
             if (dashboardController.selectedSalesFilterPeriod.value !=
