@@ -22,7 +22,10 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CTxnItemsListView extends StatelessWidget {
-  const CTxnItemsListView({super.key, required this.space});
+  const CTxnItemsListView({
+    super.key,
+    required this.space,
+  });
 
   final String space;
 
@@ -188,9 +191,13 @@ class CTxnItemsListView extends StatelessWidget {
                 ? CColors.rBrown.withValues(alpha: 0.3)
                 : CColors.lightGrey,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(CSizes.borderRadiusLg),
+              borderRadius: BorderRadius.circular(
+                CSizes.borderRadiusLg,
+              ),
               child: ExpansionPanelList.radio(
-                animationDuration: const Duration(milliseconds: 400),
+                animationDuration: const Duration(
+                  milliseconds: 400,
+                ),
                 elevation: 3,
                 expandedHeaderPadding: EdgeInsets.all(2.0),
                 expandIconColor: CNetworkManager.instance.hasConnection.value

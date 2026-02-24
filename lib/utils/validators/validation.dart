@@ -10,6 +10,13 @@ class CValidator {
     return null;
   }
 
+  /* === check if 1st character of a string is a letter === */
+  static bool isFirstCharacterALetter(String str) {
+    if (str.isEmpty) return false;
+    final RegExp letterPattern = RegExp(r'^[a-zA-Z]');
+    return letterPattern.hasMatch(str);
+  }
+
   /* ========== barcode field validation ========== */
   static String? validateBarcode(String? fieldName, String? value) {
     if (value == '') {

@@ -29,29 +29,61 @@ class CProfileScreen extends StatelessWidget {
       color: isDarkTheme ? CColors.transparent : CColors.white,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 0.5, right: 0.5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Iconsax.menu, size: 25.0, color: CColors.rBrown),
-                Icon(Iconsax.notification, size: 25.0, color: CColors.rBrown),
-              ],
+          actions: [
+            Icon(
+              Iconsax.notification,
+              size: 25.0,
+              color: CColors.rBrown,
             ),
+          ],
+          actionsPadding: const EdgeInsets.all(
+            CSizes.md,
           ),
+          automaticallyImplyLeading: true,
+          iconTheme: IconThemeData(
+            color: CColors.rBrown,
+          ),
+          // title: Padding(
+          //   padding: const EdgeInsets.only(
+          //     left: 0.5,
+          //     right: 0.5,
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Icon(
+          //         Iconsax.menu,
+          //         size: 25.0,
+          //         color: CColors.rBrown,
+          //       ),
+          //       Icon(
+          //         Iconsax.notification,
+          //         size: 25.0,
+          //         color: CColors.rBrown,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ),
-        backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
+        backgroundColor: CColors.rBrown.withValues(
+          alpha: 0.2,
+        ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 15.0, top: 10.0),
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 15.0,
+              top: 10.0,
+            ),
             child: Column(
               children: [
                 CRoundedContainer(
                   bgColor: CColors.rBrown,
                   showBorder: true,
                   borderRadius: 100,
-                  borderColor: CColors.rBrown.withValues(alpha: 0.3),
+                  borderColor: CColors.rBrown.withValues(
+                    alpha: 0.3,
+                  ),
                   child: Stack(
                     children: [
                       Obx(() {
@@ -89,7 +121,9 @@ class CProfileScreen extends StatelessWidget {
                               size: 18.0,
                               color: isDarkTheme
                                   ? CColors.white
-                                  : CColors.rBrown.withValues(alpha: 0.6),
+                                  : CColors.rBrown.withValues(
+                                      alpha: 0.6,
+                                    ),
                             ),
                           ),
                         ),
@@ -123,11 +157,17 @@ class CProfileScreen extends StatelessWidget {
                   btnTitle: '',
                   editFontSize: false,
                 ),
-                const SizedBox(height: CSizes.spaceBtnItems / 4),
+                const SizedBox(
+                  height: CSizes.spaceBtnItems / 4,
+                ),
 
                 CProfileMenu(
                   onTap: () {
-                    Get.to(() => const CUpdateName(autoImplyLeading: true));
+                    Get.to(
+                      () => const CUpdateName(
+                        autoImplyLeading: true,
+                      ),
+                    );
                   },
                   secondRowWidgetFlex: 5,
                   title: 'your name',
@@ -204,7 +244,7 @@ class CProfileScreen extends StatelessWidget {
                   onTap: () {},
                 ),
                 CProfileMenu(
-                  title: 'account created',
+                  title: 'created',
                   value: userController.user.value.createdAt.toString(),
                   titleFlex: 2,
                   secondRowWidgetFlex: 6,

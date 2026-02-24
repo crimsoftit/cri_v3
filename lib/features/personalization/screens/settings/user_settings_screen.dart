@@ -6,6 +6,7 @@ import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/data/repos/auth/auth_repo.dart';
 import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/screens/profile/profile.dart';
 import 'package:cri_v3/features/personalization/screens/settings/widgets/payment_platforms.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
@@ -29,7 +30,9 @@ class CUserSettingsScreen extends StatelessWidget {
     return Container(
       color: isDarkTheme ? CColors.transparent : CColors.white,
       child: Scaffold(
-        appBar: CVersion2AppBar(autoImplyLeading: false),
+        appBar: CVersion2AppBar(
+          autoImplyLeading: false,
+        ),
         backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
         body: SingleChildScrollView(
           child: Padding(
@@ -65,6 +68,27 @@ class CUserSettingsScreen extends StatelessWidget {
 
                 // -- app settings
                 const SizedBox(height: CSizes.spaceBtnItems),
+
+                CMenuTile(
+                  icon: Iconsax.user_edit,
+                  title: 'My profile',
+                  subTitle: 'check out your profile',
+                  trailing: IconButton(
+                    onPressed: () {
+                      Get.to(() => const CProfileScreen());
+                    },
+                    icon: const Icon(
+                      Iconsax.arrow_right,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(
+                      () {
+                        return const CProfileScreen();
+                      },
+                    );
+                  },
+                ),
                 const CSectionHeading(
                   showActionBtn: false,
                   title: 'app settings',

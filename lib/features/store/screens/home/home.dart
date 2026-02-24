@@ -158,13 +158,13 @@ class HomeScreen extends StatelessWidget {
                             /// -- top sellers --
                             CSectionHeading(
                               showActionBtn: true,
-                              title: 'top sellers...',
+                              title: 'Top sellers...',
                               txtColor:
                                   CNetworkManager.instance.hasConnection.value
                                   ? CColors.rBrown
                                   : CColors.darkGrey,
 
-                              btnTitle: 'view all',
+                              btnTitle: 'View all',
                               btnTxtColor: CColors.rBrown,
                               editFontSize: true,
                               fWeight: FontWeight.w400,
@@ -212,6 +212,9 @@ class HomeScreen extends StatelessWidget {
                                 child: CCustomDropdownBtn(
                                   dropdownItems:
                                       dashboardController.salesFilters,
+                                  dropdownBoxColor: CColors.rBrown.withValues(
+                                    alpha: .4,
+                                  ),
                                   selectedValue: dashboardController
                                       .setDefaultSalesFilterPeriod(),
                                   onValueChanged: (value) {
@@ -273,7 +276,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         CSectionHeading(
           showActionBtn: false,
-          title: 'peak hour sales traffic...',
+          title: "Peak hours' sales traffic...",
           txtColor: CNetworkManager.instance.hasConnection.value
               ? CColors.rBrown
               : CColors.darkGrey,

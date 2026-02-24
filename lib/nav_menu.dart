@@ -90,7 +90,7 @@ class NavMenu extends StatelessWidget {
               icon: Icon(
                 Iconsax.home,
               ),
-              label: 'home',
+              label: 'Home',
             ),
             // NavigationDestination(
             //   icon: Icon(
@@ -102,7 +102,7 @@ class NavMenu extends StatelessWidget {
               icon: Icon(
                 Iconsax.shop,
               ),
-              label: 'store',
+              label: 'Store',
             ),
 
             // NavigationDestination(
@@ -114,33 +114,34 @@ class NavMenu extends StatelessWidget {
             //   label: 'txns',
             // ),
             NavigationDestination(
-              icon: Icon(Iconsax.setting),
-              label: 'account',
+              icon: Icon(
+                Iconsax.setting,
+              ),
+              label: 'Account',
             ),
 
-            NavigationDestination(
-              icon: Icon(Iconsax.user),
-              label: 'profile',
-            ),
-
+            // NavigationDestination(
+            //   icon: Icon(Iconsax.user),
+            //   label: 'Profile',
+            // ),
             NavigationDestination(
               icon: Icon(
-                Iconsax.user,
+                Iconsax.user_octagon,
               ),
-              label: 'contacts',
+              label: 'Contacts',
             ),
             SizedBox(
               child: Stack(
                 children: [
                   NavigationDestination(
                     icon: Icon(Iconsax.notification),
-                    label: 'alerts',
+                    label: 'Alerts',
                   ),
                   CAlertsCounterWidget(
                     alertsCount: notsController.unreadNotifications.length,
                     counterBgColor: Colors.red,
                     counterTxtColor: CColors.white,
-                    rightPosition: 15.0,
+                    rightPosition: 20.0,
                     topPosition: 10.0,
                   ),
                 ],

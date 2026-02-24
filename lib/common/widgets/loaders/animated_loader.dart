@@ -50,9 +50,12 @@ class CAnimatedLoaderWidget extends StatelessWidget {
           const SizedBox(height: CSizes.defaultSpace),
           Text(
             text,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium!.apply(color: txtColor),
+            style:
+                Theme.of(
+                  context,
+                ).textTheme.bodyMedium!.apply(
+                  color: txtColor,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: CSizes.defaultSpace),

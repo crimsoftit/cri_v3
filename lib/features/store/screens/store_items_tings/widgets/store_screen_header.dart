@@ -1,6 +1,4 @@
-import 'package:cri_v3/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:cri_v3/common/widgets/shimmers/shimmer_effects.dart';
-import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/sync_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
@@ -16,14 +14,15 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CStoreScreenHeader extends StatelessWidget {
-  const CStoreScreenHeader({required this.title, super.key});
+  const CStoreScreenHeader({required this.title, super.key, required this.forStoreScreen});
 
   final String title;
+  final bool forStoreScreen;
 
   @override
   Widget build(BuildContext context) {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
-    final cartController = Get.put(CCartController());
+    //final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final syncController = Get.put(CSyncController());
@@ -168,17 +167,19 @@ class CStoreScreenHeader extends StatelessWidget {
                             ? CColors.rBrown
                             : CColors.darkGrey,
                         heroTag: 'sync',
-                        child: Icon(Iconsax.cloud_change),
+                        child: Icon(
+                          Iconsax.cloud_change,
+                        ),
                       ),
 
                 /// -- checkout --
-                if (cartController.cartItems.isEmpty)
-                  CCartCounterIcon(
-                    iconColor: isConnectedToInternet
-                        ? CColors.rBrown
-                        : CColors.darkGrey,
-                    showCounterWidget: cartController.cartItems.isNotEmpty,
-                  ),
+                // if (cartController.cartItems.isEmpty)
+                //   CCartCounterIcon(
+                //     iconColor: isConnectedToInternet
+                //         ? CColors.rBrown
+                //         : CColors.darkGrey,
+                //     showCounterWidget: cartController.cartItems.isNotEmpty,
+                //   ),
 
                 // -- scan item for checkout btn --
                 CCheckoutScanFAB(

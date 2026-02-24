@@ -14,7 +14,7 @@ class CPermissionProvider {
 
   static DialogRoute? permissionDialogRoute;
 
-  /// -- handle location services permission --
+  /// -- handle permissions for location services --
   static Future<void> handleLocationPermission() async {
     locationServiceIsOn = await Permission.location.serviceStatus.isEnabled;
     locationPermission = await Permission.location.status;

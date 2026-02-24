@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -208,5 +209,14 @@ class CHelperFunctions {
       maxWidth: double.infinity,
     ); // Use actual container width if known
     return txtPainter.didExceedMaxLines;
+  }
+
+  /// -- Using HSL for Aesthetic Colors (Modern Approach) --
+  static Color randomAstheticColor() {
+    final hue = math.Random().nextDouble() * 360;
+    final saturation = .6 + (math.Random().nextDouble() * .4);
+    final lightness = .4 + (math.Random().nextDouble() * .4);
+
+    return HSLColor.fromAHSL(1.0, hue, saturation, lightness).toColor();
   }
 }

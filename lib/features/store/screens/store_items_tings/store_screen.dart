@@ -117,9 +117,12 @@ class CStoreScreen extends StatelessWidget {
                       shrinkWrap: true,
                       children: [
                         CStoreScreenHeader(
+                          forStoreScreen: true,
                           title: 'Store',
                         ),
-                        SizedBox(height: 1.0,),
+                        SizedBox(
+                          height: 1.0,
+                        ),
                       ],
                     ),
                   ),
@@ -129,10 +132,10 @@ class CStoreScreen extends StatelessWidget {
                     tabs: [
                       Tab(child: Text('inventory')),
 
-                      Tab(child: Text('sales (all)')),
                       Tab(child: Text('receipts')),
                       Tab(child: Text('invoices')),
                       Tab(child: Text('refunds')),
+                      Tab(child: Text('sales (all)')),
                     ],
                   ),
                 ),
@@ -150,12 +153,19 @@ class CStoreScreen extends StatelessWidget {
                 // ),
 
                 /// -- transactions list view --
-                CTxnItemsListView(space: 'sales'),
+                CTxnItemsListView(
+                  space: 'receipts',
+                ),
 
-                CTxnItemsListView(space: 'receipts'),
-
-                CTxnItemsListView(space: 'invoices'),
-                CTxnItemsListView(space: 'refunds'),
+                CTxnItemsListView(
+                  space: 'invoices',
+                ),
+                CTxnItemsListView(
+                  space: 'refunds',
+                ),
+                CTxnItemsListView(
+                  space: 'sales',
+                ),
                 // CItemsListView(
                 //   space: 'refunds',
                 // ),

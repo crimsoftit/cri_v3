@@ -124,7 +124,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               ),
                             ),
                       suffixIcon: IconButton(
-                        icon: const Icon(Iconsax.scan, size: CSizes.iconSm),
+                        icon: const Icon(
+                          Iconsax.scan,
+                          size: CSizes.iconSm,
+                        ),
                         color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
                         onPressed: () {
                           invController.scanBarcodeNormal();
