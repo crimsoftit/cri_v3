@@ -57,23 +57,23 @@ class CImages {
   static String paymentSuccessfulAnimation =
       "assets/images/lottie_anime/120978-payment-successful.json";
 
-  // static String searchAnimation =
-  //     "assets/images/animations/72785-searching.json";
-  // static String emptyAnimation =
-  //     "assets/images/animations/53207-empty-file.json";
-  // static String securityAnimation =
-  //     "assets/images/animations/67263-security-icon-transparent.json";
-  // static String successfulRegAnimation =
-  //     "assets/images/animations/72462-check-register.json";
-  // static String thankYouAnimation =
-  //     "assets/images/animations/104368-thank-you.json";
+  static String searchAnimation =
+      "assets/images/animations/72785-searching.json";
+  static String emptyAnimation =
+      "assets/images/animations/53207-empty-file.json";
+  static String securityAnimation =
+      "assets/images/animations/67263-security-icon-transparent.json";
+  static String successfulRegAnimation =
+      "assets/images/animations/72462-check-register.json";
+  static String thankYouAnimation =
+      "assets/images/animations/104368-thank-you.json";
 
-  // static String loadingJuggleAnimation =
-  //     "assets/images/animations/141397-loading-juggle.json";
-  // static String cloudUploadingAnimation =
-  //     "assets/images/animations/cloud-uploading-animation.json";
-  // static String loaderAnimation =
-  //     "assets/images/animations/loader-animation.json";
+  static String loadingJuggleAnimation =
+      "assets/images/animations/141397-loading-juggle.json";
+  static String cloudUploadingAnimation =
+      "assets/images/animations/cloud-uploading-animation.json";
+  static String loaderAnimation =
+      "assets/images/animations/loader-animation.json";
 
   // -- animations
   static const productsIllustration =
@@ -88,8 +88,6 @@ class CImages {
       "assets/images/animations/sammy-line-man-receives-a-mail.png";
   static const verifyIllustration =
       "assets/images/animations/sammy-line-travel-backpack-with-passport-and-air-ticket.gif";
-  static String successfulRegAnimation =
-      "assets/images/lottie_anime/72462-check-register.json";
   static String pencilAnimation =
       "assets/images/lottie_anime/140429-pencil-drawing.json";
 

@@ -1,5 +1,6 @@
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
+import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -38,14 +39,21 @@ class CCircleAvatar extends StatelessWidget {
                 height: 40.0,
                 child: Stack(
                   children: [
-                    Text(
-                      avatarInitial.toUpperCase(),
-                      style: Theme.of(context).textTheme.titleMedium!.apply(
-                        color: txtColor,
-                        fontSizeFactor: 1.7,
-                        fontWeightDelta: -3,
-                      ),
-                    ),
+                    CValidator.isFirstCharacterALetter(
+                          avatarInitial,
+                        )
+                        ? Text(
+                            avatarInitial.toUpperCase(),
+                            style: Theme.of(context).textTheme.titleMedium!
+                                .apply(
+                                  color: txtColor,
+                                  fontSizeFactor: 1.7,
+                                  fontWeightDelta: -3,
+                                ),
+                          )
+                        : Icon(
+                            Iconsax.tag,
+                          ),
                     Positioned(
                       top: 15.0,
                       right: 5.0,

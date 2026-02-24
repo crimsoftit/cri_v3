@@ -110,22 +110,25 @@ class CDashboardController extends GetxController {
   }
 
   Future<List<DateTime>> generateSalesFilterItems() async {
-    salesDatesOnly.value = txnsController.sales
-        .map(
-          (item) => DateTime.parse(item.lastModified.replaceAll(' @', '')),
-        )
-        .toList();
+    int firstYr;
+    int lastYr;
+    if (txnsController.sales.isNotEmpty) {
+      salesDatesOnly.value = txnsController.sales
+          .map(
+            (item) => DateTime.parse(item.lastModified.replaceAll(' @', '')),
+          )
+          .toList();
 
-    int firstYr = salesDatesOnly
-        .map((date) => date.year)
-        .reduce((a, b) => a < b ? a : b);
-
-    int lastYr = salesDatesOnly
-        .map((date) => date.year)
-        .reduce((a, b) => a > b ? a : b);
-
-    // int startYear = 2026;
-    // int endYear = 2020;
+      firstYr = salesDatesOnly
+          .map((date) => date.year)
+          .reduce((a, b) => a < b ? a : b);
+      lastYr = salesDatesOnly
+          .map((date) => date.year)
+          .reduce((a, b) => a > b ? a : b);
+    } else {
+      firstYr = DateTime.now().year - 1;
+      lastYr = DateTime.now().year;
+    }
 
     List<String> years = List.generate(
       firstYr - lastYr + 1,

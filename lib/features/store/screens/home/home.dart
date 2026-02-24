@@ -210,9 +210,10 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 showBorder: true,
                                 child: CCustomDropdownBtn(
+                                  defaultItemColor: CColors.black,
                                   dropdownItems:
                                       dashboardController.salesFilters,
-                                  dropdownBoxColor: CColors.rBrown.withValues(
+                                  dropdownBoxColor: CColors.white.withValues(
                                     alpha: .4,
                                   ),
                                   selectedValue: dashboardController

@@ -35,7 +35,7 @@ class CCustomDropdownBtn extends StatelessWidget {
             value: value,
             child: Text(
               value,
-              style: Theme.of(context).textTheme.labelMedium!.apply(
+              style: Theme.of(context).textTheme.labelLarge!.apply(
                 // color: isDarkTheme ? CColors.white : CColors.rBrown,
                 color: defaultItemColor ?? CColors.rBrown,
               ),

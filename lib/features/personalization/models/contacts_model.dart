@@ -4,6 +4,7 @@ class CContactsModel {
   int? _contactId;
   int? _productId;
 
+  String _addedBy = '';
   String _contactName = '';
   String _contactPhone = '';
   String _contactEmail = '';
@@ -12,6 +13,7 @@ class CContactsModel {
   String _createdAt = '';
 
   CContactsModel(
+    this._addedBy,
     this._productId,
     this._contactName,
     this._contactPhone,
@@ -22,6 +24,7 @@ class CContactsModel {
   );
 
   CContactsModel.withId(
+    this._addedBy,
     this._productId,
     this._contactId,
     this._contactName,
@@ -33,11 +36,12 @@ class CContactsModel {
   );
 
   CContactsModel empty() {
-    return CContactsModel.withId(0, 0, '', '', '', '', '', '');
+    return CContactsModel.withId('', 0, 0, '', '', '', '', '', '');
   }
 
   int? get contactId => _contactId;
   int? get productId => _productId;
+  String get addedBy => _addedBy;
   String get contactName => _contactName;
   String get contactPhone => _contactPhone;
   String get contactEmail => _contactEmail;
@@ -51,6 +55,10 @@ class CContactsModel {
 
   set productId(int? newProductId) {
     _contactId = newProductId;
+  }
+
+  set addedBy(String deviceUser) {
+    _addedBy = deviceUser;
   }
 
   set contactName(String newContactName) {
@@ -80,6 +88,7 @@ class CContactsModel {
   /// -- convert a Contact object into a Map object --
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
+      'addedBy': _addedBy,
       'contactName': _contactName,
       'contactPhone': _contactPhone,
       'contactEmail': _contactEmail,
@@ -100,6 +109,7 @@ class CContactsModel {
   CContactsModel.fromMapObject(Map<String, dynamic> map) {
     _contactId = map['contactId'];
     _productId = map['productId'];
+    _addedBy = map['addedBy'];
     _contactName = map['contactName'];
     _contactPhone = map['contactPhone'];
     _contactEmail = map['contactEmail'];

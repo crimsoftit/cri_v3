@@ -154,6 +154,7 @@ class DbHelper extends GetxController {
           CREATE TABLE IF NOT EXISTS $contactsTable (
             contactId INTEGER PRIMARY KEY AUTOINCREMENT,
             productId INTEGER NOT NULL,
+            addedBy TEXT NOT NULL,
             contactName TEXT NOT NULL,
             contactPhone TEXT NOT NULL,
             contactEmail TEXT NOT NULL,
@@ -817,12 +818,13 @@ class DbHelper extends GetxController {
   }
 
   /// -- fetch contacts from local db --
-  Future<List<CContactsModel>> fetchContacts() async {
+  Future<List<CContactsModel>> fetchUserContacts(String email) async {
     try {
       final db = _db;
 
       final result = await db!.rawQuery(
-        'select * from $contactsTable order by lastModified DESC',
+        'select * from $contactsTable WHERE addedBy = ? order by lastModified DESC',
+        [email],
       );
 
       // -- convert the List<Map<String, dynamic> into a List<CContactsModel>.

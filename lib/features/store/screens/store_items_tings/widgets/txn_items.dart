@@ -181,11 +181,17 @@ class CTxnItemsListView extends StatelessWidget {
         }
 
         if (txnsController.isLoading.value || invController.isLoading.value) {
-          return const CVerticalProductShimmer(itemCount: 5);
+          return const CVerticalProductShimmer(
+            itemCount: 5,
+          );
         }
 
         return Padding(
-          padding: const EdgeInsets.only(left: 2.0, right: 2.0),
+          padding: const EdgeInsets.only(
+            left: 2.0,
+            right: 2.0,
+            top: 10.0,
+          ),
           child: Card(
             color: isDarkTheme
                 ? CColors.rBrown.withValues(alpha: 0.3)

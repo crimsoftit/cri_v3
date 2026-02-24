@@ -215,8 +215,8 @@ class CHelperFunctions {
   static Color randomAstheticColor() {
     final hue = math.Random().nextDouble() * 360;
     final saturation = .6 + (math.Random().nextDouble() * .4);
-    final lightness = .4 + (math.Random().nextDouble() * .4);
+    final lightness = .2 + (math.Random().nextDouble() * .2);
 
-    return HSLColor.fromAHSL(1.0, hue, saturation, lightness).toColor();
+    return HSLColor.fromAHSL(.5, hue, saturation, lightness).toColor();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/contacts_model.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
@@ -15,14 +16,16 @@ class CContactsController extends GetxController {
   /// -- variables --
   DbHelper dbHelper = DbHelper.instance;
   final invController = Get.put(CInventoryController());
+  final userController = Get.put(CUserController());
 
   final RxBool isLoading = false.obs;
 
   final RxList<CContactsModel> myContacts = <CContactsModel>[].obs;
 
+  // TODO: FETCH CLOUD CONTACTS FROM INVENTORY AND SALES
   @override
   void onInit() {
-    fetchContacts();
+    fetchMyContacts();
     super.onInit();
   }
 
@@ -34,6 +37,7 @@ class CContactsController extends GetxController {
   ) async {
     try {
       var contactDetails = CContactsModel(
+        userController.user.value.email,
         fromInventoryDetails ? productId : 0,
         fromInventoryDetails
             ? invController.txtSupplierName.text.trim()
@@ -92,12 +96,14 @@ class CContactsController extends GetxController {
   }
 
   /// -- fetch contacts from sqflite db --
-  Future<List<CContactsModel>> fetchContacts() async {
+  Future<List<CContactsModel>> fetchMyContacts() async {
     try {
       // start loader while contacts are fetched
       isLoading.value = true;
 
-      final fetchedContacts = await dbHelper.fetchContacts();
+      final fetchedContacts = await dbHelper.fetchUserContacts(
+        userController.user.value.email,
+      );
       myContacts.assignAll(fetchedContacts);
 
       List<CContactsModel> returnItems;

@@ -22,7 +22,7 @@ class CContactsScreen extends StatelessWidget {
       animationDuration: Duration(
         milliseconds: 300,
       ),
-      length: 3,
+      length: 4,
       child: Container(
         color: isDarkTheme ? CColors.transparent : CColors.white,
         child: Scaffold(
@@ -41,7 +41,7 @@ class CContactsScreen extends StatelessWidget {
                     tabs: [
                       Tab(
                         child: Text(
-                          'Customers',
+                          'All',
                         ),
                       ),
                       Tab(
@@ -49,6 +49,12 @@ class CContactsScreen extends StatelessWidget {
                           'Suppliers',
                         ),
                       ),
+                      Tab(
+                        child: Text(
+                          'Customers',
+                        ),
+                      ),
+
                       Tab(
                         child: Text(
                           'Friends',
@@ -85,15 +91,17 @@ class CContactsScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: [
                 CContactsExpansionPanelView(
+                  space: 'all',
+                ),
+                CContactsExpansionPanelView(
+                  space: 'suppliers',
+                ),
+                CContactsExpansionPanelView(
                   space: 'customers',
                 ),
 
                 CContactsExpansionPanelView(
-                  space: 'suppliers',
-                ),
-
-                Text(
-                  'friend_1',
+                  space: 'friends',
                 ),
               ],
             ),

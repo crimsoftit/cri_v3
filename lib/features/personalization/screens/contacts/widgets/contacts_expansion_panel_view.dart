@@ -5,13 +5,11 @@ import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
-import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CContactsExpansionPanelView extends StatelessWidget {
@@ -33,11 +31,23 @@ class CContactsExpansionPanelView extends StatelessWidget {
           var demContacts = [];
 
           switch (space) {
+            case 'all':
+              demContacts.assignAll(contactsController.myContacts);
+              break;
             case 'customers':
               demContacts.assignAll(
                 contactsController.myContacts.where(
                   (contact) => contact.contactCategory.toLowerCase().contains(
                     'customer'.toLowerCase(),
+                  ),
+                ),
+              );
+              break;
+            case 'friends':
+              demContacts.assignAll(
+                contactsController.myContacts.where(
+                  (contact) => contact.contactCategory.toLowerCase().contains(
+                    'friend'.toLowerCase(),
                   ),
                 ),
               );
@@ -62,18 +72,20 @@ class CContactsExpansionPanelView extends StatelessWidget {
               }
           }
 
-          if (demContacts.isEmpty) {
-            return Center(
-              child: NoDataScreen(
-                lottieImage: CImages.noDataLottie,
-                txt: 'your $space contacts appear here...',
-              ),
-            );
-          }
-
-          if (contactsController.isLoading.value) {
+          if (contactsController.isLoading.value &&
+              contactsController.myContacts.isNotEmpty) {
             return const CVerticalProductShimmer(
               itemCount: 5,
+            );
+          }
+          if (demContacts.isEmpty && !contactsController.isLoading.value) {
+            return Center(
+              child: NoDataScreen(
+                lottieImage: CImages.pencilAnimation,
+                txt: space == 'all'
+                    ? 'All your contacts appear here...'
+                    : 'Your $space\' contacts appear here...',
+              ),
             );
           }
           return Padding(
@@ -100,9 +112,10 @@ class CContactsExpansionPanelView extends StatelessWidget {
                   expandedHeaderPadding: EdgeInsets.all(
                     2.0,
                   ),
-                  expandIconColor: CNetworkManager.instance.hasConnection.value
-                      ? CColors.rBrown
-                      : CColors.darkGrey,
+                  // expandIconColor: CNetworkManager.instance.hasConnection.value
+                  //     ? CColors.rBrown
+                  //     : CColors.darkGrey,
+                  expandIconColor: CColors.transparent,
                   expansionCallback: (panelIndex, isExpanded) {
                     if (isExpanded) {
                       // Perform an action when the panel is expanded
@@ -126,11 +139,12 @@ class CContactsExpansionPanelView extends StatelessWidget {
                               )
                             : CColors.lightGrey,
                         canTapOnHeader: true,
-                        headerBuilder: (_, isExpanded) {
+                        highlightColor: CColors.rBrown,
+                        headerBuilder: (context, isExpanded) {
                           return ListTile(
                             contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10.0,
-                              vertical: 8.0,
+                              horizontal: 5.0,
+                              vertical: 2.0,
                             ),
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -170,12 +184,12 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                       .textTheme
                                       .labelMedium!
                                       .apply(
-                                        fontSizeFactor: 1.3,
+                                        fontSizeFactor: 1.1,
                                       ),
                                 ),
                               ],
                             ),
-                            trailing: const SizedBox.shrink(),
+                            trailing: SizedBox.shrink(),
                           );
                         },
                         value: contact.contactId,
@@ -183,13 +197,84 @@ class CContactsExpansionPanelView extends StatelessWidget {
                         body: Padding(
                           padding: const EdgeInsets.only(
                             bottom: 4.0,
-                            left: 16.0,
-                            right: 8.0,
+                            left: 63.0,
+                            right: 4.0,
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'mobile ${contact.contactPhone}',
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'mobile ${contact.contactPhone}',
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.labelMedium!.apply(
+                                            fontWeightDelta: 2,
+                                          ),
+                                    ),
+                                    TextButton.icon(
+                                      icon: Icon(
+                                        Iconsax.add,
+                                        color: isDarkTheme
+                                            ? CColors.white
+                                            : CColors.rBrown,
+                                        size: CSizes.iconSm,
+                                      ),
+                                      label: Text(
+                                        contact.contactPhone != ''
+                                            ? 'add e-mail'
+                                            : 'add phone no.',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelMedium!.apply(),
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton.outlined(
+                                    color: CColors.rBrown,
+                                    icon: Icon(
+                                      Iconsax.call_outgoing,
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.rBrown,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton.outlined(
+                                    color: CColors.rBrown,
+                                    //focusColor: CColors.rBrown,
+                                    icon: Icon(
+                                      Iconsax.message,
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.rBrown,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton.outlined(
+                                    //color: Colors.lightGreen,
+                                    icon: Icon(
+                                      Iconsax.information,
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.rBrown,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ],
                               ),
                             ],
                           ),

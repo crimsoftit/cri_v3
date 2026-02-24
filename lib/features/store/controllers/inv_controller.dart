@@ -7,6 +7,7 @@ import 'package:cri_v3/features/store/controllers/search_bar_controller.dart';
 import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_dels_model.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
+import 'package:cri_v3/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
 import 'package:cri_v3/utils/helpers/formatter.dart';
@@ -1325,5 +1326,43 @@ class CInventoryController extends GetxController {
         ? itemMetrics.value
         : demMetrics[0];
     return itemMetrics.value;
+  }
+
+  addInvItemDialogAction() {
+    resetInvFields();
+    AddUpdateItemDialog dialog = AddUpdateItemDialog();
+
+    showDialog(
+      context: Get.overlayContext!,
+      useRootNavigator: false,
+      builder: (BuildContext context) => dialog.buildDialog(
+        context,
+        CInventoryModel(
+          '',
+          '',
+          '',
+          '',
+          '',
+          0,
+          '',
+          0,
+          0,
+          0,
+          0.0,
+          0.0,
+          0.0,
+          0,
+          '',
+          '',
+          '',
+          '',
+          '',
+          0,
+          '',
+        ),
+        true,
+        false,
+      ),
+    );
   }
 }
