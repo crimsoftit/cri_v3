@@ -1,4 +1,6 @@
 import 'package:cri_v3/common/widgets/buttons/custom_dropdown_btn.dart';
+import 'package:cri_v3/common/widgets/login_signup/form_divider.dart';
+import 'package:cri_v3/common/widgets/txt_fields/custom_typeahed_field.dart';
 import 'package:cri_v3/features/personalization/controllers/contacts_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/date_controller.dart';
@@ -20,7 +22,6 @@ import 'package:iconsax/iconsax.dart';
 class AddUpdateInventoryForm extends StatelessWidget {
   const AddUpdateInventoryForm({
     super.key,
-    required this.invController,
     required this.textStyle,
     required this.inventoryItem,
     required this.fromHomeScreen,
@@ -28,13 +29,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
 
   final bool fromHomeScreen;
   final CInventoryModel inventoryItem;
-  final CInventoryController invController;
   final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
     final contactsController = Get.put(CContactsController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final invController = Get.put(CInventoryController());
     final navController = Get.put(CNavMenuController());
     final userController = Get.put(CUserController());
     final currency = CHelperFunctions.formatCurrency(
@@ -63,16 +64,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           controller: invController.txtId,
                           readOnly: true,
                           decoration: InputDecoration(
-                            labelText: 'product id',
-                            labelStyle: textStyle,
+                            labelText: 'Product id',
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
                           ),
                         ),
                         TextFormField(
                           controller: invController.txtSyncAction,
                           readOnly: true,
                           decoration: InputDecoration(
-                            labelText: 'sync action',
-                            labelStyle: textStyle,
+                            labelText: 'Sync action',
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
                           ),
                         ),
                       ],
@@ -83,12 +88,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     controller: invController.txtCode,
                     //readOnly: true,
                     decoration: InputDecoration(
+                      constraints: BoxConstraints(
+                        maxHeight: 60.0,
+                      ),
                       filled: true,
                       fillColor: isDarkTheme
                           ? CColors.transparent
                           : CColors.lightGrey,
-                      labelText: 'barcode/sku',
-                      labelStyle: textStyle,
+                      labelText: 'Barcode/Sku',
+                      labelStyle: Theme.of(
+                        context,
+                      ).textTheme.labelSmall,
                       prefixIcon: invController.txtCode.text.isNotEmpty
                           ? Icon(
                               Iconsax.barcode,
@@ -112,8 +122,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               ),
                               label: Text(
                                 invController.txtCode.text.isEmpty
-                                    ? 'auto'
-                                    : 'clear',
+                                    ? 'Auto'
+                                    : 'Clear',
                                 style: Theme.of(context).textTheme.labelSmall!
                                     .apply(
                                       color: isDarkTheme
@@ -139,7 +149,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     },
                     style: const TextStyle(fontWeight: FontWeight.normal),
                     validator: (value) {
-                      return CValidator.validateBarcode('barcode value', value);
+                      return CValidator.validateBarcode('Barcode value', value);
                     },
                   ),
                   const SizedBox(
@@ -151,22 +161,29 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: invController.txtNameController,
                     decoration: InputDecoration(
+                      constraints: BoxConstraints(
+                        maxHeight: 60.0,
+                      ),
                       filled: true,
                       fillColor: isDarkTheme
                           ? CColors.transparent
                           : CColors.lightGrey,
-                      labelText: 'product name',
-                      labelStyle: textStyle,
+                      labelText: 'Product name',
+                      labelStyle: Theme.of(
+                        context,
+                      ).textTheme.labelSmall,
                       prefixIcon: Icon(
                         Iconsax.tag,
                         color: CColors.darkGrey,
                         size: CSizes.iconXs,
                       ),
                     ),
-                    style: const TextStyle(fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
                     validator: (value) {
                       return CValidator.validateEmptyText(
-                        'product name',
+                        'Product name',
                         value,
                       );
                     },
@@ -180,8 +197,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     children: [
                       // -- item metrics dropdown button --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .42,
-                        height: 55.0,
+                        width: CHelperFunctions.screenWidth() * .41,
+                        height: 60.0,
                         child: CCustomDropdownBtn(
                           dropdownItems: invController.demMetrics,
                           defaultItemColor: isDarkTheme
@@ -195,14 +212,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               invController.itemMetrics.value = value!;
                             }
                           },
+                          padding: EdgeInsets.only(
+                            bottom: 5.0,
+                            left: 5.0,
+                            right: 5.0,
+                            top: 10.0,
+                          ),
                           selectedValue: invController.setItemMetrics(),
                         ),
                       ),
 
                       // -- inventory qty field --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .42,
-                        height: 55.0,
+                        width: CHelperFunctions.screenWidth() * .41,
+                        height: 60.0,
                         child: TextFormField(
                           controller: invController.txtQty,
                           keyboardType: const TextInputType.numberWithOptions(
@@ -218,7 +241,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             fontWeight: FontWeight.normal,
                           ),
                           decoration: InputDecoration(
-                            constraints: BoxConstraints(minHeight: 60.0),
+                            constraints: BoxConstraints(
+                              minHeight: 60.0,
+                            ),
                             contentPadding: const EdgeInsets.only(
                               left: 2.0,
                             ),
@@ -226,10 +251,12 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             fillColor: isDarkTheme
                                 ? CColors.transparent
                                 : CColors.lightGrey,
-                            labelStyle: textStyle,
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
                             //labelText:  'qty (units, kg, litre)',
                             labelText:
-                                'qty in ${CFormatter.formatItemMetrics(invController.itemMetrics.value)}(s):',
+                                'Qty in ${CFormatter.formatItemMetrics(invController.itemMetrics.value)}s:',
                             maintainHintSize: true,
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(left: 2.0),
@@ -242,7 +269,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           ),
                           validator: (value) {
                             return CValidator.validateNumber(
-                              'qty/no. of units',
+                              'Qty/No. of units',
                               value,
                             );
                           },
@@ -274,8 +301,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     children: [
                       // -- buying price textfield --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .42,
-                        height: 55.0,
+                        width: CHelperFunctions.screenWidth() * .41,
+                        height: 60.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtBP,
@@ -292,13 +319,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 1.0,
                             ),
-                            constraints: BoxConstraints(minHeight: 40.0),
+                            constraints: BoxConstraints(
+                              minHeight: 60.0,
+                            ),
                             filled: true,
                             fillColor: isDarkTheme
                                 ? CColors.transparent
                                 : CColors.lightGrey,
-                            labelStyle: textStyle,
-                            labelText: 'buying price($currency):',
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
+                            labelText: 'Buying price($currency):',
                             prefixIcon: Icon(
                               // Iconsax.card_pos,
                               Iconsax.bitcoin_card,
@@ -320,7 +351,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           ),
                           validator: (value) {
                             return CValidator.validateNumber(
-                              'buying price',
+                              'Buying price',
                               value,
                             );
                           },
@@ -328,33 +359,37 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        width: CSizes.spaceBtnInputFields / 2.5,
+                        width: CSizes.spaceBtnInputFields / 3.0,
                       ),
 
                       // -- unit selling price field --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .42,
-                        height: 55.0,
+                        width: CHelperFunctions.screenWidth() * .41,
+                        height: 60.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtUnitSP,
                           decoration: InputDecoration(
-                            constraints: BoxConstraints(minHeight: 60.0),
+                            constraints: BoxConstraints(
+                              minHeight: 60.0,
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 2.0,
+                              horizontal: 0.0,
                             ),
                             filled: true,
                             fillColor: isDarkTheme
                                 ? CColors.transparent
                                 : CColors.lightGrey,
-                            labelStyle: textStyle,
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
                             labelText:
                                 invController.itemMetrics.value == '' ||
                                     (invController.itemMetrics.value != '' &&
                                         invController.itemMetrics.value ==
                                             'units')
-                                ? 'unit selling price($currency):'
-                                : 'selling price per ${invController.itemMetrics.value}($currency):',
+                                ? 'Unit Selling Price($currency):'
+                                : 'Selling price per ${invController.itemMetrics.value}($currency):',
                             maintainHintSize: true,
                             prefixIcon: Icon(
                               Iconsax.bitcoin_card,
@@ -377,7 +412,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           ),
                           validator: (value) {
                             return CValidator.validateNumber(
-                              'unit selling price',
+                              'Unit selling price',
                               value,
                             );
                           },
@@ -402,7 +437,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           : 14.0,
                       alignment: Alignment.topRight,
                       child: Text(
-                        'unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
+                        'Unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
                         style: Theme.of(context).textTheme.labelSmall!.apply(
                           fontStyle: FontStyle.italic,
                         ),
@@ -424,7 +459,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       // FilteringTextInputFormatter.digitsOnly,
                     ],
                     decoration: InputDecoration(
-                      constraints: BoxConstraints(minHeight: 60.0),
+                      constraints: BoxConstraints(
+                        minHeight: 70.0,
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 0.0,
                       ),
@@ -432,8 +469,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       fillColor: isDarkTheme
                           ? CColors.transparent
                           : CColors.lightGrey,
-
-                      labelText: 'alert when qty falls below:',
+                      labelStyle: Theme.of(
+                        context,
+                      ).textTheme.labelSmall,
+                      labelText: 'Notify when qty falls below:',
                       prefixIcon: Icon(
                         // Iconsax.card_pos,
                         Iconsax.quote_down,
@@ -442,10 +481,12 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                     ),
                     onChanged: (value) {},
-                    style: const TextStyle(fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
                     validator: (value) {
                       return CValidator.validateNumber(
-                        'alert threshold',
+                        'Alert threshold',
                         value,
                       );
                     },
@@ -461,83 +502,133 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields,
                             ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                'supplier details...',
-                                style: Theme.of(context).textTheme.labelMedium,
-                              ),
+                            CFormDivider(
+                              dividerColor: isDarkTheme
+                                  ? CColors.white
+                                  : CColors.rBrown,
+                              dividerText: 'Supplier\'s details',
+                              dividerTxtColor: isDarkTheme
+                                  ? CColors.white
+                                  : CColors.rBrown,
+                              dividerTxtFontSizeFactor: .85,
                             ),
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields,
                             ),
-                            TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              controller: invController.txtSupplierName,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: isDarkTheme
-                                    ? CColors.transparent
-                                    : CColors.lightGrey,
 
-                                labelText: 'supplier name:',
-                                prefixIcon: Icon(
-                                  Iconsax.user_add,
-                                  color: CColors.darkGrey,
-                                  size: CSizes.iconXs,
-                                ),
+                            CCustomTypeahedField(
+                              //fieldKey: ,
+                              labelTxt: 'Supplier\'s name:',
+                              onItemSelected: (suggestion) {
+                                invController.txtSupplierName.text =
+                                    suggestion.contactName;
+                                invController.txtSupplierContacts.text =
+                                    suggestion.contactPhone != ''
+                                    ? suggestion.contactPhone
+                                    : suggestion.contactEmail;
+                              },
+                              prefixIcon: Icon(
+                                Iconsax.user_add,
+                                color: CColors.darkGrey,
+                                size: CSizes.iconXs,
                               ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                              ),
-                              validator: (value) {
-                                return CValidator.validateEmptyText(
-                                  'supplier name',
-                                  value,
-                                );
+                              typeAheadFieldController:
+                                  invController.txtSupplierName,
+                              fieldValidator: (value) {
+                                return fieldValidator(value);
                               },
                             ),
+
+                            // TextFormField(
+                            //   autovalidateMode:
+                            //       AutovalidateMode.onUserInteraction,
+                            //   controller: invController.txtSupplierName,
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            //     fillColor: isDarkTheme
+                            //         ? CColors.transparent
+                            //         : CColors.lightGrey,
+
+                            //     labelText: 'Supplier name:',
+                            //     prefixIcon: Icon(
+                            //       Iconsax.user_add,
+                            //       color: CColors.darkGrey,
+                            //       size: CSizes.iconXs,
+                            //     ),
+                            //   ),
+                            //   style: const TextStyle(
+                            //     fontWeight: FontWeight.normal,
+                            //   ),
+                            //   validator: fieldValidator,
+                            // ),
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields / 2,
                             ),
-                            TextFormField(
-                              // autovalidateMode: AutovalidateMode.always,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              controller: invController.txtSupplierContacts,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: isDarkTheme
-                                    ? CColors.transparent
-                                    : CColors.lightGrey,
-                                // labelStyle: TextStyle(
-                                //   color: CColors.darkGrey,
-                                //   inherit: true,
-                                // ),
-                                labelText: 'supplier email or phone no.:',
 
-                                prefixIcon: Icon(
-                                  Icons.contact_mail,
-                                  color: CColors.darkGrey,
-                                  size: CSizes.iconXs,
-                                ),
+                            CCustomTypeahedField(
+                              //fieldKey: ,
+                              labelTxt: 'Supplier\'s phone no. or e-mail:',
+                              onItemSelected: (suggestion) {
+                                invController.txtSupplierName.text =
+                                    suggestion.contactName;
+                                invController.txtSupplierContacts.text =
+                                    suggestion.contactPhone != ''
+                                    ? suggestion.contactPhone
+                                    : suggestion.contactEmail;
+                              },
+                              prefixIcon: Icon(
+                                Icons.contact_mail,
+                                color: CColors.darkGrey,
+                                size: CSizes.iconXs,
                               ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                              ),
-                              validator: (value) {
+                              typeAheadFieldController:
+                                  invController.txtSupplierContacts,
+                              fieldValidator: (value) {
                                 if (value == null ||
                                     value == '' ||
                                     (!CValidator.isValidEmail(value.trim()) &&
                                         !CValidator.isValidPhoneNumber(
                                           value.trim(),
                                         ))) {
-                                  return 'please enter a valid email or phone no.!';
+                                  return 'Please enter a valid phone no. e-mail address!';
                                 }
                                 return null;
                               },
                             ),
+                            // TextFormField(
+                            //   // autovalidateMode: AutovalidateMode.always,
+                            //   autovalidateMode:
+                            //       AutovalidateMode.onUserInteraction,
+                            //   controller: invController.txtSupplierContacts,
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            //     fillColor: isDarkTheme
+                            //         ? CColors.transparent
+                            //         : CColors.lightGrey,
+
+                            //     labelText: 'Supplier\'s email or phone no.:',
+
+                            //     prefixIcon: Icon(
+                            //       Icons.contact_mail,
+                            //       color: CColors.darkGrey,
+                            //       size: CSizes.iconXs,
+                            //     ),
+                            //   ),
+                            //   style: const TextStyle(
+                            //     fontWeight: FontWeight.normal,
+                            //   ),
+                            //   validator: (value) {
+                            //     if (value == null ||
+                            //         value == '' ||
+                            //         (!CValidator.isValidEmail(value.trim()) &&
+                            //             !CValidator.isValidPhoneNumber(
+                            //               value.trim(),
+                            //             ))) {
+                            //       return 'Please enter a valid e-mail address or phone no.!';
+                            //     }
+                            //     return null;
+                            //   },
+                            // ),
                             const SizedBox(
                               height: CSizes.spaceBtnInputFields / 2,
                             ),
@@ -557,8 +648,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             fillColor: isDarkTheme
                                 ? CColors.transparent
                                 : CColors.lightGrey,
-                            labelText: 'pick expiry date:',
-                            labelStyle: textStyle,
+                            labelText: 'Pick expiry date:',
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.labelSmall,
                             prefixIcon: Icon(
                               Iconsax.calendar,
                               color: CColors.darkGrey,
@@ -581,7 +674,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: CSizes.spaceBtnInputFields),
+                  const SizedBox(
+                    height: CSizes.spaceBtnInputFields,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -594,7 +689,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             color: isDarkTheme ? CColors.rBrown : CColors.white,
                           ),
                           label: Text(
-                            invController.itemExists.value ? 'update' : 'add',
+                            invController.itemExists.value ? 'Update' : 'Add',
                             style: Theme.of(context).textTheme.labelMedium!
                                 .apply(
                                   color: isDarkTheme
@@ -627,11 +722,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             if (await invController.addOrUpdateInventoryItem(
                               inventoryItem,
                             )) {
-                              if (!invController.itemExists.value &&
+                              // -- check if contact already exists --
+
+                              if (await contactsController.contactActionIsAdd(
+                                    invController.txtSupplierName.text.trim(),
+                                    invController.txtSupplierContacts.text
+                                        .trim(),
+                                  ) &&
                                   (invController
                                       .includeSupplierDetails
                                       .value)) {
-                                contactsController.addContact(
+                                contactsController.addUpdateContact(
                                   true,
                                   null,
                                   inventoryItem.productId!,
@@ -651,31 +752,36 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               }
                             } else {
                               CPopupSnackBar.errorSnackBar(
-                                title: 'error adding/updating inventory item ',
+                                title: 'Error adding/updating inventory item ',
                               );
                               return;
                             }
                           },
                         ),
                       ),
-                      const SizedBox(width: CSizes.spaceBtnSections / 4),
+                      const SizedBox(
+                        width: CSizes.spaceBtnSections / 4,
+                      ),
                       Expanded(
                         flex: 4,
                         child: TextButton.icon(
                           icon: const Icon(
                             Iconsax.undo,
                             size: CSizes.iconSm,
-                            color: CColors.error,
+                            color: CColors.rBrown,
                           ),
                           label: Text(
-                            'back',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.labelMedium!.apply(color: Colors.red),
+                            'Back',
+                            style:
+                                Theme.of(
+                                  context,
+                                ).textTheme.labelMedium!.apply(
+                                  color: CColors.rBrown,
+                                ),
                           ),
                           style: ElevatedButton.styleFrom(
                             foregroundColor:
-                                Colors.red, // foreground (text) color
+                                CColors.rBrown, // foreground (text) color
                             backgroundColor: CColors.white, // background color
                           ),
                           onPressed: () {
@@ -692,6 +798,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  String? fieldValidator(value) {
+    return CValidator.validateEmptyText(
+      'supplier name',
+      value,
     );
   }
 }

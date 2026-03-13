@@ -213,8 +213,8 @@ class HomeScreen extends StatelessWidget {
                                   defaultItemColor: CColors.black,
                                   dropdownItems:
                                       dashboardController.salesFilters,
-                                  dropdownBoxColor: CColors.white.withValues(
-                                    alpha: .4,
+                                  dropdownBoxColor: CColors.rBrown.withValues(
+                                    alpha: .8,
                                   ),
                                   selectedValue: dashboardController
                                       .setDefaultSalesFilterPeriod(),

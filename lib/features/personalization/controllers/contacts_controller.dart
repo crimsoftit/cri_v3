@@ -21,16 +21,72 @@ class CContactsController extends GetxController {
   final RxBool isLoading = false.obs;
 
   final RxList<CContactsModel> myContacts = <CContactsModel>[].obs;
+  final RxList<CContactsModel> foundMatches = <CContactsModel>[].obs;
 
   // TODO: FETCH CLOUD CONTACTS FROM INVENTORY AND SALES
   @override
-  void onInit() {
-    fetchMyContacts();
+  void onInit() async {
+    foundMatches.value = [];
+    await fetchMyContacts();
     super.onInit();
   }
 
+  /// -- check if contact details exist in the database --
+  Future<bool> contactActionIsAdd(
+    String contactName,
+    String contactDetails,
+  ) async {
+    try {
+      bool addContact = false;
+      List<CContactsModel> contactMatches = [];
+      await fetchMyContacts().then(
+        (results) {
+          switch (results.isNotEmpty) {
+            case true:
+              contactMatches = myContacts
+                  .where(
+                    (match) =>
+                        match.contactName.toLowerCase().contains(
+                          contactName.toLowerCase(),
+                        ) ||
+                        (match.contactEmail.toLowerCase().contains(
+                              contactDetails.toLowerCase(),
+                            ) ||
+                            match.contactPhone.toLowerCase().contains(
+                              contactDetails.toLowerCase(),
+                            )),
+                  )
+                  .toList();
+              if (contactMatches.isNotEmpty) {
+                addContact = false;
+              } else {
+                addContact = true;
+              }
+              break;
+
+            default:
+              contactMatches = [];
+              addContact = true;
+              break;
+          }
+        },
+      );
+
+      return addContact;
+    } catch (e) {
+      if (kDebugMode) {
+        print('error checking contact existence: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error checking contact existence: $e',
+          title: 'error checking contact existence!',
+        );
+      }
+      rethrow;
+    }
+  }
+
   /// -- add a contact to the database --
-  Future addContact(
+  Future addUpdateContact(
     bool fromInventoryDetails,
     CContactsModel? contact,
     int? productId,
@@ -83,6 +139,7 @@ class CContactsController extends GetxController {
           title: 'contact added',
         );
       }
+      fetchMyContacts();
     } catch (e) {
       if (kDebugMode) {
         print('error adding contact: $e');
@@ -134,8 +191,55 @@ class CContactsController extends GetxController {
     }
   }
 
-  // static List<String> getSuggestions(String query) {
-  //   List<String> matches = [];
-  //   matches.addAll(iterable)
-  // }
+  Future<List<CContactsModel>> getContactSuggestion(String query) async {
+    try {
+      List<CContactsModel> contactMatches = [];
+      await fetchMyContacts();
+
+      contactMatches.addAll(myContacts);
+      contactMatches.retainWhere(
+        (contact) {
+          return contact.contactName.toLowerCase().contains(
+                query.toLowerCase(),
+              ) ||
+              contact.contactPhone.toLowerCase().contains(
+                query.toLowerCase(),
+              ) ||
+              contact.contactEmail.toLowerCase().contains(
+                query.toLowerCase(),
+              );
+        },
+      );
+      return contactMatches;
+    } catch (e) {
+      if (kDebugMode) {
+        print('error fetching contact suggestions: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching contact suggestions: $e',
+          title: 'error fetching contact suggestions!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  contactSuggestionsCallBackAction(String pattern) {
+    foundMatches.clear;
+    foundMatches.value = myContacts
+        .where(
+          (contact) =>
+              contact.contactName.toLowerCase().contains(
+                pattern.toLowerCase(),
+              ) ||
+              contact.contactPhone.toLowerCase().contains(
+                pattern.toLowerCase(),
+              ) ||
+              contact.contactEmail.toLowerCase().contains(
+                pattern.toLowerCase(),
+              ),
+        )
+        .toList();
+
+    return foundMatches;
+  }
 }

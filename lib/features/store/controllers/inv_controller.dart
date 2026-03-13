@@ -98,6 +98,7 @@ class CInventoryController extends GetxController {
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
+  //final contactItemFormKey = GlobalKey<FormState>();
   final notificationsController = Get.put(CLocalNotificationsController());
   final isLoading = false.obs;
   final syncIsLoading = false.obs;
@@ -1187,12 +1188,14 @@ class CInventoryController extends GetxController {
       context: context,
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.all(CSizes.lg / 3),
+          padding: const EdgeInsets.all(
+            CSizes.lg / 3,
+          ),
           child: Column(
             children: [
               const CSectionHeading(
                 showActionBtn: false,
-                title: 'select payment method...',
+                title: 'You may be selling at a loss...',
                 btnTitle: '',
                 editFontSize: true,
               ),
@@ -1328,7 +1331,7 @@ class CInventoryController extends GetxController {
     return itemMetrics.value;
   }
 
-  addInvItemDialogAction() {
+  addInvItemDialogAction(bool fromHomeScreen) {
     resetInvFields();
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
@@ -1361,7 +1364,7 @@ class CInventoryController extends GetxController {
           '',
         ),
         true,
-        false,
+        fromHomeScreen,
       ),
     );
   }

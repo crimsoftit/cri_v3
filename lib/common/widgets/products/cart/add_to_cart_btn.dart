@@ -10,8 +10,13 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CAddToCartBtn extends StatelessWidget {
-  const CAddToCartBtn({super.key, required this.pId});
+  const CAddToCartBtn({
+    super.key,
+    required this.pId,
+    this.boxColor,
+  });
 
+  final Color? boxColor;
   final int pId;
 
   @override
@@ -54,15 +59,20 @@ class CAddToCartBtn extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: pQtyInCart > 0
-                ? Colors.orange
-                : invItem.quantity <= invItem.lowStockNotifierLimit ||
-                      (invItem.expiryDate != '' &&
-                          itemExpiry != null &&
-                          itemExpiry <= 0)
-                ? Colors.red
-                : CNetworkManager.instance.hasConnection.value
-                ? CColors.rBrown
-                : CColors.darkerGrey,
+                ? CColors.success.withValues(
+                    alpha: .5,
+                  )
+                : boxColor ??
+                      (pQtyInCart > 0
+                          ? CColors.success
+                          : invItem.quantity <= invItem.lowStockNotifierLimit ||
+                                (invItem.expiryDate != '' &&
+                                    itemExpiry != null &&
+                                    itemExpiry <= 0)
+                          ? Colors.red
+                          : CNetworkManager.instance.hasConnection.value
+                          ? CColors.rBrown
+                          : CColors.darkerGrey),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(CSizes.cardRadiusMd - 4),
               bottomRight: Radius.circular(CSizes.pImgRadius - 4),

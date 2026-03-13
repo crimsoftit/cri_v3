@@ -1,13 +1,15 @@
 import 'dart:math';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'package:cri_v3/utils/computations/date_time_computations.dart';
+import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CHelperFunctions {
-  /// -- get first day of current week --
+  /// -- get first day of the current week --
   static DateTime getStartOfCurrentWeek(DateTime date) {
     final int daysUntilMonday = date.weekday - 1;
     final DateTime startOfWeek = date.subtract(Duration(days: daysUntilMonday));
@@ -218,5 +220,41 @@ class CHelperFunctions {
     final lightness = .2 + (math.Random().nextDouble() * .2);
 
     return HSLColor.fromAHSL(.5, hue, saturation, lightness).toColor();
+  }
+
+  static ui.Color generateInvItemsDisplayColor(
+    Color? defaultDisplayColor,
+    double qtyAvailable,
+    double alertThreshold,
+    String expiryDate,
+  ) {
+    Color displayColor = CColors.rBrown;
+    switch (qtyAvailable) {
+      case <= 0.0:
+        displayColor = CColors.error;
+        break;
+      case > 0:
+        if (expiryDate != '' &&
+            CDateTimeComputations.timeRangeFromNow(
+                  expiryDate.replaceAll('@ ', ''),
+                ) <=
+                0) {
+          CColors.error;
+        }
+        if (qtyAvailable <= alertThreshold ||
+            (expiryDate != '' &&
+                CDateTimeComputations.timeRangeFromNow(
+                      expiryDate.replaceAll('@ ', ''),
+                    ) <=
+                    3.0)) {
+          displayColor = CColors.warning;
+        }
+
+        break;
+      default:
+        displayColor = defaultDisplayColor ?? CColors.rBrown;
+        break;
+    }
+    return displayColor;
   }
 }

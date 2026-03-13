@@ -113,22 +113,20 @@ class NavMenu extends StatelessWidget {
             //   icon: Icon(Iconsax.wallet_check),
             //   label: 'txns',
             // ),
-            NavigationDestination(
-              icon: Icon(
-                Iconsax.setting,
-              ),
-              label: 'Account',
-            ),
+            
 
-            // NavigationDestination(
-            //   icon: Icon(Iconsax.user),
-            //   label: 'Profile',
-            // ),
+            
             NavigationDestination(
               icon: Icon(
                 Iconsax.user_octagon,
               ),
               label: 'Contacts',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Iconsax.setting,
+              ),
+              label: 'Account',
             ),
             SizedBox(
               child: Stack(

@@ -22,6 +22,7 @@ class CTextFormFieldTheme {
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.italic,
+      color: CColors.error,
     ),
     floatingLabelStyle: const TextStyle().copyWith(
       //color: CColors.rBrown.withOpacity(0.8),
@@ -47,7 +48,10 @@ class CTextFormFieldTheme {
     ),
     errorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(2.0),
-      borderSide: const BorderSide(width: 1.0, color: Colors.red,),
+      borderSide: const BorderSide(
+        width: 1.0,
+        color: Colors.red,
+      ),
     ),
     focusedErrorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(2.0),
@@ -76,23 +80,42 @@ class CTextFormFieldTheme {
     ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),
-      borderSide: const BorderSide(width: 1.0, color: CColors.grey),
+      borderSide: const BorderSide(
+        width: 1.0,
+        color: CColors.grey,
+      ),
     ),
     enabledBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),
-      borderSide: const BorderSide(width: 1.0, color: CColors.grey),
+      borderSide: const BorderSide(
+        width: 1.0,
+        color: CColors.grey,
+      ),
     ),
     focusedBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),
-      borderSide: const BorderSide(width: 1.0, color: CColors.white),
+      borderSide: const BorderSide(
+        width: 1.0,
+        color: CColors.white,
+      ),
     ),
     errorBorder: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(2.0),
-      borderSide: const BorderSide(width: 1.0, color: Colors.red),
+      borderRadius: BorderRadius.circular(
+        5.0,
+      ),
+      borderSide: const BorderSide(
+        width: 1.0,
+        color: Colors.red,
+      ),
     ),
     focusedErrorBorder: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(2.0),
-      borderSide: const BorderSide(width: 2.0, color: CColors.rBrown),
+      borderRadius: BorderRadius.circular(
+        5.0,
+      ),
+      borderSide: const BorderSide(
+        width: 2.0,
+        color: CColors.error,
+      ),
     ),
   );
 }

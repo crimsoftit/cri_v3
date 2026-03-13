@@ -11,7 +11,9 @@ class NoSearchResultsScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: CSizes.spaceBtnSections * 2),
+      padding: const EdgeInsets.only(
+        top: CSizes.spaceBtnSections * 2,
+      ),
       child: Center(
         child: Column(
           children: [
@@ -22,7 +24,7 @@ class NoSearchResultsScreen extends StatelessWidget {
             ),
             const SizedBox(height: CSizes.spaceBtnSections),
             Text(
-              'search results not found!',
+              'Search results not found!',
               style: Theme.of(context).textTheme.labelLarge!.apply(
                 //fontWeightDelta: 1,
               ),

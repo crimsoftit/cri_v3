@@ -41,21 +41,36 @@ class CTypeAheadSearchField extends StatelessWidget {
             decoration: InputDecoration(
               border: InputBorder.none,
               prefixIcon: Padding(
-                padding: const EdgeInsets.only(bottom: 3.0),
-                child: Icon(Iconsax.search_normal, size: CSizes.iconMd - 5.0),
+                padding: const EdgeInsets.only(
+                  bottom: 3.0,
+                ),
+                child: Icon(
+                  Iconsax.search_normal,
+                  size: CSizes.iconMd - 5.0,
+                ),
               ),
-              prefixIconColor: CColors.rBrown.withValues(alpha: 0.4),
+              prefixIconColor: CColors.rBrown.withValues(
+                alpha: 0.4,
+              ),
               suffixIcon: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
+                padding: const EdgeInsets.only(
+                  bottom: 4.0,
+                ),
                 child: InkWell(
                   onTap: () {
                     searchBarController.onTypeAheadSearchIconTap();
                   },
-                  child: Icon(Iconsax.close_circle),
+                  child: Icon(
+                    Iconsax.close_circle,
+                  ),
                 ),
               ),
-              suffixIconColor: CColors.rBrown.withValues(alpha: 0.4),
-              contentPadding: EdgeInsets.all(1.0),
+              suffixIconColor: CColors.rBrown.withValues(
+                alpha: 0.4,
+              ),
+              contentPadding: EdgeInsets.all(
+                1.0,
+              ),
               disabledBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
@@ -86,7 +101,9 @@ class CTypeAheadSearchField extends StatelessWidget {
           );
         },
         offset: Offset(0, 14),
-        constraints: BoxConstraints(maxWidth: screenWidth),
+        constraints: BoxConstraints(
+          maxWidth: screenWidth,
+        ),
         suggestionsCallback: (pattern) {
           var matches = invController.inventoryItems;
 
@@ -128,7 +145,6 @@ class CTypeAheadSearchField extends StatelessWidget {
                   ).textTheme.labelSmall!.apply(color: CColors.darkGrey),
                 ),
                 Text(
-                  // '${suggestion.name.toUpperCase()} (#${suggestion.productId})',
                   '${suggestion.name.toUpperCase()} (@ $currencySymbol.${suggestion.unitSellingPrice})',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: CColors.rBrown,
@@ -143,45 +159,13 @@ class CTypeAheadSearchField extends StatelessWidget {
                     context,
                   ).textTheme.labelSmall!.apply(color: CColors.rBrown),
                 ),
-                // Text(
-                //   'usp: $currencySymbol.${suggestion.unitSellingPrice} (${suggestion.quantity} stocked)',
-                //   style: Theme.of(context).textTheme.labelMedium!.apply(
-                //         color: CColors.rBrown,
-                //       ),
-                // ),
-                // Text(
-                //   'in stock:${suggestion.quantity}   unit bp:$currencySymbol.${suggestion.unitBp}',
-                //   style: Theme.of(context).textTheme.labelSmall!.apply(
-                //         color: CColors.rBrown,
-                //       ),
-                // ),
               ],
             ),
             children: [
               Column(
                 children: [
                   Obx(() {
-                    // if (txnsController.isLoading.value ||
-                    //     invController.isLoading.value ||
-                    //     invController.syncIsLoading.value) {
-                    //   // return const CVerticalProductShimmer(
-                    //   //   itemCount: 2,
-                    //   // );
-                    //   return CRoundedContainer(
-                    //     bgColor: CColors.rBrown,
-                    //     height: 50.0,
-                    //     showBorder: false,
-                    //     width: 100.0,
-                    //     child: Center(
-                    //       child: CircularProgressIndicator(
-                    //         color: CColors.white,
-                    //       ),
-                    //     ),
-                    //   );
-                    //   // return const DefaultLoaderScreen();
-                    // }
                     return Row(
-                      //crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
                         TextButton.icon(
                           onPressed: () async {
@@ -207,7 +191,9 @@ class CTypeAheadSearchField extends StatelessWidget {
                             color: CColors.rBrown,
                           ),
                         ),
-                        SizedBox(width: CSizes.defaultSpace / 3),
+                        SizedBox(
+                          width: CSizes.defaultSpace / 3,
+                        ),
 
                         // -- buttons to increment, decrement qty --
                         CItemQtyWithAddRemoveBtns(
@@ -291,31 +277,12 @@ class CTypeAheadSearchField extends StatelessWidget {
                                   fontSizeDelta: 1.5,
                                 ),
                           ),
-                          // Text(
-                          //   cartController
-                          //           .getItemQtyInCart(suggestion.productId!)
-                          //           .isGreaterThan(0)
-                          //       ? cartController
-                          //             .getItemQtyInCart(suggestion.productId!)
-                          //             .toString()
-                          //       : 0.toString(),
-                          //   style: Theme.of(context).textTheme.labelMedium!
-                          //       .apply(
-                          //         color: CColors.rBrown,
-                          //         fontSizeDelta: 1.5,
-                          //       ),
-                          // ),
 
                           // button to increment item qty in the cart
                           addItemBtnAction: () {
                             if (suggestion.quantity > 0) {
                               invController.fetchUserInventoryItems();
                               cartController.fetchCartItems();
-
-                              // int cartItemIndex = cartController.userCartItems
-                              //     .indexWhere((cartItem) =>
-                              //         cartItem.productId ==
-                              //         suggestion.productId);
 
                               final thisCartItem = cartController
                                   .convertInvToCartItem(
@@ -327,13 +294,6 @@ class CTypeAheadSearchField extends StatelessWidget {
                                 false,
                                 null,
                               );
-                              // cartController.fetchCartItems();
-
-                              // cartController
-                              //         .qtyFieldControllers[cartItemIndex].text =
-                              //     cartController
-                              //         .userCartItems[cartItemIndex].quantity
-                              //         .toString();
                             } else {
                               CPopupSnackBar.warningSnackBar(
                                 title: 'item is out of stock',

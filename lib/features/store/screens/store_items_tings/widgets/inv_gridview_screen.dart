@@ -46,11 +46,11 @@ class CInvGridviewScreen extends StatelessWidget {
           height: 200.0,
           child: CAnimatedLoaderWidget(
             actionBtnWidth: 180.0,
-            actionBtnText: 'let\'s fill it!',
+            actionBtnText: 'Let\'s fill it!',
             animation: CImages.noDataLottie,
             lottieAssetWidth: CHelperFunctions.screenWidth() * 0.42,
             onActionBtnPressed: () {
-              invController.addInvItemDialogAction();
+              invController.addInvItemDialogAction(false);
               // showDialog(
               //   context: context,
               //   useRootNavigator: false,
@@ -85,7 +85,7 @@ class CInvGridviewScreen extends StatelessWidget {
               // );
             },
             showActionBtn: true,
-            text: 'whoops! store is EMPTY!',
+            text: 'Whoops! Store is EMPTY!',
           ),
         );
 
@@ -247,6 +247,12 @@ class CInvGridviewScreen extends StatelessWidget {
                     : invController.inventoryItems[index].unitSellingPrice;
 
                 return CProductCardVertical(
+                  avatarColor: CHelperFunctions.generateInvItemsDisplayColor(
+                    isDarkTheme ? CColors.white : CColors.rBrown,
+                    qtyAvailable,
+                    lowStockNotifierLimit,
+                    expiryDate,
+                  ),
                   bp: bp.toString(),
                   containerHeight: 195.0,
                   //containerHeight: double.infinity,
@@ -342,7 +348,7 @@ class CInvGridviewScreen extends StatelessWidget {
                   onDoubleTapAction: () {
                     Get.toNamed(
                       '/inventory/item_details/',
-                      arguments: invController.inventoryItems[index].productId,
+                      arguments: productId,
                     );
                   },
                   onFavoriteIconTap: () {
@@ -371,21 +377,30 @@ class CInvGridviewScreen extends StatelessWidget {
                       ? qtySold.toStringAsFixed(0)
                       : qtySold.toString(),
                   syncAction: syncAction,
-                  titleColor: expiryDate != ''
-                      ? CDateTimeComputations.timeRangeFromNow(
-                                  expiryDate.replaceAll('@ ', ''),
-                                ) <=
-                                0
-                            ? CColors.error
-                            : CDateTimeComputations.timeRangeFromNow(
-                                    expiryDate.replaceAll('@ ', ''),
-                                  ) <=
-                                  3
-                            ? CColors.warning
-                            : CColors.rBrown
-                      : isDarkTheme
-                      ? CColors.white
-                      : CColors.rBrown,
+                  // titleColor: expiryDate != ''
+                  //     ? CDateTimeComputations.timeRangeFromNow(
+                  //                 expiryDate.replaceAll('@ ', ''),
+                  //               ) <=
+                  //               0
+                  //           ? CColors.error
+                  //           : CDateTimeComputations.timeRangeFromNow(
+                  //                   expiryDate.replaceAll('@ ', ''),
+                  //                 ) <=
+                  //                 3
+                  //           ? CColors.warning
+                  //           : CColors.rBrown
+                  //     : qtyAvailable > 0 &&
+                  //           qtyAvailable <= lowStockNotifierLimit
+                  //     ? CColors.warning
+                  //     : qtyAvailable == 0 ? CColors.error : isDarkTheme
+                  //     ? CColors.white
+                  //     : CColors.rBrown,
+                  titleColor: CHelperFunctions.generateInvItemsDisplayColor(
+                    isDarkTheme ? CColors.white : CColors.rBrown,
+                    qtyAvailable,
+                    lowStockNotifierLimit,
+                    expiryDate,
+                  ),
                   usp: usp.toString(),
                 );
               },

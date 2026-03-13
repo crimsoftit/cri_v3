@@ -55,7 +55,7 @@ class CStoreScreenHeader extends StatelessWidget {
                   elevation: 0, // -- removes shadow
                   onPressed: () {
                     forStoreScreen
-                        ? invController.addInvItemDialogAction()
+                        ? invController.addInvItemDialogAction(false)
                         : CPopupSnackBar.customToast(
                             forInternetConnectivityStatus: false,
                             message: 'rada safi...',

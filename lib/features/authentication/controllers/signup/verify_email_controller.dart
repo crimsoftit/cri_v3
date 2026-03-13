@@ -27,9 +27,9 @@ class CVerifyEmailController extends GetxController {
     try {
       await AuthRepo.instance.sendEmailVerification();
       CPopupSnackBar.successSnackBar(
-        title: 'verification e-mail sent!',
+        title: 'Verification e-mail sent!',
         message:
-            'please check your inbox or spam to verify your e-mail address',
+            'Please check your inbox or spam to verify your e-mail address',
       );
     } catch (e) {
       CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());

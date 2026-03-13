@@ -9,12 +9,14 @@ class CCustomDropdownBtn extends StatelessWidget {
     this.defaultItemColor,
     this.dropdownBoxColor,
     this.iconColor,
+    this.padding,
     this.selectedValue,
     this.underlineColor = CColors.white,
     this.underlineHeight,
   });
 
   final Color? defaultItemColor, dropdownBoxColor, iconColor, underlineColor;
+  final EdgeInsetsGeometry? padding;
   final double? underlineHeight;
   final List<String> dropdownItems;
   final String? selectedValue;
@@ -26,7 +28,7 @@ class CCustomDropdownBtn extends StatelessWidget {
 
     return DropdownButton<String>(
       borderRadius: BorderRadius.circular(10.0),
-      elevation: 10,
+      elevation: 8,
       items: dropdownItems.map(
         (
           String value,
@@ -35,7 +37,7 @@ class CCustomDropdownBtn extends StatelessWidget {
             value: value,
             child: Text(
               value,
-              style: Theme.of(context).textTheme.labelLarge!.apply(
+              style: Theme.of(context).textTheme.labelMedium!.apply(
                 // color: isDarkTheme ? CColors.white : CColors.rBrown,
                 color: defaultItemColor ?? CColors.rBrown,
               ),
@@ -44,7 +46,7 @@ class CCustomDropdownBtn extends StatelessWidget {
         },
       ).toList(),
       onChanged: onValueChanged,
-      style: Theme.of(context).textTheme.labelLarge!.apply(
+      style: Theme.of(context).textTheme.labelMedium!.apply(
         color: CColors.rBrown,
       ),
       dropdownColor:
@@ -61,10 +63,12 @@ class CCustomDropdownBtn extends StatelessWidget {
         color: underlineColor,
         height: underlineHeight ?? 2.0,
       ),
-      padding: const EdgeInsets.only(
-        left: 5.0,
-        right: 5.0,
-      ),
+      padding:
+          padding ??
+          const EdgeInsets.only(
+            left: 5.0,
+            right: 5.0,
+          ),
       value: selectedValue,
     );
   }

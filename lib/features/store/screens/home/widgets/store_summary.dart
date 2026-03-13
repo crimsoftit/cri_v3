@@ -40,7 +40,8 @@ class CStoreSummary extends StatelessWidget {
                 children: [
                   CStoreSummaryCard(
                     iconData: Iconsax.money_recive,
-                    subTitleTxt: 'money collected($userCurrency)',
+                    // subTitleTxt: 'money collected($userCurrency)',
+                    subTitleTxt: 'money collected',
                     titleTxt: txnsController.moneyCollected.value
                         .toStringAsFixed(1),
                   ),

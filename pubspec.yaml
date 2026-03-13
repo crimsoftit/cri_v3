@@ -128,7 +128,8 @@ dependencies:
   csv: any
   file_picker: ^10.3.7
   flutter_native_splash: any
-  flutter_typeahead: any
+  # flutter_typeahead: any
+  flutter_typeahead: ^5.2.0
   gsheets: ^0.5.0
   googleapis: any
   http: any

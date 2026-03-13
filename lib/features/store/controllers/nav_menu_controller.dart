@@ -18,11 +18,12 @@ class CNavMenuController extends GetxController {
 
     //const CTxnsScreen(),
     //const CCheckoutScreenRaw(),
+    const CContactsScreen(),
     const CUserSettingsScreen(),
 
     //const SettingsScreenRaw(),
     //const CProfileScreen(),
-    const CContactsScreen(),
+    
     const CNotificationsScreen(),
   ];
 }

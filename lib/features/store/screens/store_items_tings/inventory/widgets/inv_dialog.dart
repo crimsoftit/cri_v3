@@ -89,7 +89,7 @@ class AddUpdateItemDialog {
                       children: [
                         // -- toggle entry for supplier details --
                         CCustomSwitch(
-                          label: 'supplier details',
+                          label: 'Supplier details',
                           labelColor: isDarkTheme
                               ? CColors.darkGrey
                               : CColors.rBrown,
@@ -104,7 +104,7 @@ class AddUpdateItemDialog {
 
                         // -- toggle entry for expiry date --
                         CCustomSwitch(
-                          label: 'expiry date',
+                          label: 'Expiry date',
                           labelColor: isDarkTheme
                               ? CColors.darkGrey
                               : CColors.rBrown,
@@ -127,7 +127,6 @@ class AddUpdateItemDialog {
           ),
           content: SingleChildScrollView(
             child: AddUpdateInventoryForm(
-              invController: invController,
               inventoryItem: invModel,
               fromHomeScreen: fromHomeScreen,
               textStyle: textStyle,

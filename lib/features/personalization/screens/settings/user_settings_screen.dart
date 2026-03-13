@@ -72,7 +72,7 @@ class CUserSettingsScreen extends StatelessWidget {
                 CMenuTile(
                   icon: Iconsax.user_edit,
                   title: 'My profile',
-                  subTitle: 'check out your profile',
+                  subTitle: 'Check out your profile',
                   trailing: IconButton(
                     onPressed: () {
                       Get.to(() => const CProfileScreen());
@@ -91,16 +91,16 @@ class CUserSettingsScreen extends StatelessWidget {
                 ),
                 const CSectionHeading(
                   showActionBtn: false,
-                  title: 'app settings',
+                  title: 'App settings',
                   btnTitle: '',
                   editFontSize: false,
                 ),
 
                 CMenuTile(
                   icon: Iconsax.money_recive,
-                  title: 'payment platforms',
+                  title: 'Payment methods',
                   subTitle:
-                      'set payment platforms and(or) accounts for transactions',
+                      'Set payment platforms and(or) accounts for transactions',
                   trailing: IconButton(
                     onPressed: () {
                       Get.to(() => CPaymentPlatforms());
@@ -114,8 +114,9 @@ class CUserSettingsScreen extends StatelessWidget {
 
                 CMenuTile(
                   icon: Iconsax.document_upload,
-                  title: 'upload data',
-                  subTitle: 'upload data to your cloud firebase',
+                  title: 'Upload data',
+                  subTitle:
+                      'Upload inventory, transactions data, and contacts to the cloud',
                   trailing: IconButton(
                     onPressed: () {},
                     icon: const Icon(Iconsax.arrow_right),
@@ -125,9 +126,9 @@ class CUserSettingsScreen extends StatelessWidget {
 
                 CMenuTile(
                   icon: Iconsax.cloud,
-                  title: 'auto-sync data',
+                  title: 'Auto-sync data',
                   subTitle:
-                      'set automatic cloud sync for your inventory and sales data',
+                      'Set automatic cloud sync for your inventory, contacts, and sales data',
                   trailing: Obx(() {
                     return Switch(
                       value: appSettingsController.dataSyncIsOn.value,
@@ -140,23 +141,24 @@ class CUserSettingsScreen extends StatelessWidget {
                 ),
                 CMenuTile(
                   icon: Iconsax.location,
-                  title: 'geolocation',
-                  subTitle: 'set recommendation based on location',
+                  title: 'Geolocation',
+                  subTitle:
+                      'Set recommendation based on location. This is recommended to help us keep you and your customers safe.',
                   trailing: Switch(
                     value: true,
                     activeThumbColor: CColors.rBrown,
                     onChanged: (value) {},
                   ),
                 ),
+                // CMenuTile(
+                //   icon: Iconsax.shopping_cart,
+                //   title: 'My cart',
+                //   subTitle: 'Add, remove products, and proceed to checkout',
+                //   onTap: () {},
+                // ),
                 CMenuTile(
                   icon: Iconsax.shopping_cart,
-                  title: 'my cart',
-                  subTitle: 'add, remove products, and proceed to checkout',
-                  onTap: () {},
-                ),
-                CMenuTile(
-                  icon: Iconsax.shopping_cart,
-                  subTitle: 'add, remove products, and proceed to checkout',
+                  subTitle: 'Add, remove products, and proceed to checkout',
                   title: 'checkout items',
                   onTap: () {},
                 ),

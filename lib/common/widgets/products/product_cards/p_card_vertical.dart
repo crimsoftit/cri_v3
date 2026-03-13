@@ -21,6 +21,7 @@ class CProductCardVertical extends StatelessWidget {
     required this.itemName,
     required this.pCode,
     required this.pId,
+    this.avatarColor,
     this.bp,
     this.lastModified,
     this.expiryDate,
@@ -46,7 +47,7 @@ class CProductCardVertical extends StatelessWidget {
   });
 
   final double containerHeight;
-  final Color? expiryColor, favIconColor, titleColor;
+  final Color? avatarColor, expiryColor, favIconColor, titleColor;
   final double? lowStockNotifierLimit;
   final int pId;
   final IconData? favIconData;
@@ -127,28 +128,29 @@ class CProductCardVertical extends StatelessWidget {
                         avatarInitial: itemAvatar!,
 
                         bgColor: CColors.transparent,
-                        editIconColor:
-                            (expiryColor == CColors.error ||
-                                expiryColor == CColors.warning)
-                            ? expiryColor
-                            : (double.parse(qtyAvailable!) <=
-                                  lowStockNotifierLimit!)
-                            ? Colors.red
-                            : isDarkTheme
-                            ? CColors.white
-                            : CColors.rBrown,
+                        editIconColor: avatarColor,
+                        // editIconColor:
+                        //     (expiryColor == CColors.error ||
+                        //         expiryColor == CColors.warning)
+                        //     ? expiryColor
+                        //     : (double.parse(qtyAvailable!) <=
+                        //           lowStockNotifierLimit!)
+                        //     ? Colors.red
+                        //     : isDarkTheme
+                        //     ? CColors.white
+                        //     : CColors.rBrown,
                         includeEditBtn: true,
                         onEdit: onAvatarIconTap,
-                        txtColor:
-                            (expiryColor == CColors.error ||
-                                expiryColor == CColors.warning)
-                            ? expiryColor
-                            : (double.parse(qtyAvailable!) <=
-                                  lowStockNotifierLimit!)
-                            ? Colors.red
-                            : isDarkTheme
-                            ? CColors.white
-                            : CColors.rBrown,
+                        txtColor: avatarColor,
+                        // txtColor: (expiryColor == CColors.error ||
+                        //         expiryColor == CColors.warning)
+                        //     ? expiryColor
+                        //     : (double.parse(qtyAvailable!) <=
+                        //           lowStockNotifierLimit!)
+                        //     ? Colors.red
+                        //     : isDarkTheme
+                        //     ? CColors.white
+                        //     : CColors.rBrown,
                       ),
 
                 invController.isLoading.value &&
@@ -228,18 +230,19 @@ class CProductCardVertical extends StatelessWidget {
                   ? "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked; $qtySold sold)"
                   : "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s) stocked; $qtySold ${CFormatter.formatItemMetrics(itemMetrics!)}(s) sold)",
 
-              txtColor:
-                  (expiryColor == CColors.error ||
-                      expiryColor == CColors.warning)
-                  ? expiryColor
-                  : (double.parse(qtyAvailable!) <= lowStockNotifierLimit! &&
-                        double.parse(qtyAvailable!) > 0)
-                  ? CColors.warning
-                  : double.parse(qtyAvailable!) <= 0
-                  ? CColors.error
-                  : isDarkTheme
-                  ? CColors.white
-                  : CColors.rBrown,
+              // txtColor:
+              //     (expiryColor == CColors.error ||
+              //         expiryColor == CColors.warning)
+              //     ? expiryColor
+              //     : (double.parse(qtyAvailable!) <= lowStockNotifierLimit! &&
+              //           double.parse(qtyAvailable!) > 0)
+              //     ? CColors.warning
+              //     : double.parse(qtyAvailable!) <= 0
+              //     ? CColors.error
+              //     : isDarkTheme
+              //     ? CColors.white
+              //     : CColors.rBrown,
+              txtColor: avatarColor,
               maxLines: 2,
             ),
 
@@ -317,7 +320,10 @@ class CProductCardVertical extends StatelessWidget {
                               height: 32.0,
                               radius: 8.0,
                             )
-                          : CAddToCartBtn(pId: pId),
+                          : CAddToCartBtn(
+                              boxColor: avatarColor,
+                              pId: pId,
+                            ),
                     ),
                   ],
                 );
