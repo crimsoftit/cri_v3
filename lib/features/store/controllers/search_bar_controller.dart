@@ -23,7 +23,6 @@ class CSearchBarController extends GetxController {
 
     showAnimatedTypeAheadField.value = false;
     txtSearchField.text = '';
-    // txtSalesSearch.text = '';
     super.onInit();
   }
 

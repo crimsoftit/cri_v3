@@ -201,12 +201,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         height: 60.0,
                         child: CCustomDropdownBtn(
                           dropdownItems: invController.demMetrics,
-                          defaultItemColor: isDarkTheme
-                              ? CColors.white
-                              : CColors.rBrown,
-                          iconColor: isDarkTheme
-                              ? CColors.white
-                              : CColors.rBrown,
+                          // defaultItemColor: isDarkTheme
+                          //     ? CColors.white
+                          //     : CColors.rBrown,
+                          // iconColor: isDarkTheme
+                          //     ? CColors.white
+                          //     : CColors.rBrown,
+                          defaultItemColor: CColors.white,
+                          defaultItemFontSizeFactor: 1.3,
+                          iconColor: CColors.white,
                           onValueChanged: (value) {
                             if (value != '') {
                               invController.itemMetrics.value = value!;
@@ -301,7 +304,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     children: [
                       // -- buying price textfield --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .41,
+                        width: CHelperFunctions.screenWidth() * .42,
                         height: 60.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -359,12 +362,12 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        width: CSizes.spaceBtnInputFields / 3.0,
+                        width: CSizes.spaceBtnInputFields / 4.0,
                       ),
 
                       // -- unit selling price field --
                       SizedBox(
-                        width: CHelperFunctions.screenWidth() * .41,
+                        width: CHelperFunctions.screenWidth() * .42,
                         height: 60.0,
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,

@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
 import 'package:cri_v3/common/widgets/dividers/custom_divider.dart';
-import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/screens/notifications/widgets/alerts_listview.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -38,7 +35,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final notsController = Get.put(CLocalNotificationsController());
+    //final notsController = Get.put(CLocalNotificationsController());
     // final notServices = Get.put(CNotificationServices());
     final userController = Get.put(CUserController());
 
@@ -69,7 +66,7 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                         ),
                       ),
                       Text(
-                        'alerts',
+                        'Alerts',
                         style: Theme.of(context).textTheme.labelLarge!.apply(
                           color: CNetworkManager.instance.hasConnection.value
                               ? CColors.rBrown
@@ -80,14 +77,19 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                       ),
 
                       /// -- custom divider --
-                      CCustomDivider(leftPadding: 5.0),
+                      CCustomDivider(
+                        leftPadding: 5.0,
+                      ),
                     ],
                   );
                 }),
-                const SizedBox(height: CSizes.spaceBtnSections,),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections,
+                ),
 
                 // -- list notifications on an ExpansionPanelList.radio widget --
                 CAlertsListView(),
+
                 // FilledButton(
                 //   onPressed: () async {
                 //     await notsController.fetchUserNotifications().then((
@@ -125,29 +127,6 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
                 //   },
                 //   child: Text('instant notifications'),
                 // ),
-                FilledButton(
-                  onPressed: () async {
-                    await notsController.fetchUserNotifications().then(
-                      (_) async {
-                        var thisAlertId = await notsController
-                            .generateNotificationId();
-
-                        var payloadData = {
-                          'notification_id': thisAlertId.toString(),
-                          'notification_title': 'notification title',
-                          'notification_body': 'notification body',
-                          'product_id': '102456',
-                        };
-                        await CLocalNotificationsController.displaySimpleAlert(
-                          body: 'body',
-                          payload: jsonEncode(payloadData),
-                          title: 'basic notification',
-                        );
-                      },
-                    );
-                  },
-                  child: Text('basic local notification'),
-                ),
               ],
             ),
           ),

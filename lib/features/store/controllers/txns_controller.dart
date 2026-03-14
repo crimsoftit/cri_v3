@@ -229,8 +229,9 @@ class CTxnsController extends GetxController {
       dashboardController.filterHourlySales();
 
       // stop loader
-      isLoading.value = false;
       soldItemsFetched.value = true;
+      isLoading.value = false;
+      
 
       return sales;
     } catch (e) {

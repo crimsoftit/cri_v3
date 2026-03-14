@@ -130,12 +130,12 @@ class CStoreScreen extends StatelessWidget {
                   /// -- tabs --
                   bottom: const CTabBar(
                     tabs: [
-                      Tab(child: Text('inventory')),
+                      Tab(child: Text('Inventory'),),
 
-                      Tab(child: Text('receipts')),
-                      Tab(child: Text('invoices')),
-                      Tab(child: Text('refunds')),
-                      Tab(child: Text('sales (all)')),
+                      Tab(child: Text('Receipts'),),
+                      Tab(child: Text('Invoices'),),
+                      Tab(child: Text('Refunds'),),
+                      Tab(child: Text('Sales (all)'),),
                     ],
                   ),
                 ),

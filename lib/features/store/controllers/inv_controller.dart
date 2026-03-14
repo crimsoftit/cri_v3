@@ -138,7 +138,7 @@ class CInventoryController extends GetxController {
         localStorage.write('SyncInvDataWithCloud', true);
       }
 
-      fetchUserInventoryItems();
+      await fetchUserInventoryItems();
     }
 
     /// TODO:-- schedule notifications for items nearing expiry date (NOT HERE - CAUSES SYSTEM CRASH) --
@@ -149,7 +149,9 @@ class CInventoryController extends GetxController {
     try {
       // start loader while products are fetched
       isLoading.value = true;
+
       foundInventoryItems.clear();
+
       // fetch items from sqflite db
       final fetchedItems = await dbHelper.fetchInventoryItems(
         userController.user.value.email,
@@ -159,7 +161,8 @@ class CInventoryController extends GetxController {
       inventoryItems.assignAll(fetchedItems);
 
       if (searchController.showSearchField.value &&
-          searchController.txtSearchField.text == '') {
+          (searchController.txtSearchField.text == '' ||
+              searchController.txtSearchField.text.isEmpty)) {
         foundInventoryItems.assignAll(fetchedItems);
       }
 
@@ -555,7 +558,18 @@ class CInventoryController extends GetxController {
     } catch (e) {
       // -- stop loader
       isLoading.value = false;
-      CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+      if (kDebugMode) {
+        print('error updating inventory item: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating inventory item!',
+          message: 'error updating inventory item: $e',
+        );
+      }
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating inventory item!',
+        message: 'an unknown error occurred while updating inventory item!',
+      );
+      rethrow;
     }
   }
 
@@ -721,7 +735,9 @@ class CInventoryController extends GetxController {
   }
 
   /// -- delete account warning popup snackbar --
-  void deleteInventoryWarningPopup(CInventoryModel inventoryItem) {
+  Future<void> deleteInventoryWarningPopup(
+    CInventoryModel inventoryItem,
+  ) async {
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(CSizes.md),
       title: 'permanently delete ${inventoryItem.name}?',
@@ -746,8 +762,7 @@ class CInventoryController extends GetxController {
             );
             await dbHelper.saveInvDelsForSync(delItem);
           }
-          deleteInventoryItem(inventoryItem);
-          fetchUserInventoryItems();
+          await deleteInventoryItem(inventoryItem);
 
           Navigator.of(Get.overlayContext!).pop();
         },

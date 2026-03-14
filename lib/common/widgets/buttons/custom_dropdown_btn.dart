@@ -7,6 +7,7 @@ class CCustomDropdownBtn extends StatelessWidget {
     required this.dropdownItems,
     required this.onValueChanged,
     this.defaultItemColor,
+    this.defaultItemFontSizeFactor,
     this.dropdownBoxColor,
     this.iconColor,
     this.padding,
@@ -17,7 +18,7 @@ class CCustomDropdownBtn extends StatelessWidget {
 
   final Color? defaultItemColor, dropdownBoxColor, iconColor, underlineColor;
   final EdgeInsetsGeometry? padding;
-  final double? underlineHeight;
+  final double? defaultItemFontSizeFactor, underlineHeight;
   final List<String> dropdownItems;
   final String? selectedValue;
   final void Function(String?) onValueChanged;
@@ -40,6 +41,7 @@ class CCustomDropdownBtn extends StatelessWidget {
               style: Theme.of(context).textTheme.labelMedium!.apply(
                 // color: isDarkTheme ? CColors.white : CColors.rBrown,
                 color: defaultItemColor ?? CColors.rBrown,
+                fontSizeFactor: defaultItemFontSizeFactor ?? 1.0,
               ),
             ),
           );
