@@ -14,7 +14,8 @@ class CAppTheme {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Poppins',
+    //fontFamily: 'Poppins',
+    fontFamily: 'IosevkaCharonMono',
     brightness: Brightness.light,
     primaryColor: CColors.rBrown,
     textTheme: CTextTheme.ligtTextTheme,

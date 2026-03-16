@@ -89,9 +89,11 @@ class CProductCardVertical extends StatelessWidget {
         padding: EdgeInsets.all(1.0),
 
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: CSizes.spaceBtnInputFields / 5),
+            SizedBox(
+              height: CSizes.spaceBtnInputFields / 5,
+            ),
 
             /// -- avatar, favorite item, and delete btns --
             Row(
@@ -129,28 +131,10 @@ class CProductCardVertical extends StatelessWidget {
 
                         bgColor: CColors.transparent,
                         editIconColor: avatarColor,
-                        // editIconColor:
-                        //     (expiryColor == CColors.error ||
-                        //         expiryColor == CColors.warning)
-                        //     ? expiryColor
-                        //     : (double.parse(qtyAvailable!) <=
-                        //           lowStockNotifierLimit!)
-                        //     ? Colors.red
-                        //     : isDarkTheme
-                        //     ? CColors.white
-                        //     : CColors.rBrown,
+
                         includeEditBtn: true,
                         onEdit: onAvatarIconTap,
                         txtColor: avatarColor,
-                        // txtColor: (expiryColor == CColors.error ||
-                        //         expiryColor == CColors.warning)
-                        //     ? expiryColor
-                        //     : (double.parse(qtyAvailable!) <=
-                        //           lowStockNotifierLimit!)
-                        //     ? Colors.red
-                        //     : isDarkTheme
-                        //     ? CColors.white
-                        //     : CColors.rBrown,
                       ),
 
                 invController.isLoading.value &&
@@ -166,9 +150,6 @@ class CProductCardVertical extends StatelessWidget {
                         iconSize: CSizes.md,
                         height: 33.0,
                         width: 33.0,
-                        // bgColor: isDarkTheme
-                        //     ? CColors.transparent
-                        //     : CColors.white,
                         bgColor: isDarkTheme
                             ? CColors.transparent
                             : CColors.rBrown.withValues(alpha: 0.2),
@@ -220,15 +201,15 @@ class CProductCardVertical extends StatelessWidget {
               //smallSize: true,
               title:
                   CHelperFunctions.txtExceedsTwoLines(
-                    "${itemName.toUpperCase()} (${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked, $qtySold sold)",
+                    "${itemName.toUpperCase()} - ${CFormatter.formatItemMetrics(itemMetrics!, double.parse(qtyAvailable!))}} stocked; $qtySold sold",
                     Theme.of(context).textTheme.labelSmall!.apply(
                       color:
                           titleColor ??
                           (isDarkTheme ? CColors.white : CColors.rBrown),
                     ),
                   )
-                  ? "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s)} stocked; $qtySold sold)"
-                  : "${itemName.toUpperCase()} ($qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!)}(s) stocked; $qtySold ${CFormatter.formatItemMetrics(itemMetrics!)}(s) sold)",
+                  ? "${itemName.toUpperCase()} - $qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!, double.parse(qtyAvailable!))}(s)} stocked; $qtySold sold"
+                  : "${itemName.toUpperCase()} ",
 
               // txtColor:
               //     (expiryColor == CColors.error ||
@@ -242,18 +223,31 @@ class CProductCardVertical extends StatelessWidget {
               //     : isDarkTheme
               //     ? CColors.white
               //     : CColors.rBrown,
+              txtAlign: TextAlign.center,
               txtColor: avatarColor,
               maxLines: 2,
             ),
+            SizedBox(
+              height: CHelperFunctions.screenHeight() * .020,
+            ),
 
             Text(
-              '($qtyRefunded ${CFormatter.formatItemMetrics(itemMetrics!)}(s) refunded)',
+              '$qtyAvailable ${CFormatter.formatItemMetrics(itemMetrics!, double.parse(qtyAvailable!))} stocked; $qtySold sold',
+              style: Theme.of(context).textTheme.labelMedium!.apply(
+                color:
+                    titleColor ??
+                    (isDarkTheme ? CColors.white : CColors.rBrown),
+              ),
+            ),
+
+            Text(
+              '$qtyRefunded ${CFormatter.formatItemMetrics(itemMetrics!, double.parse(qtyRefunded!))} refunded',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),
             ),
             Text(
-              'sku: $pCode lsn: ${CFormatter.formatItemQtyDisplays(lowStockNotifierLimit!, itemMetrics!)}',
+              'Sku: $pCode; Lsn: ${CFormatter.formatItemQtyDisplays(lowStockNotifierLimit!, itemMetrics!)}',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color: isDarkTheme ? CColors.white : CColors.darkGrey,
               ),
@@ -268,7 +262,7 @@ class CProductCardVertical extends StatelessWidget {
               ),
             ),
             Text(
-              'expiry date: $expiryDate',
+              'Expiry date: $expiryDate',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                 color:
                     expiryColor ??
@@ -276,7 +270,7 @@ class CProductCardVertical extends StatelessWidget {
               ),
             ),
             CProductPriceTxt(
-              priceCategory: 'bp: ',
+              priceCategory: 'Bp: ',
               price: bp!,
               maxLines: 1,
               isLarge: true,

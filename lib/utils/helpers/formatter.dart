@@ -125,10 +125,12 @@ class CFormatter {
     }
   }
 
-  static String formatItemMetrics(String metrics) {
+  static String formatItemMetrics(String metrics, double? qty) {
     try {
-      var formattedOutput = metrics == 'units'
+      var formattedOutput = metrics == 'units' && qty == 1
           ? metrics.substring(0, metrics.length - 1)
+          : metrics != 'units'
+          ? '${metrics}s'
           : metrics;
 
       return formattedOutput;

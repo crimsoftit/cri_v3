@@ -273,6 +273,15 @@ flutter:
 
   # --- local fonts --- #
   fonts:
+    - family: IosevkaCharonMono
+      fonts:
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-Light.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-Medium.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-MediumItalic.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-LightItalic.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-Italic.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-Bold.ttf
+        - asset: assets/fonts/Iosevka_Charon_Mono/IosevkaCharonMono-Regular.ttf
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Light.ttf

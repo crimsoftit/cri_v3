@@ -119,7 +119,8 @@ class CInvGridviewScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: CSizes.gridViewSpacing / 2,
                 crossAxisSpacing: CSizes.gridViewSpacing / 2,
-                mainAxisExtent: mainAxisExtent,
+                //mainAxisExtent: CHelperFunctions.screenHeight() * .27,
+                mainAxisExtent: 207.0,
               ),
               itemBuilder: (context, index) {
                 var avatarTxt =
@@ -253,7 +254,8 @@ class CInvGridviewScreen extends StatelessWidget {
                     expiryDate,
                   ),
                   bp: bp.toString(),
-                  containerHeight: 195.0,
+                  //   containerHeight: 195.0,
+                  containerHeight: CHelperFunctions.screenHeight() * .2,
                   //containerHeight: double.infinity,
                   deleteAction: syncController.processingSync.value
                       ? null
@@ -286,7 +288,7 @@ class CInvGridviewScreen extends StatelessWidget {
                             ? CColors.warning
                             : CColors.darkGrey
                       : CColors.darkGrey,
-                  favIconColor: isFavorite == 1 ? CColors.error : CColors.white,
+                  favIconColor: isFavorite == 1 ? Colors.red : CColors.white,
 
                   isSynced: isSynced.toString(),
                   itemAvatar: avatarTxt,

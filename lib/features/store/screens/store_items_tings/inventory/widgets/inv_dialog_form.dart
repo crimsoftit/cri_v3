@@ -259,7 +259,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             ).textTheme.labelSmall,
                             //labelText:  'qty (units, kg, litre)',
                             labelText:
-                                'Qty in ${CFormatter.formatItemMetrics(invController.itemMetrics.value)}s:',
+                                'Qty in ${CFormatter.formatItemMetrics(invController.itemMetrics.value, null)}:',
                             maintainHintSize: true,
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(left: 2.0),

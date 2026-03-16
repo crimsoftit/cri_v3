@@ -345,7 +345,7 @@ class CTxnItemsListView extends StatelessWidget {
                                         : buildSalesDetails(
                                             context,
                                             '${item.productName.toUpperCase()} (${item.txnStatus})',
-                                            '${CFormatter.formatItemQtyDisplays(item.quantity, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics)}(s) sold; ${CFormatter.formatItemQtyDisplays(item.qtyRefunded, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics)}(s) refunded @: $userCurrency.${item.unitSellingPrice} #${item.productId}',
+                                            '${CFormatter.formatItemQtyDisplays(item.quantity, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics, item.quantity)} sold; ${CFormatter.formatItemQtyDisplays(item.qtyRefunded, item.itemMetrics)} ${CFormatter.formatItemMetrics(item.itemMetrics, item.qtyRefunded)} refunded @: $userCurrency.${item.unitSellingPrice} #${item.productId}',
                                           ),
                                     // buildSalesDetails(
                                     //   context,
@@ -416,7 +416,7 @@ class CTxnItemsListView extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${txnsController.transactionItems[index].productName.toUpperCase()} (${CFormatter.formatItemQtyDisplays(txnsController.transactionItems[index].quantity, txnsController.transactionItems[index].itemMetrics)} ${CFormatter.formatItemMetrics(txnsController.transactionItems[index].itemMetrics)}(s) @ $userCurrency.${txnsController.transactionItems[index].unitSellingPrice})',
+                                                    '${txnsController.transactionItems[index].productName.toUpperCase()} (${CFormatter.formatItemQtyDisplays(txnsController.transactionItems[index].quantity, txnsController.transactionItems[index].itemMetrics)} ${CFormatter.formatItemMetrics(txnsController.transactionItems[index].itemMetrics, txnsController.transactionItems[index].quantity)} @ $userCurrency.${txnsController.transactionItems[index].unitSellingPrice})',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .labelMedium!

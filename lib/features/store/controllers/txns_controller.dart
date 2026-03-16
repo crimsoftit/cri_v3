@@ -231,7 +231,6 @@ class CTxnsController extends GetxController {
       // stop loader
       soldItemsFetched.value = true;
       isLoading.value = false;
-      
 
       return sales;
     } catch (e) {
@@ -1039,7 +1038,7 @@ class CTxnsController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'qty (${CFormatter.formatItemMetrics(soldItem.itemMetrics)}(s)):',
+                      'qty (${CFormatter.formatItemMetrics(soldItem.itemMetrics, qtyAvailable.value)}):',
                     ),
                     const SizedBox(
                       width: CSizes.spaceBtnInputFields,
@@ -1154,7 +1153,7 @@ class CTxnsController extends GetxController {
                             return 'only ${CFormatter.formatItemQtyDisplays(
                               soldItem.quantity,
                               soldItem.itemMetrics,
-                            )} ${CFormatter.formatItemMetrics(soldItem.itemMetrics)}(s) were sold';
+                            )} ${CFormatter.formatItemMetrics(soldItem.itemMetrics, soldItem.quantity)} were sold';
                           }
                           return null;
                         },
@@ -1282,7 +1281,7 @@ class CTxnsController extends GetxController {
                                   if (refundQty.value > soldItem.quantity) {
                                     CPopupSnackBar.warningSnackBar(
                                       message:
-                                          'only ${CFormatter.formatItemQtyDisplays(soldItem.quantity, soldItem.itemMetrics)} of ${CFormatter.formatItemMetrics(soldItem.itemMetrics)}s were sold to this customer!',
+                                          'only ${CFormatter.formatItemQtyDisplays(soldItem.quantity, soldItem.itemMetrics)} of ${CFormatter.formatItemMetrics(soldItem.itemMetrics, soldItem.quantity)} were sold to this customer!',
                                       title: 'refund qty is invalid!',
                                     );
                                   }

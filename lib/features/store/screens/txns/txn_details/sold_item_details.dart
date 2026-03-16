@@ -144,7 +144,7 @@ class CSoldItemDetails extends StatelessWidget {
                         // title:
                         //     '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${saleItem.quantity} sold; ${saleItem.qtyRefunded} refunded)',
                         title:
-                            '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${CFormatter.formatItemQtyDisplays(saleItem.quantity, saleItem.itemMetrics)} ${CFormatter.formatItemMetrics(saleItem.itemMetrics)}(s) sold; ${CFormatter.formatItemQtyDisplays(saleItem.qtyRefunded, saleItem.itemMetrics)} refunded)',
+                            '$userCurrency.${(saleItem.quantity * saleItem.unitSellingPrice).toStringAsFixed(2)} (${CFormatter.formatItemQtyDisplays(saleItem.quantity, saleItem.itemMetrics)} ${CFormatter.formatItemMetrics(saleItem.itemMetrics, saleItem.quantity)} sold; ${CFormatter.formatItemQtyDisplays(saleItem.qtyRefunded, saleItem.itemMetrics)} refunded)',
                         subTitle: 'total amount',
                         onTap: () {},
                       ),
