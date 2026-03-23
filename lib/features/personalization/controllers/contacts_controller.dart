@@ -86,7 +86,7 @@ class CContactsController extends GetxController {
   }
 
   /// -- add a contact to the database --
-  Future addUpdateContact(
+  Future addContact(
     bool fromInventoryDetails,
     CContactsModel? contact,
     int? productId,
@@ -125,6 +125,8 @@ class CContactsController extends GetxController {
           'yyyy-MM-dd kk:mm',
         ).format(clock.now()),
         DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
+        0,
+        'add',
       );
 
       await dbHelper.addContact(contact ?? contactDetails);

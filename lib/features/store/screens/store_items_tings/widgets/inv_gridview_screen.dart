@@ -95,8 +95,11 @@ class CInvGridviewScreen extends StatelessWidget {
             !invController.isLoading.value) {
           return const NoSearchResultsScreen();
         }
-        if (invController.inventoryItems.isEmpty &&
-            invController.foundInventoryItems.isEmpty) {
+        // if (invController.inventoryItems.isEmpty &&
+        //     invController.foundInventoryItems.isEmpty) {
+        //   return noDataWidget;
+        // }
+        if (invController.inventoryItems.isEmpty) {
           return noDataWidget;
         }
 
@@ -119,56 +122,82 @@ class CInvGridviewScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: CSizes.gridViewSpacing / 2,
                 crossAxisSpacing: CSizes.gridViewSpacing / 2,
-                //mainAxisExtent: CHelperFunctions.screenHeight() * .27,
-                mainAxisExtent: 207.0,
+                mainAxisExtent: CHelperFunctions.screenHeight() * .29,
+                //mainAxisExtent: 207.0,
               ),
               itemBuilder: (context, index) {
+                // var avatarTxt =
+                //     searchController.showSearchField.value &&
+                //         invController.foundInventoryItems.isNotEmpty
+                //     ? invController.foundInventoryItems[index].name[0]
+                //           .toUpperCase()
+                //     : invController.inventoryItems[index].name[0].toUpperCase();
+
                 var avatarTxt =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].name[0]
                           .toUpperCase()
                     : invController.inventoryItems[index].name[0].toUpperCase();
 
+                // var bp =
+                //     searchController.showSearchField.value &&
+                //         invController.foundInventoryItems.isNotEmpty
+                //     ? invController.foundInventoryItems[index].buyingPrice
+                //     : invController.inventoryItems[index].buyingPrice;
+
                 var bp =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].buyingPrice
                     : invController.inventoryItems[index].buyingPrice;
 
+                var stockValue =
+                    searchController.showSearchField.value &&
+                        searchController.txtSearchField.text != ''
+                    ? (invController.foundInventoryItems[index].unitBp *
+                          invController.foundInventoryItems[index].quantity)
+                    : (invController.inventoryItems[index].unitBp *
+                          invController.inventoryItems[index].quantity);
+
+                // var dateAdded =
+                //     searchController.showSearchField.value &&
+                //         invController.foundInventoryItems.isNotEmpty
+                //     ? invController.foundInventoryItems[index].dateAdded
+                //     : invController.inventoryItems[index].dateAdded;
                 var dateAdded =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].dateAdded
                     : invController.inventoryItems[index].dateAdded;
 
                 var expiryDate =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].expiryDate
                     : invController.inventoryItems[index].expiryDate;
 
                 var isFavorite =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].markedAsFavorite
                     : invController.inventoryItems[index].markedAsFavorite;
 
                 var isSynced =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].isSynced
                     : invController.inventoryItems[index].isSynced;
 
                 var lastModified =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].lastModified
                     : invController.inventoryItems[index].lastModified;
 
                 var lowStockNotifierLimit =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController
                           .foundInventoryItems[index]
                           .lowStockNotifierLimit
@@ -176,73 +205,73 @@ class CInvGridviewScreen extends StatelessWidget {
 
                 var productId =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].productId
                     : invController.inventoryItems[index].productId;
 
                 var pName =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].name
                     : invController.inventoryItems[index].name;
 
                 var itemCalibration =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].calibration
                     : invController.inventoryItems[index].calibration;
 
                 var qtyAvailable =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].quantity
                     : invController.inventoryItems[index].quantity;
 
                 var qtyRefunded =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].qtyRefunded
                     : invController.inventoryItems[index].qtyRefunded;
 
                 var qtySold =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].qtySold
                     : invController.inventoryItems[index].qtySold;
 
                 var sku =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].pCode
                     : invController.inventoryItems[index].pCode;
 
                 var supplierContacts =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].supplierContacts
                     : invController.inventoryItems[index].supplierContacts;
 
                 var supplierName =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].supplierName
                     : invController.inventoryItems[index].supplierName;
 
                 var syncAction =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].syncAction
                     : invController.inventoryItems[index].syncAction;
 
                 var unitBp =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].unitBp
                     : invController.inventoryItems[index].unitBp;
 
                 var usp =
                     searchController.showSearchField.value &&
-                        invController.foundInventoryItems.isNotEmpty
+                        searchController.txtSearchField.text != ''
                     ? invController.foundInventoryItems[index].unitSellingPrice
                     : invController.inventoryItems[index].unitSellingPrice;
 
@@ -299,49 +328,54 @@ class CInvGridviewScreen extends StatelessWidget {
                   onAvatarIconTap: syncController.processingSync.value
                       ? null
                       : () {
-                          invController.itemExists.value = true;
-                          invController.txtSupplierName.text = supplierName;
-                          invController.txtSupplierContacts.text =
-                              supplierContacts;
+                          invController.resetInvFields().then(
+                            (_) {
+                              invController.itemExists.value = true;
+                              invController.txtSupplierName.text = supplierName;
+                              invController.txtSupplierContacts.text =
+                                  supplierContacts;
 
-                          invController.includeSupplierDetails.value =
-                              supplierName != '' || supplierContacts != '';
-                          invController.includeExpiryDate.value =
-                              expiryDate != '';
-                          showDialog(
-                            context: context,
-                            useRootNavigator: true,
-                            builder: (BuildContext context) {
-                              invController.currentItemId.value = productId!;
+                              invController.includeSupplierDetails.value =
+                                  supplierName != '' || supplierContacts != '';
+                              invController.includeExpiryDate.value =
+                                  expiryDate != '';
+                              showDialog(
+                                context: Get.overlayContext!,
+                                useRootNavigator: true,
+                                builder: (BuildContext context) {
+                                  invController.currentItemId.value =
+                                      productId!;
 
-                              return dialog.buildDialog(
-                                context,
-                                CInventoryModel.withID(
-                                  invController.currentItemId.value,
-                                  userController.user.value.id,
-                                  userController.user.value.email,
-                                  userController.user.value.fullName,
-                                  sku,
-                                  pName,
-                                  isFavorite,
-                                  itemCalibration,
-                                  qtyAvailable,
-                                  qtySold,
-                                  qtyRefunded,
-                                  bp,
-                                  unitBp,
-                                  usp,
-                                  lowStockNotifierLimit,
-                                  supplierName,
-                                  supplierContacts,
-                                  dateAdded,
-                                  lastModified,
-                                  expiryDate,
-                                  isSynced,
-                                  syncAction,
-                                ),
-                                false,
-                                false,
+                                  return dialog.buildDialog(
+                                    context,
+                                    CInventoryModel.withID(
+                                      invController.currentItemId.value,
+                                      userController.user.value.id,
+                                      userController.user.value.email,
+                                      userController.user.value.fullName,
+                                      sku,
+                                      pName,
+                                      isFavorite,
+                                      itemCalibration,
+                                      qtyAvailable,
+                                      qtySold,
+                                      qtyRefunded,
+                                      bp,
+                                      unitBp,
+                                      usp,
+                                      lowStockNotifierLimit,
+                                      supplierName,
+                                      supplierContacts,
+                                      dateAdded,
+                                      lastModified,
+                                      expiryDate,
+                                      isSynced,
+                                      syncAction,
+                                    ),
+                                    false,
+                                    false,
+                                  );
+                                },
                               );
                             },
                           );
@@ -378,6 +412,7 @@ class CInvGridviewScreen extends StatelessWidget {
                       ? qtySold.toStringAsFixed(0)
                       : qtySold.toString(),
                   syncAction: syncAction,
+                  stockValue: stockValue.toString(),
                   // titleColor: expiryDate != ''
                   //     ? CDateTimeComputations.timeRangeFromNow(
                   //                 expiryDate.replaceAll('@ ', ''),

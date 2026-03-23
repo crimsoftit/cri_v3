@@ -161,6 +161,8 @@ class DbHelper extends GetxController {
             contactCategory TEXT NOT NULL,
             lastModified TEXT NOT NULL,
             createdAt TEXT NOT NULL,
+            isSynced INTEGER NOT NULL,
+            syncAction TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
           )
         ''');

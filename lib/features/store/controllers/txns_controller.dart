@@ -239,7 +239,10 @@ class CTxnsController extends GetxController {
 
       if (kDebugMode) {
         print(e.toString());
-        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching sold items!',
+          message: e.toString(),
+        );
       }
       //throw e.toString();
       rethrow;
@@ -303,8 +306,11 @@ class CTxnsController extends GetxController {
       isLoading.value = false;
 
       if (kDebugMode) {
-        print(e.toString());
-        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+        print('error fetching txns: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching txns!',
+          message: e.toString(),
+        );
       }
       //throw e.toString();
       rethrow;

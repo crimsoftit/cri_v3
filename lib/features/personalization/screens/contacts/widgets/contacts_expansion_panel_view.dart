@@ -209,15 +209,25 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'mobile ${contact.contactPhone}',
-                                      style:
-                                          Theme.of(
-                                            context,
-                                          ).textTheme.labelMedium!.apply(
-                                            fontWeightDelta: 2,
+                                    contact.contactPhone != ''
+                                        ? Text(
+                                            'mobile ${contact.contactPhone}',
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium!.apply(
+                                                  fontWeightDelta: 2,
+                                                ),
+                                          )
+                                        : Text(
+                                            'email: ${contact.contactEmail}',
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium!.apply(
+                                                  fontWeightDelta: 2,
+                                                ),
                                           ),
-                                    ),
                                     TextButton.icon(
                                       icon: Icon(
                                         Iconsax.add,

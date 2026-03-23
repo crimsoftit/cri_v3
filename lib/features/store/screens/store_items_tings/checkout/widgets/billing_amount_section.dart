@@ -41,7 +41,7 @@ class CBillingAmountSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('discount', style: Theme.of(context).textTheme.bodyMedium),
+            Text('Discount', style: Theme.of(context).textTheme.bodyMedium),
             cartController.discount.value == 0
                 ? IconButton(
                     icon: Icon(
@@ -88,7 +88,7 @@ class CBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'total amount (vatable)',
+              'Total amount (vatable)',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium!.apply(fontWeightDelta: 2),
@@ -106,7 +106,7 @@ class CBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'customer balance',
+              'Customer balance',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium!.apply(fontWeightDelta: 2),

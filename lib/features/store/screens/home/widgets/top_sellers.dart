@@ -41,15 +41,13 @@ class CTopSellers extends StatelessWidget {
             return SizedBox(width: CSizes.spaceBtnItems / 2);
           },
           itemBuilder: (context, index) {
+            var invItemIndex = invController.inventoryItems.indexWhere(
+              (item) =>
+                  item.productId == txnsController.bestSellers[index].productId,
+            );
             return InkWell(
               onTap: () {
-                var itemIndex = invController.inventoryItems.indexWhere(
-                  (item) =>
-                      item.productId ==
-                      txnsController.bestSellers[index].productId,
-                );
-
-                if (itemIndex >= 0) {
+                if (invItemIndex >= 0) {
                   Get.toNamed(
                     '/inventory/item_details/',
                     arguments: txnsController.bestSellers[index].productId,
@@ -65,10 +63,11 @@ class CTopSellers extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CCircleAvatar(
-                    avatarInitial: txnsController
-                        .bestSellers[index]
-                        .productName[0]
-                        .toUpperCase(),
+                    avatarInitial: invItemIndex >= 0
+                        ? invController.inventoryItems[index].name[0]
+                              .toUpperCase()
+                        : txnsController.bestSellers[index].productName[0]
+                              .toUpperCase(),
                     bgColor: CColors.white,
                     radius: 20.0,
                     txtColor: CColors.rBrown,
@@ -83,8 +82,11 @@ class CTopSellers extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          txnsController.bestSellers[index].productName
-                              .toUpperCase(),
+                          invItemIndex >= 0
+                              ? invController.inventoryItems[index].name
+                                    .toUpperCase()
+                              : txnsController.bestSellers[index].productName
+                                    .toUpperCase(),
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             fontWeightDelta: 1,
                             color: isDarkTheme ? CColors.white : CColors.rBrown,
@@ -93,7 +95,7 @@ class CTopSellers extends StatelessWidget {
                           maxLines: 1,
                         ),
                         Text(
-                          '${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId)  == 'unit' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId)}(s) sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
+                          '${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId) == 'unit' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId)}(s) sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             color: CColors.darkGrey,
                           ),

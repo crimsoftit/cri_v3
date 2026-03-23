@@ -211,10 +211,11 @@ class HomeScreen extends StatelessWidget {
                                 showBorder: true,
                                 child: CCustomDropdownBtn(
                                   defaultItemColor: CColors.black,
+                                  defaultItemFontSizeFactor: 1.1,
                                   dropdownItems:
                                       dashboardController.salesFilters,
                                   dropdownBoxColor: CColors.rBrown.withValues(
-                                    alpha: .8,
+                                    alpha: .4,
                                   ),
                                   selectedValue: dashboardController
                                       .setDefaultSalesFilterPeriod(),
@@ -231,7 +232,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           showActionBtn: true,
-                          title: 'sales summary...',
+                          title: 'Sales summary...',
                           txtColor: CNetworkManager.instance.hasConnection.value
                               ? CColors.rBrown
                               : CColors.darkGrey,
@@ -297,6 +298,10 @@ class HomeScreen extends StatelessWidget {
               chartHeight: 180.0,
               chartWidth: CHelperFunctions.screenWidth(),
               lineChartData: [
+                FlSpot(
+                  0,
+                  dashboardController.salesPastMidnightTo3.value,
+                ),
                 FlSpot(
                   3,
                   (dashboardController.salesBtn3to6.value),

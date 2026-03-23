@@ -105,7 +105,7 @@ class CCheckoutScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'chekout',
+                        'Chekout',
                         style: Theme.of(context).textTheme.labelLarge!.apply(
                           color: CNetworkManager.instance.hasConnection.value
                               ? CColors.rBrown
@@ -133,8 +133,8 @@ class CCheckoutScreen extends StatelessWidget {
                   /// -- empty data widget --
                   final noDataWidget = CAnimatedLoaderWidget(
                     showActionBtn: true,
-                    text: 'whoops! cart is EMPTY!',
-                    actionBtnText: 'let\'s fill it',
+                    text: 'Whoops! cart is EMPTY!',
+                    actionBtnText: 'Let\'s fill it',
                     animation: CImages.emptyCartLottie,
                     onActionBtnPressed: () {
                       navController.selectedIndex.value = 1;
@@ -394,10 +394,64 @@ class CCheckoutScreen extends StatelessWidget {
                                                             ),
 
                                                             onChanged: (value) {
-                                                              cartController
-                                                                      .displaySaveBtnOnCheckOutItems
-                                                                      .value =
-                                                                  true;
+                                                              // cartController
+                                                              //         .displaySaveBtnOnCheckOutItems
+                                                              //         .value =
+                                                              //     true;
+                                                              if (cartController
+                                                                      .qtyFieldControllers[index]
+                                                                      .text !=
+                                                                  '') {
+                                                                var invItem = invController.inventoryItems.firstWhere(
+                                                                  (item) =>
+                                                                      item.productId
+                                                                          .toString() ==
+                                                                      cartController
+                                                                          .cartItems[index]
+                                                                          .productId
+                                                                          .toString()
+                                                                          .toLowerCase(),
+                                                                );
+
+                                                                final thisCartItem = cartController.convertInvToCartItem(
+                                                                  invItem,
+                                                                  double.parse(
+                                                                    cartController
+                                                                        .qtyFieldControllers[index]
+                                                                        .text
+                                                                        .trim(),
+                                                                  ),
+                                                                );
+
+                                                                cartController.addSingleItemToCart(
+                                                                  thisCartItem,
+                                                                  true,
+                                                                  cartController
+                                                                      .qtyFieldControllers[index]
+                                                                      .text
+                                                                      .trim(),
+                                                                );
+                                                                if (checkoutController
+                                                                        .amtIssuedFieldController
+                                                                        .text !=
+                                                                    '') {
+                                                                  checkoutController.computeCustomerBal(
+                                                                    cartController
+                                                                        .totalCartPrice
+                                                                        .value,
+                                                                    double.parse(
+                                                                      checkoutController
+                                                                          .amtIssuedFieldController
+                                                                          .text
+                                                                          .trim(),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                cartController
+                                                                        .displaySaveBtnOnCheckOutItems
+                                                                        .value =
+                                                                    false;
+                                                              }
                                                             },
                                                           ),
                                                         ),

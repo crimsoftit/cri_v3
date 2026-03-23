@@ -27,8 +27,8 @@ class CPaymentMethodSection extends StatelessWidget {
       children: [
         CSectionHeading(
           showActionBtn: true,
-          title: 'payment method',
-          btnTitle: 'change',
+          title: 'Payment method',
+          btnTitle: 'Change',
           btnTxtColor: CColors.darkerGrey,
           editFontSize: true,
           fSize: 13.0,

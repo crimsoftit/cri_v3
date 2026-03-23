@@ -130,12 +130,22 @@ class CStoreScreen extends StatelessWidget {
                   /// -- tabs --
                   bottom: const CTabBar(
                     tabs: [
-                      Tab(child: Text('Inventory'),),
+                      Tab(
+                        child: Text('Inventory'),
+                      ),
 
-                      Tab(child: Text('Receipts'),),
-                      Tab(child: Text('Invoices'),),
-                      Tab(child: Text('Refunds'),),
-                      Tab(child: Text('Sales (all)'),),
+                      Tab(
+                        child: Text('Receipts'),
+                      ),
+                      Tab(
+                        child: Text('Invoices'),
+                      ),
+                      Tab(
+                        child: Text('Refunds'),
+                      ),
+                      Tab(
+                        child: Text('Sales (all)'),
+                      ),
                     ],
                   ),
                 ),
@@ -210,8 +220,8 @@ class CStoreScreen extends StatelessWidget {
                           containerWidth: 14.0,
                           counterBgColor: CColors.white,
                           counterTxtColor: CColors.rBrown,
-                          rightPosition: 75.0,
-                          topPosition: 12.0,
+                          rightPosition: 68.0,
+                          topPosition: 10.0,
                         ),
                       ],
                     ),

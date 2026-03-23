@@ -40,6 +40,9 @@ class AddUpdateItemDialog {
       invController.txtBP.text = invController.txtBP.text.isEmpty
           ? invModel.buyingPrice.toString()
           : invController.txtBP.text.trim();
+      // invController.txtBP.text = invController.txtBP.text.isEmpty
+      //     ? (invModel.unitBp * invModel.quantity).toString()
+      //     : invController.txtBP.text.trim();
       invController.unitBP.value = invModel.unitBp;
       invController.txtUnitSP.text = invController.txtUnitSP.text.isEmpty
           ? invModel.unitSellingPrice.toString()

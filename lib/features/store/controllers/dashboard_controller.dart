@@ -27,6 +27,7 @@ class CDashboardController extends GetxController {
   final RxDouble currentWeekSalesAmount = 0.0.obs;
   final RxDouble lastWeekSalesAmount = 0.0.obs;
 
+  final RxDouble salesPastMidnightTo3 = 0.0.obs;
   final RxDouble salesBtnMidnightTo3 = 0.0.obs;
   final RxDouble salesBtn3to6 = 0.0.obs;
   final RxDouble salesBtn6to9 = 0.0.obs;
@@ -50,18 +51,18 @@ class CDashboardController extends GetxController {
   final RxList<String> salesFilters = <String>[].obs;
 
   final RxList<String> monthNames = [
-    'jan',
-    'feb',
-    'mar',
-    'apr',
-    'may',
-    'jun',
-    'jul',
-    'aug',
-    'sep',
-    'oct',
-    'nov',
-    'dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ].obs;
 
   final RxMap<int, double> monthlyTotals = <int, double>{}.obs;
@@ -269,7 +270,15 @@ class CDashboardController extends GetxController {
             // map index to the desired day of the week
             final period = forAnnualData
                 ? monthNames
-                : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+                : [
+                    'Mon',
+                    'Tue',
+                    'Wed',
+                    'Thu',
+                    'Fri',
+                    'Sat',
+                    'Sun',
+                  ];
 
             // calculate the index and ensure it wraps around the corresponding day of the week or month of they year
             final index = value.toInt() % period.length;
@@ -369,6 +378,7 @@ class CDashboardController extends GetxController {
   }
 
   filterHourlySales() {
+    final timePastMidnight = 1;
     final timeAt3Hrs = 3 * 60;
     final timeAt6Hrs = 6 * 60;
     final timeAt9Hrs = 9 * 60;
@@ -379,6 +389,20 @@ class CDashboardController extends GetxController {
     final timeAtMidnight = 24 * 60;
 
     /// -- sales btn midnight and 3:00hrs --
+    var salesPast0and3 = txnsController.sales.where(
+      (sale) {
+        var formattedDate = DateTime.parse(
+          sale.lastModified.replaceAll(' @', ''),
+        );
+        final timeInMunites = formattedDate.hour * 60 + formattedDate.minute;
+        return timeInMunites >= timePastMidnight && timeInMunites < timeAt3Hrs;
+      },
+    ).toList();
+    salesPastMidnightTo3.value = salesPast0and3.fold(
+      0.0,
+      (sum, sale) => sum + (sale.unitSellingPrice * sale.quantity),
+    );
+
     var salesBtn0and3 = txnsController.sales.where(
       (sale) {
         var formattedDate = DateTime.parse(

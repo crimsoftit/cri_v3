@@ -113,9 +113,6 @@ class NavMenu extends StatelessWidget {
             //   icon: Icon(Iconsax.wallet_check),
             //   label: 'txns',
             // ),
-            
-
-            
             NavigationDestination(
               icon: Icon(
                 Iconsax.user_octagon,
@@ -135,13 +132,14 @@ class NavMenu extends StatelessWidget {
                     icon: Icon(Iconsax.notification),
                     label: 'Alerts',
                   ),
-                  CAlertsCounterWidget(
-                    alertsCount: notsController.unreadNotifications.length,
-                    counterBgColor: Colors.red,
-                    counterTxtColor: CColors.white,
-                    rightPosition: 20.0,
-                    topPosition: 10.0,
-                  ),
+                  if (notsController.unreadNotifications.isNotEmpty)
+                    CAlertsCounterWidget(
+                      alertsCount: notsController.unreadNotifications.length,
+                      counterBgColor: Colors.red,
+                      counterTxtColor: CColors.white,
+                      rightPosition: 16.0,
+                      topPosition: 10.0,
+                    ),
                 ],
               ),
             ),

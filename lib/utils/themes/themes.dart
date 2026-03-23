@@ -31,7 +31,7 @@ class CAppTheme {
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Poppins',
+    fontFamily: 'IosevkaCharonMono',
     brightness: Brightness.dark,
     primaryColor: CColors.rBrown,
     textTheme: CTextTheme.darkTextTheme,

@@ -74,6 +74,7 @@ class CInventoryController extends GetxController {
     'units',
     'litre',
     'kg',
+    'metre',
   ].obs;
 
   final RxString itemMetrics = ''.obs;
@@ -125,6 +126,7 @@ class CInventoryController extends GetxController {
   void dispose() {
     // -- clean up the controller when the widget is removed from the widget tree --
     txtNameController.dispose();
+    txtExpiryDatePicker.dispose();
     super.dispose();
   }
 
@@ -235,10 +237,15 @@ class CInventoryController extends GetxController {
       return returnItems;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('error fetching inventory items: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching inventory items!',
+          message: e.toString(),
+        );
+      }
+
+      rethrow;
     }
   }
 
@@ -252,9 +259,9 @@ class CInventoryController extends GetxController {
       inventoryItem.productId = CHelperFunctions.generateInvId();
 
       // -- check internet connectivity
-      final isConnected = await CNetworkManager.instance.isConnected();
 
-      if (isConnected) {
+      if (await CNetworkManager.instance.isConnected() ||
+          CNetworkManager.instance.hasConnection.value) {
         // -- save data to gsheets --
         var gSheetsInvData = CInventoryModel.withID(
           inventoryItem.productId,
@@ -265,7 +272,7 @@ class CInventoryController extends GetxController {
           txtNameController.text,
           0,
           itemMetrics.value,
-          double.parse(txtQty.text),
+          double.parse(txtQty.text.trim()),
           0.0,
           0.0,
           double.parse(txtBP.text.trim()),
@@ -308,10 +315,18 @@ class CInventoryController extends GetxController {
       // );
     } catch (e) {
       isLoading.value = false;
-      CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
-    } finally {
-      isLoading.value = false;
+      if (kDebugMode) {
+        print('error adding inventory item: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error adding inventory item!',
+          message: e.toString(),
+        );
+      }
+      rethrow;
     }
+    // finally {
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- upload unsynced data to the cloud --
@@ -419,9 +434,12 @@ class CInventoryController extends GetxController {
 
       if (kDebugMode) {
         print('error updating inventory appends: $e');
-        CPopupSnackBar.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating inventory appends!',
+          message: e.toString(),
+        );
       }
-      throw e.toString();
+      rethrow;
     }
   }
 
@@ -440,6 +458,25 @@ class CInventoryController extends GetxController {
       //fetchInventoryItems();
 
       if (fetchedItem.isNotEmpty) {
+        if (fetchedItem.first.supplierName != '' ||
+            fetchedItem.first.supplierContacts != '') {
+          supplierDetailsExist.value = true;
+          includeSupplierDetails.value = true;
+          txtSupplierName.text = fetchedItem.first.supplierName;
+          txtSupplierContacts.text = fetchedItem.first.supplierContacts;
+        } else {
+          supplierDetailsExist.value = false;
+          includeSupplierDetails.value = false;
+          txtSupplierName.text = '';
+          txtSupplierContacts.text = '';
+        }
+        if (fetchedItem.first.expiryDate != '') {
+          includeExpiryDate.value = true;
+          txtExpiryDatePicker.text = fetchedItem.first.expiryDate;
+        } else {
+          includeExpiryDate.value = false;
+          txtExpiryDatePicker.text = '';
+        }
         currentItemId.value = fetchedItem.first.productId!;
 
         itemExists.value = true;
@@ -455,21 +492,6 @@ class CInventoryController extends GetxController {
 
         txtStockNotifierLimit.text = (fetchedItem.first.lowStockNotifierLimit)
             .toString();
-        txtSupplierName.text = fetchedItem.first.supplierName;
-        txtSupplierContacts.text = fetchedItem.first.supplierContacts;
-        txtExpiryDatePicker.text = fetchedItem.first.expiryDate;
-
-        if (fetchedItem.first.supplierName != '' ||
-            fetchedItem.first.supplierContacts != '') {
-          supplierDetailsExist.value = true;
-        } else {
-          supplierDetailsExist.value = false;
-        }
-        if (fetchedItem.first.expiryDate != '') {
-          includeExpiryDate.value = true;
-        } else {
-          includeExpiryDate.value = false;
-        }
 
         txtSyncAction.text = 'update';
       } else {
@@ -493,10 +515,14 @@ class CInventoryController extends GetxController {
       return fetchedItem;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('error fetching item by code and email: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching item by code and email!',
+          message: e.toString(),
+        );
+      }
+      rethrow;
     }
   }
 
@@ -520,7 +546,7 @@ class CInventoryController extends GetxController {
 
   searchInventory(String value) {
     fetchUserInventoryItems();
-    foundInventoryItems.clear();
+    //foundInventoryItems.clear();
 
     var invSearchItems = inventoryItems
         .where(
@@ -548,7 +574,10 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // -- update entry
-      await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
+      await dbHelper.updateInventoryItem(
+        inventoryItem,
+        int.parse(txtId.text.trim()),
+      );
 
       // -- refresh inventory list
       fetchUserInventoryItems();
@@ -687,28 +716,37 @@ class CInventoryController extends GetxController {
             await dbHelper.saveInvDelsForSync(updateItem);
             CPopupSnackBar.customToast(
               message:
-                  'while this works offline, consider using an internet connection to back up your data online!',
+                  'While this works offline, consider using an internet connection to back up your data online!',
               forInternetConnectivityStatus: true,
             );
           }
-          updateInventoryItem(inventoryItem);
+          updateInventoryItem(inventoryItem).then(
+            (_) {
+              resetInvFields();
+            },
+          );
         } else {
           inventoryItem.dateAdded = DateFormat(
             'yyyy-MM-dd @ kk:mm',
           ).format(clock.now());
-          addInventoryItem(inventoryItem);
+          addInventoryItem(inventoryItem).then(
+            (_) {
+              resetInvFields();
+            },
+          );
         }
       }
+
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print(e.toString());
+        print('error adding/updating inventory item: $e');
         CPopupSnackBar.errorSnackBar(
           title: 'error adding/updating inventory item',
           message: e.toString(),
         );
       }
-      return false;
+      rethrow;
     }
   }
 
@@ -730,7 +768,11 @@ class CInventoryController extends GetxController {
       scanResults.value = "ERROR!! failed to get platform version";
     } catch (e) {
       scanResults.value = "ERROR!! failed to get platform version";
-      CPopupSnackBar.errorSnackBar(title: 'scan error', message: e.toString());
+      CPopupSnackBar.errorSnackBar(
+        title: 'scan error',
+        message: e.toString(),
+      );
+      rethrow;
     }
   }
 
@@ -796,10 +838,14 @@ class CInventoryController extends GetxController {
       return allGSheetData;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('error fetching all inventory sheet items: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching all inventory sheet items!',
+          message: e.toString(),
+        );
+      }
+      rethrow;
     }
   }
 
@@ -809,12 +855,15 @@ class CInventoryController extends GetxController {
       //await StoreSheetsApi.initializeSpreadSheets();
       await StoreSheetsApi.updateInvDataNoDeletions(id, itemModel.toMap());
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating sheet data',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('error updating inventory cloud data: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating inventory cloud data',
+          message: e.toString(),
+        );
+      }
 
-      throw e.toString();
+      rethrow;
     }
   }
 
@@ -823,11 +872,15 @@ class CInventoryController extends GetxController {
     try {
       await StoreSheetsApi.deleteInvItemByIdAndNotForUpdates(id);
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'delete error',
-        message: e.toString(),
-      );
-      throw e.toString();
+      if (kDebugMode) {
+        print('error deleting inventory cloud data: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting inventory cloud data',
+          message: e.toString(),
+        );
+      }
+
+      rethrow;
     }
   }
 
@@ -954,7 +1007,7 @@ class CInventoryController extends GetxController {
         );
       }
 
-      throw e.toString();
+      rethrow;
     }
   }
 
@@ -997,7 +1050,7 @@ class CInventoryController extends GetxController {
           message: e.toString(),
         );
       }
-      return false;
+      rethrow;
     }
   }
 
@@ -1017,7 +1070,7 @@ class CInventoryController extends GetxController {
         );
       }
 
-      throw e.toString();
+      rethrow;
     }
   }
 
@@ -1110,11 +1163,12 @@ class CInventoryController extends GetxController {
           message: 'inventory sync error: $e',
         );
       }
-      return false;
-    } finally {
-      // stop loader
-      syncIsLoading.value = false;
+      rethrow;
     }
+    // finally {
+    //   // stop loader
+    //   syncIsLoading.value = false;
+    // }
   }
 
   /// -- fetch top sellers --
@@ -1166,7 +1220,7 @@ class CInventoryController extends GetxController {
 
   toggleSupplierDetsFieldsVisibility(value) {
     includeSupplierDetails.value = value;
-    if (!includeSupplierDetails.value) {
+    if (value == false) {
       txtSupplierName.text = '';
       txtSupplierContacts.text = '';
     }
@@ -1180,10 +1234,11 @@ class CInventoryController extends GetxController {
   }
 
   /// -- reset fields --
-  resetInvFields() {
+  Future resetInvFields() async {
     itemExists.value = false;
     itemMetrics.value = "";
     includeSupplierDetails.value = false;
+    includeExpiryDate.value = false;
     txtId.text = "";
     txtNameController.text = "";
     txtCode.text = "";
@@ -1195,6 +1250,8 @@ class CInventoryController extends GetxController {
     txtStockNotifierLimit.text = "";
     txtSupplierName.text = "";
     txtSupplierContacts.text = '';
+    txtExpiryDatePicker.text = '';
+    txtSyncAction.text = '';
   }
 
   /// -- bottomSheetModal for when usp is less than ubp --
@@ -1214,7 +1271,9 @@ class CInventoryController extends GetxController {
                 btnTitle: '',
                 editFontSize: true,
               ),
-              const SizedBox(height: CSizes.spaceBtnSections / 4),
+              const SizedBox(
+                height: CSizes.spaceBtnSections / 4,
+              ),
             ],
           ),
         );
@@ -1238,6 +1297,11 @@ class CInventoryController extends GetxController {
 
       txtExpiryDatePicker.text = formattedDate;
     }
+  }
+
+  removeExpiry() {
+    txtExpiryDatePicker.text = '';
+    //includeExpiryDate.value = false;
   }
 
   /// -- toggle favorite status --

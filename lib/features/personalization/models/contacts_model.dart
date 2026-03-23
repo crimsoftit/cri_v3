@@ -11,6 +11,8 @@ class CContactsModel {
   String _contactCategory = '';
   String _lastModified = '';
   String _createdAt = '';
+  int _isSynced = 0;
+  String _syncAction = '';
 
   CContactsModel(
     this._addedBy,
@@ -21,6 +23,8 @@ class CContactsModel {
     this._contactCategory,
     this._lastModified,
     this._createdAt,
+    this._isSynced,
+    this._syncAction,
   );
 
   CContactsModel.withId(
@@ -33,10 +37,24 @@ class CContactsModel {
     this._contactCategory,
     this._lastModified,
     this._createdAt,
+    this._isSynced,
+    this._syncAction,
   );
 
   CContactsModel empty() {
-    return CContactsModel.withId('', 0, 0, '', '', '', '', '', '');
+    return CContactsModel.withId(
+      '',
+      0,
+      0,
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      0,
+      '',
+    );
   }
 
   int? get contactId => _contactId;
@@ -48,6 +66,8 @@ class CContactsModel {
   String get contactCategory => _contactCategory;
   String get lastModified => _lastModified;
   String get createdAt => _createdAt;
+  int get isSynced => _isSynced;
+  String get syncAction => _syncAction;
 
   set contactId(int? newContactId) {
     _contactId = newContactId;
@@ -85,6 +105,14 @@ class CContactsModel {
     _createdAt = newCreatedAt;
   }
 
+  set isSynced(int newIsSynced) {
+    _isSynced = newIsSynced;
+  }
+
+  set syncAction(String newSyncAction) {
+    _syncAction = newSyncAction;
+  }
+
   /// -- convert a Contact object into a Map object --
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -95,6 +123,8 @@ class CContactsModel {
       'contactCategory': _contactCategory,
       'lastModified': _lastModified,
       'createdAt': _createdAt,
+      'isSynced': _isSynced,
+      'syncAction': _syncAction,
     };
     if (contactId != null) {
       map['contactId'] = _contactId;
@@ -116,5 +146,7 @@ class CContactsModel {
     _contactCategory = map['contactCategory'];
     _lastModified = map['lastModified'];
     _createdAt = map['createdAt'];
+    _isSynced = map['isSynced'];
+    _syncAction = map['syncAction'];
   }
 }

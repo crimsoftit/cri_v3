@@ -169,6 +169,8 @@ dependencies:
   in_date_utils: ^1.2.4+1
   percent_indicator: ^4.2.5
 
+  font_awesome_flutter: ^11.0.0
+
 
   double_tap_back_exit: any
 
