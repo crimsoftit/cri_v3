@@ -5,9 +5,11 @@ import 'package:cri_v3/api/sheets/store_sheets_api.dart';
 import 'package:cri_v3/common/widgets/success_screen/txn_success.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:cri_v3/features/personalization/controllers/app_settings_controller.dart';
+import 'package:cri_v3/features/personalization/controllers/contacts_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/location_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/notification_tings/flutter_local_notifications/local_notifications_controller.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
+import 'package:cri_v3/features/personalization/models/contacts_model.dart';
 import 'package:cri_v3/features/personalization/models/notification_model.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
@@ -35,6 +37,7 @@ import 'package:cri_v3/utils/helpers/network_manager.dart';
 import 'package:cri_v3/utils/popups/full_screen_loader.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
+import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +60,7 @@ class CCheckoutController extends GetxController {
     selectedPaymentMethod.value.platformName == 'cash';
     setFocusOnAmtIssuedField.value = false;
     includeAmtIssuedFieldonModal.value = false;
-    
+
     CLocationServices.instance.getUserLocation(
       locationController: locationController,
     );
@@ -87,6 +90,7 @@ class CCheckoutController extends GetxController {
 
   final appSettingsController = Get.put(CAppSettingsController());
   final cartController = Get.put(CCartController());
+  final contactsController = Get.put(CContactsController());
   final invController = Get.put(CInventoryController());
   final navController = Get.put(CNavMenuController());
   final notificationsController = Get.put(CLocalNotificationsController());
@@ -308,10 +312,10 @@ class CCheckoutController extends GetxController {
             lottieImage: syncController.processingSync.value
                 ? CImages.loadingAnime
                 : CImages.paymentSuccessfulAnimation,
-            title: 'txn success',
+            title: 'Txn success',
             subTitle: syncController.processingSync.value
-                ? 'processing cloud sync...'
-                : 'transaction successful',
+                ? 'Processing cloud sync...'
+                : 'Transaction successful',
             onContinueBtnPressed: () async {
               txnsController.fetchSoldItems();
 
@@ -521,7 +525,20 @@ class CCheckoutController extends GetxController {
         message: formatException.message,
       );
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(title: 'scan error!', message: e.toString());
+      if (kDebugMode) {
+        print('scan error: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'scan error!',
+          message: e.toString(),
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'scan error!',
+          message: 'an unknown error occurred while scanning barcode',
+        );
+      }
+
+      rethrow;
     }
   }
 
@@ -636,12 +653,12 @@ class CCheckoutController extends GetxController {
       itemExists.value = false;
       if (kDebugMode) {
         print(e.toString());
-        throw CPopupSnackBar.errorSnackBar(
+        CPopupSnackBar.errorSnackBar(
           title: 'Oh Snap! error fetching for sale item by code!',
           message: e.toString(),
         );
       }
-      return [];
+      rethrow;
     }
   }
 
@@ -707,10 +724,11 @@ class CCheckoutController extends GetxController {
 
   onCheckoutBtnPressed() async {
     try {
-      if (selectedPaymentMethod.value.platformName == 'cash') {
+      if (selectedPaymentMethod.value.platformName.toLowerCase() ==
+          'cash'.toLowerCase()) {
         if (amtIssuedFieldController.text == '') {
           CPopupSnackBar.customToast(
-            message: 'please enter the amount issued by the customer!!',
+            message: 'Please enter the amount issued by the customer!!',
             forInternetConnectivityStatus: false,
           );
           setFocusOnAmtIssuedField.value = true;
@@ -741,13 +759,29 @@ class CCheckoutController extends GetxController {
         );
         return;
       }
-      if (selectedPaymentMethod.value.platformName == 'credit') {
-        if (customerNameFieldController.text == '') {
+      if (selectedPaymentMethod.value.platformName.toLowerCase() ==
+          'credit'.toLowerCase()) {
+        if (customerNameFieldController.text == '' ||
+            customerContactsFieldController.text == '') {
           customerNameFocusNode.value.requestFocus();
           CPopupSnackBar.warningSnackBar(
-            title: 'customer details required!',
+            title: 'Customer details required!',
             message:
-                'please provide customer\'s name and (or) contacts for ${selectedPaymentMethod.value.platformName} payment verification',
+                'Please provide customer\'s name and contacts for ${selectedPaymentMethod.value.platformName} payment verification!',
+          );
+          return;
+        }
+
+        if (!CValidator.isValidPhoneNumber(
+              customerContactsFieldController.text.trim(),
+            ) &&
+            !CValidator.isValidEmail(
+              customerContactsFieldController.text.trim(),
+            )) {
+          CPopupSnackBar.warningSnackBar(
+            title: 'Invalid value for customer contacts!',
+            message:
+                'Please provide a valid phone no. or email for customer\'s ${selectedPaymentMethod.value.platformName} payment verification!',
           );
           return;
         }
@@ -761,8 +795,14 @@ class CCheckoutController extends GetxController {
           break;
         default:
           txnType = 'complete';
+          break;
       }
-      processTxn(txnType);
+
+      processCustomerDetails().then(
+        (_) {
+          processTxn(txnType);
+        },
+      );
     } catch (e) {
       if (kDebugMode) {
         print('checkout error: $e');
@@ -771,6 +811,65 @@ class CCheckoutController extends GetxController {
           title: 'checkout error!',
         );
       }
+      rethrow;
+    }
+  }
+
+  processCustomerDetails() async {
+    try {
+      // -- check if supplied customer contact already exists --
+      if (customerNameFieldController.text != '' &&
+          customerContactsFieldController.text != '') {
+        if (await contactsController.contactActionIsAdd(
+          invController.txtSupplierName.text.trim(),
+          invController.txtSupplierContacts.text,
+        )) {
+          var customerDetails = CContactsModel(
+            userController.user.value.email,
+            0,
+            customerNameFieldController.text.trim(),
+            CValidator.isValidPhoneNumber(
+                  customerContactsFieldController.text.trim(),
+                )
+                ? customerContactsFieldController.text.trim()
+                : '',
+            CValidator.isValidEmail(customerContactsFieldController.text.trim())
+                ? customerContactsFieldController.text.trim()
+                : '',
+            'customers',
+            DateFormat(
+              'yyyy-MM-dd kk:mm',
+            ).format(clock.now()),
+            DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
+            0,
+            'add',
+          );
+
+          contactsController
+              .addContact(
+                false,
+                customerDetails,
+                null,
+              )
+              .then((_) {
+                contactsController.fetchMyContacts();
+              });
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('error adding customer details: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: '$e',
+          title: 'error adding customer details!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an unknown error occurred while saving customer details!',
+          title: 'error adding customer details!',
+        );
+      }
+
       rethrow;
     }
   }
@@ -837,12 +936,21 @@ class CCheckoutController extends GetxController {
     try {
       await StoreSheetsApi.updateCloudTxnItems(txnId, itemModel.toMap());
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating txn #$txnId\'s cloud data',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('error updating txn #$txnId\'s cloud data');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating txn #$txnId\'s cloud data',
+          message: e.toString(),
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating txn #$txnId\'s cloud data',
+          message:
+              'an unknown error occurred while updating txn #$txnId\'s cloud data',
+        );
+      }
 
-      throw e.toString();
+      rethrow;
     }
   }
 

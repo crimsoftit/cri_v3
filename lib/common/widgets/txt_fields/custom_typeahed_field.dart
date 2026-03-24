@@ -12,12 +12,20 @@ import 'package:iconsax/iconsax.dart';
 class CCustomTypeahedField extends StatelessWidget {
   const CCustomTypeahedField({
     super.key,
+    this.fieldHeight,
     this.fieldValidator,
+    this.fillColor,
+    this.minHeight,
     this.prefixIcon,
     required this.labelTxt,
     required this.typeAheadFieldController,
     required this.onItemSelected,
+    required this.includePrefixIcon,
   });
+
+  final bool includePrefixIcon;
+  final Color? fillColor;
+  final double? fieldHeight, minHeight;
 
   final String labelTxt;
   final TextEditingController typeAheadFieldController;
@@ -34,7 +42,7 @@ class CCustomTypeahedField extends StatelessWidget {
 
     return CRoundedContainer(
       bgColor: CColors.transparent,
-      height: 60.0,
+      height: fieldHeight ?? 60.0,
       width: screenWidth,
       child: TypeAheadField<CContactsModel>(
         controller: typeAheadFieldController,
@@ -45,21 +53,35 @@ class CCustomTypeahedField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               constraints: BoxConstraints(
-                minHeight: 60.0,
+                minHeight: minHeight ?? 70.0,
               ),
               filled: true,
-              fillColor: isDarkTheme ? CColors.transparent : CColors.lightGrey,
+              fillColor:
+                  fillColor ??
+                  (isDarkTheme ? CColors.transparent : CColors.lightGrey),
+              focusColor: CColors.rBrown.withValues(alpha: 0.3),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(CSizes.cardRadiusXs),
+                borderSide: BorderSide(color: CColors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: CColors.rBrown.withValues(alpha: 0.3),
+                ),
+                borderRadius: BorderRadius.circular(CSizes.cardRadiusXs),
+              ),
               labelStyle: Theme.of(
                 context,
               ).textTheme.labelSmall,
               labelText: labelTxt,
-              prefixIcon:
-                  prefixIcon ??
-                  Icon(
-                    Iconsax.user_add,
-                    color: CColors.darkGrey,
-                    size: CSizes.iconXs,
-                  ),
+              prefixIcon: includePrefixIcon
+                  ? prefixIcon ??
+                        Icon(
+                          Iconsax.user_add,
+                          color: CColors.darkGrey,
+                          size: CSizes.iconXs,
+                        )
+                  : null,
             ),
             focusNode: focusNode,
             style: const TextStyle(

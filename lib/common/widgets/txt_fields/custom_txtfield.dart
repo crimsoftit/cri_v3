@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CCustomTxtField extends StatelessWidget {
   const CCustomTxtField({
     super.key,
-    this.fieldHeight = 38.0,
+    this.fieldHeight = 40.0,
     required this.txtFieldController,
     required this.labelTxt,
   });

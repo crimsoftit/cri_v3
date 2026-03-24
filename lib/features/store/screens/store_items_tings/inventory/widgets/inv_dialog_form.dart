@@ -517,7 +517,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               height: CSizes.spaceBtnInputFields / 2.0,
                             ),
                             CCustomTypeahedField(
-                              //fieldKey: ,
+                              includePrefixIcon: true,
                               labelTxt: 'Supplier\'s name:',
                               onItemSelected: (suggestion) {
                                 invController.txtSupplierName.text =
@@ -545,6 +545,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
 
                             CCustomTypeahedField(
                               //fieldKey: ,
+                              includePrefixIcon: true,
                               labelTxt: 'Supplier\'s phone no. or e-mail:',
                               onItemSelected: (suggestion) {
                                 invController.txtSupplierName.text =

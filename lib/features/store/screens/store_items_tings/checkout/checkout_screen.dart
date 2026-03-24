@@ -6,7 +6,6 @@ import 'package:cri_v3/common/widgets/products/store_item.dart';
 import 'package:cri_v3/common/widgets/search_bar/animated_typeahead_field.dart';
 import 'package:cri_v3/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:cri_v3/common/widgets/txt_fields/custom_intl_phone_input_field.dart';
-import 'package:cri_v3/common/widgets/txt_fields/custom_txtfield.dart';
 import 'package:cri_v3/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/store/controllers/cart_controller.dart';
@@ -18,6 +17,7 @@ import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/amt_issued_field.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/billing_amount_section.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
+import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/customer_details_screen.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/constants/img_strings.dart';
@@ -680,18 +680,22 @@ class CCheckoutScreen extends StatelessWidget {
                                           checkoutController
                                                       .selectedPaymentMethod
                                                       .value
-                                                      .platformName ==
-                                                  'cash' ||
+                                                      .platformName
+                                                      .toLowerCase() ==
+                                                  'cash'.toLowerCase() ||
                                               checkoutController
                                                       .selectedPaymentMethod
                                                       .value
-                                                      .platformName ==
-                                                  'mPesa (offline)' ||
+                                                      .platformName
+                                                      .toLowerCase() ==
+                                                  'mPesa (offline)'
+                                                      .toLowerCase() ||
                                               checkoutController
                                                       .selectedPaymentMethod
                                                       .value
-                                                      .platformName ==
-                                                  'credit'
+                                                      .platformName
+                                                      .toLowerCase() ==
+                                                  'credit'.toLowerCase()
                                           ? checkoutController
                                                 .selectedPaymentMethod
                                                 .value
@@ -705,15 +709,16 @@ class CCheckoutScreen extends StatelessWidget {
                                           checkoutController
                                                   .selectedPaymentMethod
                                                   .value
-                                                  .platformName ==
-                                              'cash'
+                                                  .platformName
+                                                  .toLowerCase() ==
+                                              'cash'.toLowerCase()
                                           ? Row(
                                               children: [
                                                 const SizedBox(
                                                   width:
                                                       CSizes.spaceBtnItems *
                                                       1.3,
-                                                  height: 38.0,
+                                                  height: 40.0,
                                                 ),
                                                 CAmountIssuedTxtField(
                                                   txtFieldWidth:
@@ -739,12 +744,15 @@ class CCheckoutScreen extends StatelessWidget {
                                                       ),
                                                 CRoundedContainer(
                                                   bgColor: CColors.transparent,
+
                                                   width:
                                                       checkoutController
                                                               .selectedPaymentMethod
                                                               .value
-                                                              .platformName ==
+                                                              .platformName
+                                                              .toLowerCase() ==
                                                           "mPesa online"
+                                                              .toLowerCase()
                                                       ? CHelperFunctions.screenWidth() *
                                                             .75
                                                       : CHelperFunctions.screenWidth() *
@@ -796,46 +804,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                       //       }
                                                       //     },
                                                       //   )
-                                                      : Column(
-                                                          children: [
-                                                            //TextFormField(),
-                                                            CCustomTxtField(
-                                                              labelTxt:
-                                                                  checkoutController
-                                                                              .selectedPaymentMethod
-                                                                              .value
-                                                                              .platformName ==
-                                                                          'mPesa (offline)' ||
-                                                                      checkoutController
-                                                                              .selectedPaymentMethod
-                                                                              .value
-                                                                              .platformName ==
-                                                                          'credit'
-                                                                  ? 'customer name'
-                                                                  : 'customer name(optional)',
-                                                              txtFieldController:
-                                                                  checkoutController
-                                                                      .customerNameFieldController,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 4.0,
-                                                            ),
-                                                            // -- contacts field --
-                                                            CCustomTxtField(
-                                                              txtFieldController:
-                                                                  checkoutController
-                                                                      .customerContactsFieldController,
-                                                              labelTxt:
-                                                                  checkoutController
-                                                                          .selectedPaymentMethod
-                                                                          .value
-                                                                          .platformName ==
-                                                                      'mPesa (offline)'
-                                                                  ? 'contacts (optional)'
-                                                                  : 'contacts',
-                                                            ),
-                                                          ],
-                                                        ),
+                                                      : CustomerDetailsScreen(),
                                                 ),
                                               ],
                                             ),

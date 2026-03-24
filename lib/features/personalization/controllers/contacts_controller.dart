@@ -85,7 +85,7 @@ class CContactsController extends GetxController {
     }
   }
 
-  /// -- add a contact to the database --
+  /// -- add a contact to the local database --
   Future addContact(
     bool fromInventoryDetails,
     CContactsModel? contact,
@@ -94,7 +94,7 @@ class CContactsController extends GetxController {
     try {
       var contactDetails = CContactsModel(
         userController.user.value.email,
-        fromInventoryDetails ? productId : 0,
+        productId,
         fromInventoryDetails
             ? invController.txtSupplierName.text.trim()
             : contact!.contactName,
@@ -121,10 +121,10 @@ class CContactsController extends GetxController {
             ? ''
             : contact!.contactEmail,
         fromInventoryDetails ? 'supplier' : contact!.contactCategory,
-        DateFormat(
+        fromInventoryDetails ? DateFormat(
           'yyyy-MM-dd kk:mm',
-        ).format(clock.now()),
-        DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
+        ).format(clock.now()) : contact!.lastModified,
+        fromInventoryDetails ? DateFormat('yyyy-MM-dd kk:mm').format(clock.now()) : contact!.createdAt,
         0,
         'add',
       );
