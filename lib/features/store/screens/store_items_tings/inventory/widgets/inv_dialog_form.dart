@@ -569,7 +569,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                         !CValidator.isValidPhoneNumber(
                                           value.trim(),
                                         ))) {
-                                  return 'Please enter a valid phone no. e-mail address!';
+                                  return 'Please enter a valid phone no. or e-mail address!';
                                 }
                                 return null;
                               },

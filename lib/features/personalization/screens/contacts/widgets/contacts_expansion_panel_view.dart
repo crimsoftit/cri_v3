@@ -88,6 +88,11 @@ class CContactsExpansionPanelView extends StatelessWidget {
               ),
             );
           }
+          if (demContacts.isNotEmpty && contactsController.isLoading.value) {
+            return const CVerticalProductShimmer(
+              itemCount: 7,
+            );
+          }
           return Padding(
             padding: const EdgeInsets.only(
               left: 2.0,
@@ -244,7 +249,13 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                           context,
                                         ).textTheme.labelMedium!.apply(),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        contactsController
+                                            .updateContactActionModal(
+                                              context,
+                                              contact,
+                                            );
+                                      },
                                     ),
                                   ],
                                 ),

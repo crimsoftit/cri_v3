@@ -1,12 +1,20 @@
 import 'package:clock/clock.dart';
+import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:cri_v3/common/widgets/txt_fields/custom_intl_phone_input_field.dart';
+import 'package:cri_v3/common/widgets/txt_fields/custom_typeahed_field.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/contacts_model.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/utils/constants/colors.dart';
+import 'package:cri_v3/utils/constants/sizes.dart';
 import 'package:cri_v3/utils/db/sqflite/db_helper.dart';
+import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 class CContactsController extends GetxController {
@@ -16,7 +24,11 @@ class CContactsController extends GetxController {
   /// -- variables --
   DbHelper dbHelper = DbHelper.instance;
   final invController = Get.put(CInventoryController());
+  final updateContactItemFormKey = GlobalKey<FormState>();
   final userController = Get.put(CUserController());
+
+  final txtEmailController = TextEditingController();
+  final txtPhoneController = TextEditingController();
 
   final RxBool isLoading = false.obs;
 
@@ -121,10 +133,14 @@ class CContactsController extends GetxController {
             ? ''
             : contact!.contactEmail,
         fromInventoryDetails ? 'supplier' : contact!.contactCategory,
-        fromInventoryDetails ? DateFormat(
-          'yyyy-MM-dd kk:mm',
-        ).format(clock.now()) : contact!.lastModified,
-        fromInventoryDetails ? DateFormat('yyyy-MM-dd kk:mm').format(clock.now()) : contact!.createdAt,
+        fromInventoryDetails
+            ? DateFormat(
+                'yyyy-MM-dd kk:mm',
+              ).format(clock.now())
+            : contact!.lastModified,
+        fromInventoryDetails
+            ? DateFormat('yyyy-MM-dd kk:mm').format(clock.now())
+            : contact!.createdAt,
         0,
         'add',
       );
@@ -243,5 +259,222 @@ class CContactsController extends GetxController {
         .toList();
 
     return foundMatches;
+  }
+
+  /// -- update contact details --
+  Future updateContact(CContactsModel contact) async {
+    try {
+      // --  start loader --
+      isLoading.value = true;
+
+      // -- stop loader --
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader --
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error updating contact: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error updating contact: $e',
+          title: 'error updating contact!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an unknown error occurred while updating contact details!',
+          title: 'error updating contact!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateContactActionModal(
+    BuildContext context,
+    CContactsModel contactItem,
+  ) async {
+    try {
+      final isDarkTheme = CHelperFunctions.isDarkMode(context);
+      return showModalBottomSheet(
+        backgroundColor: isDarkTheme
+            ? CColors.black.withValues(
+                alpha: .9,
+              )
+            : CColors.white,
+        context: context,
+        isDismissible: false,
+        isScrollControlled: true,
+        useSafeArea: true,
+        useRootNavigator: true,
+        builder: (context) {
+          // -- set field values --
+          txtEmailController.text = contactItem.contactEmail;
+          txtPhoneController.text = contactItem.contactPhone;
+
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: CRoundedContainer(
+              bgColor: CColors.transparent,
+              height: CHelperFunctions.screenHeight() * 0.35,
+              padding: const EdgeInsets.all(
+                CSizes.lg / 3,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    contactItem.contactName.toUpperCase(),
+                    style: Theme.of(context).textTheme.headlineMedium!.apply(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30.0,
+                      right: 30.0,
+                      top: 30.0,
+                    ),
+                    child: Form(
+                      key: updateContactItemFormKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CCustomTypeahedField(
+                            //fieldKey: ,
+                            includePrefixIcon: true,
+                            labelTxt: contactItem.contactEmail == ''
+                                ? 'Enter e-mail address:'
+                                : 'E-mail address',
+                            onItemSelected: (suggestion) {
+                              txtEmailController.text = suggestion.contactEmail;
+                            },
+                            prefixIcon: Icon(
+                              Icons.contact_mail,
+                              color: CColors.darkGrey,
+                              size: CSizes.iconXs,
+                            ),
+                            typeAheadFieldController: txtEmailController,
+                            fieldValidator: (value) {
+                              if (value == null ||
+                                  value == '' ||
+                                  !CValidator.isValidEmail(
+                                    value.trim(),
+                                  )) {
+                                return 'Please enter a valid e-mail address!';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields,
+                          ),
+
+                          CInternationalPhoneNumberInput(
+                            controller: txtPhoneController,
+                          ),
+
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields,
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: TextButton.icon(
+                                  icon: Icon(
+                                    Iconsax.save_add,
+                                    size: CSizes.iconSm,
+                                    color: isDarkTheme
+                                        ? CColors.rBrown
+                                        : CColors.white,
+                                  ),
+                                  label: Text(
+                                    'Update',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .apply(
+                                          color: isDarkTheme
+                                              ? CColors.rBrown
+                                              : CColors.white,
+                                        ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: CColors
+                                        .white, // foreground (text) color
+                                    backgroundColor: isDarkTheme
+                                        ? CColors.white
+                                        : CColors.rBrown, // background color
+                                  ),
+                                  onPressed: () async {
+                                    // -- form validation
+                                    if (!updateContactItemFormKey.currentState!
+                                        .validate()) {
+                                      return;
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                width: CSizes.spaceBtnSections / 4,
+                              ),
+                              Expanded(
+                                flex: 4,
+                                child: TextButton.icon(
+                                  icon: const Icon(
+                                    Iconsax.undo,
+                                    size: CSizes.iconSm,
+                                    color: CColors.rBrown,
+                                  ),
+                                  label: Text(
+                                    'Back',
+                                    style:
+                                        Theme.of(
+                                          context,
+                                        ).textTheme.labelMedium!.apply(
+                                          color: CColors.rBrown,
+                                        ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: CColors
+                                        .rBrown, // foreground (text) color
+                                    backgroundColor:
+                                        CColors.white, // background color
+                                  ),
+                                  onPressed: () {
+                                    //Navigator.pop(context, true);
+
+                                    resetFields();
+                                    Navigator.pop(Get.overlayContext!, true);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('error displaying bottom sheet modal: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error displaying bottom sheet modal: $e',
+          title: 'error popping bottom sheet modal!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  resetFields() {
+    txtEmailController.text = '';
+    txtPhoneController.text = '';
   }
 }

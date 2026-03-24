@@ -87,8 +87,8 @@ class CSignupForm extends StatelessWidget {
             initialCountryCode: 'KE',
             focusNode: focusNode,
             dropdownTextStyle: const TextStyle(
-              fontSize: 10,
-              fontFamily: 'Poppins',
+              fontSize: 12,
+              fontFamily: 'IosevkaCharonMono',
               height: 0.8,
             ),
             decoration: InputDecoration(
@@ -99,7 +99,9 @@ class CSignupForm extends StatelessWidget {
                   color: isDarkTheme ? CColors.darkGrey : CColors.rBrown,
                 ),
               ),
-              label: Text('phone number'),
+              label: Text(
+                'phone number',
+              ),
               // focusedBorder: OutlineInputBorder(
               //   borderSide: BorderSide(width: 1.0, color: CColors.darkGrey),
               // ),

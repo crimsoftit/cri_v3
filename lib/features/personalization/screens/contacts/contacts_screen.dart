@@ -1,18 +1,22 @@
 import 'package:cri_v3/common/widgets/appbar/tab_bar.dart';
 import 'package:cri_v3/common/widgets/appbar/v2_app_bar.dart';
+import 'package:cri_v3/features/personalization/controllers/contacts_controller.dart';
 import 'package:cri_v3/features/personalization/screens/contacts/widgets/contacts_expansion_panel_view.dart';
 import 'package:cri_v3/features/store/screens/store_items_tings/widgets/store_screen_header.dart';
 import 'package:cri_v3/utils/constants/colors.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CContactsScreen extends StatelessWidget {
   const CContactsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final contactsController = Get.put(CContactsController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
+    contactsController.fetchMyContacts();
     return DefaultTabController(
       animationDuration: Duration(
         milliseconds: 300,

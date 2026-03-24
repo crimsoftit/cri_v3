@@ -13,6 +13,7 @@ class CCustomTypeahedField extends StatelessWidget {
   const CCustomTypeahedField({
     super.key,
     this.fieldHeight,
+    this.fieldLabelStyle,
     this.fieldValidator,
     this.fillColor,
     this.minHeight,
@@ -29,6 +30,7 @@ class CCustomTypeahedField extends StatelessWidget {
 
   final String labelTxt;
   final TextEditingController typeAheadFieldController;
+  final TextStyle? fieldLabelStyle;
   final Widget? prefixIcon;
   final void Function(CContactsModel) onItemSelected;
   final FormFieldValidator<String>? fieldValidator;
@@ -68,7 +70,9 @@ class CCustomTypeahedField extends StatelessWidget {
                 borderSide: BorderSide(
                   color: CColors.rBrown.withValues(alpha: 0.3),
                 ),
-                borderRadius: BorderRadius.circular(CSizes.cardRadiusXs),
+                borderRadius: BorderRadius.circular(
+                  CSizes.cardRadiusXs,
+                ),
               ),
               labelStyle: Theme.of(
                 context,

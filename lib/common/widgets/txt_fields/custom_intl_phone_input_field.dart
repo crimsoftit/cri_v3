@@ -4,15 +4,21 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class CInternationalPhoneNumberInput extends StatelessWidget {
   const CInternationalPhoneNumberInput({
-    super.key, required this.controller,
+    super.key,
+    required this.controller,
+    this.autoFocus = false,
+    this.initialValue,
   });
 
+  final bool autoFocus;
+  final PhoneNumber? initialValue;
   final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return InternationalPhoneNumberInput(
-      autoFocus: true,
+      autoFocus: autoFocus,
+      textAlign: TextAlign.start,
       onInputChanged:
           (
             PhoneNumber number,
@@ -38,13 +44,18 @@ class CInternationalPhoneNumberInput extends StatelessWidget {
         }
       },
       selectorConfig: SelectorConfig(
+        leadingPadding: 10.0,
+
         selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+        setSelectorButtonAsPrefixIcon: true,
+        useBottomSheetSafeArea: true,
+        useEmoji: true,
       ),
       ignoreBlank: false,
       autoValidateMode: AutovalidateMode.onUserInteraction,
-      initialValue: PhoneNumber(
-        isoCode: 'KE',
-      ),
+      // initialValue: PhoneNumber(
+      //   isoCode: 'KE',
+      // ),
       textFieldController: controller,
       formatInput: true,
       keyboardType: TextInputType.phone,

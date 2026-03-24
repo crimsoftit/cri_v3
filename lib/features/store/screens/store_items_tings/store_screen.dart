@@ -23,6 +23,7 @@ class CStoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final cartController = Get.put(CCartController()); TODO:<INTERFERES WITH SEARCH BOX>
+
     final checkoutController = Get.put(CCheckoutController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
@@ -32,6 +33,7 @@ class CStoreScreen extends StatelessWidget {
     final searchController = Get.put(CSearchBarController());
 
     txnsController.fetchTxns();
+
     //Get.put(CTxnsController());
 
     // if (!invController.isLoading.value &&
@@ -141,10 +143,10 @@ class CStoreScreen extends StatelessWidget {
                         child: Text('Invoices'),
                       ),
                       Tab(
-                        child: Text('Refunds'),
+                        child: Text('Sales (all)'),
                       ),
                       Tab(
-                        child: Text('Sales (all)'),
+                        child: Text('Refunds'),
                       ),
                     ],
                   ),
@@ -170,15 +172,13 @@ class CStoreScreen extends StatelessWidget {
                 CTxnItemsListView(
                   space: 'invoices',
                 ),
-                CTxnItemsListView(
-                  space: 'refunds',
-                ),
+
                 CTxnItemsListView(
                   space: 'sales',
                 ),
-                // CItemsListView(
-                //   space: 'refunds',
-                // ),
+                CTxnItemsListView(
+                  space: 'refunds',
+                ),
               ],
             ),
           ),

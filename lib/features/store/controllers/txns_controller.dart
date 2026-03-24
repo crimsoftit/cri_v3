@@ -1011,7 +1011,7 @@ class CTxnsController extends GetxController {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: CRoundedContainer(
-            height: CHelperFunctions.screenHeight() * 0.35,
+            height: CHelperFunctions.screenHeight() * 0.38,
             padding: const EdgeInsets.all(
               CSizes.lg / 3,
             ),
@@ -1020,10 +1020,13 @@ class CTxnsController extends GetxController {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'refund ${soldItem.productName.toUpperCase()}?',
+                  'Refund ${soldItem.productName.toUpperCase()}?',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: isDarkTheme ? CColors.white : CColors.rBrown,
                   ),
+                ),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 4,
                 ),
                 Text(
                   '${soldItem.itemMetrics == 'units' ? soldItem.quantity.toInt() : soldItem.quantity} ${CFormatter.formatInventoryMetrics(soldItem.productId)}(s) sold; (${soldItem.itemMetrics == 'units' ? soldItem.qtyRefunded.toInt() : soldItem.qtyRefunded} ${CFormatter.formatInventoryMetrics(soldItem.productId)}(s) refunded)',

@@ -842,4 +842,31 @@ class DbHelper extends GetxController {
       rethrow;
     }
   }
+
+  /// --  update contact --
+  Future<int> updateContact(CContactsModel contact) async {
+    try {
+      var updateResult = await _db!.update(
+        contactsTable,
+        contact.toMap(),
+        where: 'contactId = ?',
+        whereArgs: [contact.contactId],
+      );
+      return updateResult;
+    } catch (e) {
+      if (kDebugMode) {
+        print('error updating contact: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error updating contact: $e',
+          title: 'error updating contact!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an unknown error occurred while updating contact details!',
+          title: 'error updating contact!',
+        );
+      }
+      rethrow;
+    }
+  }
 }
