@@ -62,77 +62,88 @@ class AddUpdateItemDialog {
 
     return PopScope(
       canPop: false,
-      child: CRoundedContainer(
-        bgColor: isDarkTheme
-            ? CColors.transparent
-            : CColors.white.withValues(alpha: 0.6),
-        child: AlertDialog(
-          backgroundColor: isDarkTheme
-              ? CColors.rBrown
-              : CColors.darkGrey.withValues(
-                  alpha: 0.3,
+      child: Scaffold(
+        backgroundColor: CColors.transparent,
+        resizeToAvoidBottomInset: true, // Prevents resizing
+        body: CRoundedContainer(
+          bgColor: isDarkTheme
+              ? CColors.transparent
+              : CColors.white.withValues(
+                  alpha: 0.6,
                 ),
-          insetPadding: const EdgeInsets.all(2.0),
-          title: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  (invController.itemExists.value)
-                      ? Icons.update
-                      : Icons.add_circle,
-                  color: isDarkTheme ? CColors.white : CColors.rBrown,
-                  size: CSizes.iconLg * 1.5,
-                ),
-                Obx(
-                  () {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // -- toggle entry for supplier details --
-                        CCustomSwitch(
-                          label: 'Supplier details',
-                          labelColor: isDarkTheme
-                              ? CColors.darkGrey
-                              : CColors.rBrown,
-                          onValueChanged: (value) {
-                            invController.toggleSupplierDetsFieldsVisibility(
-                              value,
-                            );
-                          },
-                          switchValue:
-                              invController.includeSupplierDetails.value,
-                        ),
+          padding: MediaQuery.of(
+            context,
+          ).padding, // Adjusts based on system insets
+          child: AlertDialog(
+            backgroundColor: isDarkTheme
+                ? CColors.rBrown.withValues(
+                    alpha: .8,
+                  )
+                : CColors.darkGrey.withValues(
+                    alpha: 0.3,
+                  ),
+            insetPadding: const EdgeInsets.all(2.0),
+            title: Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    (invController.itemExists.value)
+                        ? Icons.update
+                        : Icons.add_circle,
+                    color: isDarkTheme ? CColors.white : CColors.rBrown,
+                    size: CSizes.iconLg * 1.5,
+                  ),
+                  Obx(
+                    () {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // -- toggle entry for supplier details --
+                          CCustomSwitch(
+                            label: 'Supplier details',
+                            labelColor: isDarkTheme
+                                ? CColors.darkGrey
+                                : CColors.rBrown,
+                            onValueChanged: (value) {
+                              invController.toggleSupplierDetsFieldsVisibility(
+                                value,
+                              );
+                            },
+                            switchValue:
+                                invController.includeSupplierDetails.value,
+                          ),
 
-                        // -- toggle entry for expiry date --
-                        CCustomSwitch(
-                          label: 'Expiry date',
-                          labelColor: isDarkTheme
-                              ? CColors.darkGrey
-                              : CColors.rBrown,
-                          onValueChanged: (value) {
-                            invController.toggleExpiryDateFieldVisibility(
-                              value,
-                            );
-                          },
-                          switchValue: invController.includeExpiryDate.value,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                          // -- toggle entry for expiry date --
+                          CCustomSwitch(
+                            label: 'Expiry date',
+                            labelColor: isDarkTheme
+                                ? CColors.darkGrey
+                                : CColors.rBrown,
+                            onValueChanged: (value) {
+                              invController.toggleExpiryDateFieldVisibility(
+                                value,
+                              );
+                            },
+                            switchValue: invController.includeExpiryDate.value,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          content: SingleChildScrollView(
-            child: AddUpdateInventoryForm(
-              inventoryItem: invModel,
-              fromHomeScreen: fromHomeScreen,
-              textStyle: textStyle,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            content: SingleChildScrollView(
+              child: AddUpdateInventoryForm(
+                inventoryItem: invModel,
+                fromHomeScreen: fromHomeScreen,
+                textStyle: textStyle,
+              ),
             ),
           ),
         ),

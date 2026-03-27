@@ -60,7 +60,7 @@ class CContactsController extends GetxController {
                     (match) =>
                         match.contactName.toLowerCase().contains(
                           contactName.toLowerCase(),
-                        ) ||
+                        ) &&
                         (match.contactEmail.toLowerCase().contains(
                               contactDetails.toLowerCase(),
                             ) ||
@@ -110,6 +110,7 @@ class CContactsController extends GetxController {
         fromInventoryDetails
             ? invController.txtSupplierName.text.trim()
             : contact!.contactName,
+        fromInventoryDetails ? '' : contact!.contactCountryCode,
         fromInventoryDetails &&
                 CValidator.isValidPhoneNumber(
                   invController.txtSupplierContacts.text.trim(),
@@ -291,6 +292,7 @@ class CContactsController extends GetxController {
   Future<dynamic> updateContactActionModal(
     BuildContext context,
     CContactsModel contactItem,
+    String updateAction,
   ) async {
     try {
       final isDarkTheme = CHelperFunctions.isDarkMode(context);
@@ -307,14 +309,19 @@ class CContactsController extends GetxController {
         useRootNavigator: true,
         builder: (context) {
           // -- set field values --
-          txtEmailController.text = contactItem.contactEmail;
-          txtPhoneController.text = contactItem.contactPhone;
+
+          txtEmailController.text = txtEmailController.text == ''
+              ? contactItem.contactEmail
+              : txtEmailController.text.trim();
+          txtPhoneController.text = txtPhoneController.text == ''
+              ? contactItem.contactPhone
+              : txtPhoneController.text.trim();
 
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: CRoundedContainer(
               bgColor: CColors.transparent,
-              height: CHelperFunctions.screenHeight() * 0.35,
+              height: CHelperFunctions.screenHeight() * 0.37,
               padding: const EdgeInsets.all(
                 CSizes.lg / 3,
               ),
@@ -339,9 +346,10 @@ class CContactsController extends GetxController {
                           CCustomTypeahedField(
                             //fieldKey: ,
                             includePrefixIcon: true,
-                            labelTxt: contactItem.contactEmail == ''
-                                ? 'Enter e-mail address:'
-                                : 'E-mail address',
+                            labelTxt: 'E-mail address',
+                            onFieldValueChanged: (value) {
+                              txtEmailController.text = value.trim();
+                            },
                             onItemSelected: (suggestion) {
                               txtEmailController.text = suggestion.contactEmail;
                             },

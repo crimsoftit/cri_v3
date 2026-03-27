@@ -36,8 +36,11 @@ class CInventoryController extends GetxController {
 
   DbHelper dbHelper = DbHelper.instance;
 
-  //final alertServices = Get.put(CAwesomeNotificationServices());
+  // -- controllers --
   final cartController = Get.put(CCartController());
+  final notificationsController = Get.put(CLocalNotificationsController());
+  final searchController = Get.put(CSearchBarController());
+  final userController = Get.put(CUserController());
 
   final RxBool isImportingInvCloudData = false.obs;
   final RxBool itemExists = false.obs;
@@ -85,7 +88,7 @@ class CInventoryController extends GetxController {
   final RxInt currentItemId = 0.obs;
   final RxInt lowStockItemsCount = 0.obs;
 
-  // -- text controllers --
+  // -- text editing controllers --
   final txtExpiryDatePicker = TextEditingController();
   final txtId = TextEditingController();
   final txtNameController = TextEditingController();
@@ -99,14 +102,9 @@ class CInventoryController extends GetxController {
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
-  //final contactItemFormKey = GlobalKey<FormState>();
-  final notificationsController = Get.put(CLocalNotificationsController());
+
   final isLoading = false.obs;
   final syncIsLoading = false.obs;
-
-  final searchController = Get.put(CSearchBarController());
-
-  final userController = Get.put(CUserController());
 
   @override
   void onInit() async {

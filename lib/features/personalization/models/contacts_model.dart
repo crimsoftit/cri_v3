@@ -6,6 +6,7 @@ class CContactsModel {
 
   String _addedBy = '';
   String _contactName = '';
+  String _contactCountryCode = '';
   String _contactPhone = '';
   String _contactEmail = '';
   String _contactCategory = '';
@@ -18,6 +19,7 @@ class CContactsModel {
     this._addedBy,
     this._productId,
     this._contactName,
+    this._contactCountryCode,
     this._contactPhone,
     this._contactEmail,
     this._contactCategory,
@@ -32,6 +34,7 @@ class CContactsModel {
     this._productId,
     this._contactId,
     this._contactName,
+    this._contactCountryCode,
     this._contactPhone,
     this._contactEmail,
     this._contactCategory,
@@ -52,6 +55,7 @@ class CContactsModel {
       '',
       '',
       '',
+      '',
       0,
       '',
     );
@@ -61,6 +65,7 @@ class CContactsModel {
   int? get productId => _productId;
   String get addedBy => _addedBy;
   String get contactName => _contactName;
+  String get contactCountryCode => _contactCountryCode;
   String get contactPhone => _contactPhone;
   String get contactEmail => _contactEmail;
   String get contactCategory => _contactCategory;
@@ -83,6 +88,10 @@ class CContactsModel {
 
   set contactName(String newContactName) {
     _contactName = newContactName;
+  }
+
+  set contactCountryCode(String newCountryCode) {
+    _contactCountryCode = newCountryCode;
   }
 
   set contactPhone(String newContactPhone) {
@@ -118,6 +127,7 @@ class CContactsModel {
     var map = <String, dynamic>{
       'addedBy': _addedBy,
       'contactName': _contactName,
+      'contactCountryCode': _contactCountryCode,
       'contactPhone': _contactPhone,
       'contactEmail': _contactEmail,
       'contactCategory': _contactCategory,
@@ -141,6 +151,7 @@ class CContactsModel {
     _productId = map['productId'];
     _addedBy = map['addedBy'];
     _contactName = map['contactName'];
+    _contactCountryCode = map['contactCountryCode'];
     _contactPhone = map['contactPhone'];
     _contactEmail = map['contactEmail'];
     _contactCategory = map['contactCategory'];

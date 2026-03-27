@@ -344,7 +344,11 @@ class CCheckoutController extends GetxController {
                   );
                 }
               }
-              refreshData();
+              processCustomerDetails().then(
+                (_) {
+                  refreshData();
+                },
+              );
             },
           );
         });
@@ -798,11 +802,7 @@ class CCheckoutController extends GetxController {
           break;
       }
 
-      processCustomerDetails().then(
-        (_) {
-          processTxn(txnType);
-        },
-      );
+      processTxn(txnType);
     } catch (e) {
       if (kDebugMode) {
         print('checkout error: $e');
@@ -821,13 +821,14 @@ class CCheckoutController extends GetxController {
       if (customerNameFieldController.text != '' &&
           customerContactsFieldController.text != '') {
         if (await contactsController.contactActionIsAdd(
-          invController.txtSupplierName.text.trim(),
-          invController.txtSupplierContacts.text,
+          customerNameFieldController.text.trim(),
+          customerContactsFieldController.text.trim(),
         )) {
           var customerDetails = CContactsModel(
             userController.user.value.email,
             0,
             customerNameFieldController.text.trim(),
+            '',
             CValidator.isValidPhoneNumber(
                   customerContactsFieldController.text.trim(),
                 )

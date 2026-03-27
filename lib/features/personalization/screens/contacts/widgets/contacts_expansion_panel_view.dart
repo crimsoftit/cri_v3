@@ -254,6 +254,7 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                             .updateContactActionModal(
                                               context,
                                               contact,
+                                              'add item',
                                             );
                                       },
                                     ),

@@ -6,6 +6,7 @@ import 'package:cri_v3/features/personalization/controllers/user_controller.dart
 import 'package:cri_v3/features/store/controllers/date_controller.dart';
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
 import 'package:cri_v3/features/store/controllers/nav_menu_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/features/store/models/inv_model.dart';
 import 'package:cri_v3/nav_menu.dart' show NavMenu;
 import 'package:cri_v3/utils/constants/colors.dart';
@@ -14,6 +15,7 @@ import 'package:cri_v3/utils/helpers/formatter.dart';
 import 'package:cri_v3/utils/helpers/helper_functions.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:cri_v3/utils/validators/validation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -37,6 +39,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
     final navController = Get.put(CNavMenuController());
+    final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
     final currency = CHelperFunctions.formatCurrency(
       userController.user.value.currencyCode,
@@ -517,6 +520,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               height: CSizes.spaceBtnInputFields / 2.0,
                             ),
                             CCustomTypeahedField(
+                              focusedBorderColor: isDarkTheme
+                                  ? CColors.grey
+                                  : CColors.rBrown,
                               includePrefixIcon: true,
                               labelTxt: 'Supplier\'s name:',
                               onItemSelected: (suggestion) {
@@ -544,7 +550,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             ),
 
                             CCustomTypeahedField(
-                              //fieldKey: ,
+                              focusedBorderColor: isDarkTheme
+                                  ? CColors.grey
+                                  : CColors.rBrown,
                               includePrefixIcon: true,
                               labelTxt: 'Supplier\'s phone no. or e-mail:',
                               onItemSelected: (suggestion) {
@@ -680,10 +688,45 @@ class AddUpdateInventoryForm extends StatelessWidget {
                               return;
                             }
 
+                            // -- check if the inventory item's name has changed --
+                            var relatedSoldItems = txnsController.txns
+                                .where(
+                                  (soldItem) =>
+                                      soldItem.productName
+                                          .trim()
+                                          .toLowerCase() ==
+                                      invController.txtNameController.text
+                                          .trim()
+                                          .toLowerCase(),
+                                )
+                                .toList();
+                            
+                            if (relatedSoldItems.isEmpty &&
+                                  invController.itemExists.value) {
+                                // -- update product name in sales db --
+                                txnsController.updateRelatedSoldItemsName(
+                                  inventoryItem,
+                                  invController.txtNameController.text.trim(),
+                                );
+                              }
+
+                              if (relatedSoldItems.isNotEmpty &&
+                                  invController.itemExists.value) {
+                                if (kDebugMode) {
+                                  print(
+                                    'product name remains intact!',
+                                  );
+                                  CPopupSnackBar.customToast(
+                                    message: 'product name remains intact',
+                                    forInternetConnectivityStatus: false,
+                                  );
+                                }
+                              }
+
                             if (await invController.addOrUpdateInventoryItem(
                               inventoryItem,
                             )) {
-                              // -- check if contact already exists --
+                              // -- check if contact already exists and add if it does not --
 
                               if (await contactsController.contactActionIsAdd(
                                     invController.txtSupplierName.text.trim(),
@@ -699,6 +742,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                   inventoryItem.productId!,
                                 );
                               }
+
+                              
+
                               switch (fromHomeScreen) {
                                 case true:
                                   navController.selectedIndex.value = 1;

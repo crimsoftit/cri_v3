@@ -249,6 +249,61 @@ class CTxnsController extends GetxController {
     }
   }
 
+  /// -- update receipt item name when inventory name is updated --
+  Future updateRelatedSoldItemsName(
+    CInventoryModel invItem,
+    String pName,
+  ) async {
+    try {
+      // -- start loader --
+      isLoading.value = true;
+
+      // -- update sold item name --
+      var relatedSoldItems = txns
+          .where(
+            (soldItem) => soldItem.productId == invItem.productId,
+          )
+          .toList();
+
+      if (relatedSoldItems.isNotEmpty) {
+        for (var relatedItem in relatedSoldItems) {
+          relatedItem.lastModified = DateFormat(
+            'yyyy-MM-dd @ kk:mm',
+          ).format(clock.now());
+          relatedItem.productName = pName.trim();
+          relatedItem.syncAction = relatedItem.isSynced == 1
+              ? 'update'
+              : relatedItem.syncAction;
+
+          dbHelper.updateReceiptItem(
+            relatedItem,
+            relatedItem.soldItemId!,
+          );
+        }
+        await fetchTxns();
+      }
+
+      // -- stop loader --
+      isLoading.value = false;
+    } catch (e) {
+      // -- stop loader --
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('error updating sold item name: $e');
+        CPopupSnackBar.errorSnackBar(
+          message: 'error updating sold item name: $e',
+          title: 'error updating sold item name!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an unknown error occurred while updating sold item name!',
+          title: 'error updating sold item name!',
+        );
+      }
+      rethrow;
+    }
+  }
+
   /// -- fetch txns from sqflite db --
   Future<List<CTxnsModel>> fetchTxns() async {
     try {
@@ -324,7 +379,7 @@ class CTxnsController extends GetxController {
       txnItemsLoading.value = true;
       isLoading.value = true;
 
-      fetchTxns().then((_) {
+      await fetchTxns().then((_) {
         if (txns.isNotEmpty && soldItemsFetched.value && txnsFetched.value) {
           var listToSearchFrom = foundSales.isNotEmpty ? foundSales : sales;
           var txnItems = listToSearchFrom

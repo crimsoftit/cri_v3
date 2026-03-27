@@ -16,7 +16,9 @@ class CCustomTypeahedField extends StatelessWidget {
     this.fieldLabelStyle,
     this.fieldValidator,
     this.fillColor,
+    this.focusedBorderColor,
     this.minHeight,
+    this.onFieldValueChanged,
     this.prefixIcon,
     required this.labelTxt,
     required this.typeAheadFieldController,
@@ -25,7 +27,7 @@ class CCustomTypeahedField extends StatelessWidget {
   });
 
   final bool includePrefixIcon;
-  final Color? fillColor;
+  final Color? fillColor, focusedBorderColor;
   final double? fieldHeight, minHeight;
 
   final String labelTxt;
@@ -33,6 +35,7 @@ class CCustomTypeahedField extends StatelessWidget {
   final TextStyle? fieldLabelStyle;
   final Widget? prefixIcon;
   final void Function(CContactsModel) onItemSelected;
+  final void Function(String)? onFieldValueChanged;
   final FormFieldValidator<String>? fieldValidator;
 
   // @override
@@ -68,7 +71,9 @@ class CCustomTypeahedField extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: CColors.rBrown.withValues(alpha: 0.3),
+                  color:
+                      focusedBorderColor ??
+                      CColors.black.withValues(alpha: 0.3),
                 ),
                 borderRadius: BorderRadius.circular(
                   CSizes.cardRadiusXs,
@@ -88,44 +93,15 @@ class CCustomTypeahedField extends StatelessWidget {
                   : null,
             ),
             focusNode: focusNode,
+            onChanged: onFieldValueChanged,
+            scrollPadding: const EdgeInsets.only(
+              bottom: 200,
+            ),
             style: const TextStyle(
               fontWeight: FontWeight.normal,
             ),
             validator: fieldValidator,
           );
-
-          // TextFormField(
-          //   autofocus: false,
-          //   autovalidateMode: AutovalidateMode.onUserInteraction,
-          //   controller: controller,
-          //   decoration: InputDecoration(
-          //     filled: true,
-          //     fillColor: isDarkTheme ? CColors.transparent : CColors.lightGrey,
-          //     labelText: labelTxt,
-          //     prefixIcon:
-          //         prefixIcon ??
-          //         Icon(
-          //           Iconsax.pen_add,
-          //           color: CColors.darkGrey,
-          //           size: CSizes.iconXs,
-          //         ),
-          //   ),
-          //   focusNode: focusNode,
-          //   //key: fieldKey,
-          //   onChanged: (value) {
-          //     controller.text = value;
-          //   },
-          //   style: TextStyle(
-          //     color: isDarkTheme ? CColors.white : CColors.rBrown,
-          //     fontSize: 13.0,
-          //     fontStyle: FontStyle.normal,
-          //     fontWeight: FontWeight.normal,
-          //     //height: 1.1,
-          //   ),
-          //   textAlign: TextAlign.start,
-          //   textAlignVertical: TextAlignVertical.center,
-          //   onFieldSubmitted: (value) {},
-          // );
         },
         constraints: BoxConstraints(
           maxWidth: screenWidth,

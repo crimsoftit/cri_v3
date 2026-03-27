@@ -1,4 +1,5 @@
 import 'package:cri_v3/features/store/controllers/inv_controller.dart';
+import 'package:cri_v3/features/store/controllers/txns_controller.dart';
 import 'package:cri_v3/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -92,8 +93,14 @@ class CFormatter {
 
   static String formatInventoryMetrics(int productId) {
     final invController = Get.put(CInventoryController());
+    final txnsController = Get.put(CTxnsController());
+
     try {
       var itemInvIndex = invController.inventoryItems.indexWhere(
+        (item) => item.productId == productId,
+      );
+
+      var soldItemIndex = txnsController.sales.indexWhere(
         (item) => item.productId == productId,
       );
       if (itemInvIndex != -1) {
@@ -104,6 +111,17 @@ class CFormatter {
         var formattedOutput = thisItem!.calibration == 'units'
             ? thisItem.calibration.substring(0, thisItem.calibration.length - 1)
             : thisItem.calibration;
+
+        return formattedOutput;
+      } else if (soldItemIndex != -1) {
+        var thisItem = txnsController.sales.firstWhereOrNull(
+          (soldItem) => soldItem.productId == productId,
+        );
+
+        var formattedOutput =
+            thisItem!.itemMetrics == 'units' && thisItem.quantity == 1
+            ? thisItem.itemMetrics.substring(0, thisItem.itemMetrics.length - 1)
+            : thisItem.itemMetrics;
 
         return formattedOutput;
       } else {
@@ -118,6 +136,11 @@ class CFormatter {
         print('error formatting item metrics: $e');
         CPopupSnackBar.errorSnackBar(
           message: 'error formatting item metrics: $e',
+          title: 'item metrics format error!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'error formatting item metrics!',
           title: 'item metrics format error!',
         );
       }

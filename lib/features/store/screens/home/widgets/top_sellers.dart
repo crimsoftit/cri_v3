@@ -63,11 +63,15 @@ class CTopSellers extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CCircleAvatar(
-                    avatarInitial: invItemIndex >= 0
-                        ? invController.inventoryItems[index].name[0]
-                              .toUpperCase()
-                        : txnsController.bestSellers[index].productName[0]
-                              .toUpperCase(),
+                    // avatarInitial: invItemIndex >= 0
+                    //     ? invController.inventoryItems[index].name[0]
+                    //           .toUpperCase()
+                    //     : txnsController.bestSellers[index].productName[0]
+                    //           .toUpperCase(),
+                    avatarInitial: txnsController
+                        .bestSellers[index]
+                        .productName[0]
+                        .toUpperCase(),
                     bgColor: CColors.white,
                     radius: 20.0,
                     txtColor: CColors.rBrown,
@@ -82,11 +86,13 @@ class CTopSellers extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          invItemIndex >= 0
-                              ? invController.inventoryItems[index].name
-                                    .toUpperCase()
-                              : txnsController.bestSellers[index].productName
-                                    .toUpperCase(),
+                          // invItemIndex >= 0
+                          //     ? invController.inventoryItems[index].name
+                          //           .toUpperCase()
+                          //     : txnsController.bestSellers[index].productName
+                          //           .toUpperCase(),
+                          txnsController.bestSellers[index].productName
+                              .toUpperCase(),
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             fontWeightDelta: 1,
                             color: isDarkTheme ? CColors.white : CColors.rBrown,
@@ -94,13 +100,21 @@ class CTopSellers extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
+                        // Text(
+                        //   '${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId) == 'unit' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId)}(s) sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
+                        //   style: Theme.of(context).textTheme.labelMedium!.apply(
+                        //     color: CColors.darkGrey,
+                        //   ),
+                        //   overflow: TextOverflow.ellipsis,
+                        //   maxLines: 1,
+                        // ),
                         Text(
-                          '${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId) == 'unit' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatInventoryMetrics(txnsController.bestSellers[index].productId)}(s) sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
+                          '${txnsController.bestSellers[index].itemMetrics == 'units' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatItemMetrics(txnsController.bestSellers[index].itemMetrics, txnsController.bestSellers[index].totalSales)} sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                             color: CColors.darkGrey,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
                         ),
                       ],
                     ),

@@ -156,6 +156,7 @@ class DbHelper extends GetxController {
             productId INTEGER NOT NULL,
             addedBy TEXT NOT NULL,
             contactName TEXT NOT NULL,
+            contactCountryCode TEXT NOT NULL,
             contactPhone TEXT NOT NULL,
             contactEmail TEXT NOT NULL,
             contactCategory TEXT NOT NULL,
@@ -507,7 +508,7 @@ class DbHelper extends GetxController {
       final db = _db;
 
       final topSellers = await db!.rawQuery(
-        'SELECT productId, productName, SUM(quantity) as totalSales, unitSellingPrice FROM $txnsTable WHERE userEmail = ? GROUP BY productId ORDER BY totalSales DESC LIMIT 20',
+        'SELECT productId, productName, itemMetrics, SUM(quantity) as totalSales, unitSellingPrice, quantity FROM $txnsTable WHERE userEmail = ? GROUP BY productId ORDER BY totalSales DESC LIMIT 20',
         [email],
       );
 
