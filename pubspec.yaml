@@ -147,6 +147,8 @@ dependencies:
   # messages manenozzz
   send_message: ^1.0.2
   flutter_email_sender: ^8.0.0
+
+  flutter_phone_direct_caller: ^2.2.1
   
   
   #googleapis: ^13.2.0

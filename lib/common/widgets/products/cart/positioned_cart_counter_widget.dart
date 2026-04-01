@@ -35,7 +35,7 @@ class CPositionedCartCounterWidget extends StatelessWidget {
           top: topPosition ?? 5.0,
           child: Container(
             width: containerWidth ?? 18.0,
-            height: containerHeight ?? 18.0,
+            height: containerHeight ?? 15.0,
             decoration: BoxDecoration(
               color: counterBgColor,
               borderRadius: BorderRadius.circular(100),

@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:send_message/send_message.dart';
 
 class CContactsController extends GetxController {
   /// -- constructor --
@@ -575,6 +576,58 @@ class CContactsController extends GetxController {
           message: 'error displaying bottom sheet modal: $e',
           title: 'error popping bottom sheet modal!',
         );
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> sendSimpleSms( List<String> recipients) async {
+    String message = "Hello from Flutter!";
+    try {
+      String result = await sendSMS(
+        message: message,
+        recipients: recipients,
+      );
+      if (kDebugMode) {
+        print("SMS sent: $result");
+        CPopupSnackBar.successSnackBar(
+          message: result,
+          title: 'sms sent!',
+        );
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print("Error: $error");
+        CPopupSnackBar.errorSnackBar(
+          message: 'error sending simple sms: $error',
+          title: 'error sending simple sms!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an unknown error occurred while sending sms!',
+          title: 'error sending sms!',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> sendDirectSms() async {
+    String message = "Test message!";
+    List<String> recipients = ["1234567890", "5556787676"];
+
+    try {
+      String result = await sendSMS(
+        message: message,
+        recipients: recipients,
+        sendDirect: true, // Skips confirmation dialog (Android only)
+      );
+      if (kDebugMode) {
+        print("Direct SMS sent: $result");
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print("Error: $error");
       }
       rethrow;
     }

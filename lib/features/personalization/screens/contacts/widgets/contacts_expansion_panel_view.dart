@@ -194,7 +194,19 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            trailing: SizedBox.shrink(),
+                            // trailing: SizedBox.shrink(),
+                            trailing: IconButton(
+                              onPressed: () {
+                                contactsController.updateContactActionModal(
+                                  context,
+                                  contact,
+                                  'edit details',
+                                );
+                              },
+                              icon: Icon(
+                                Iconsax.edit,
+                              ),
+                            ),
                           );
                         },
                         value: contact.contactId,
@@ -263,7 +275,7 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                                   .updateContactActionModal(
                                                     context,
                                                     contact,
-                                                    'edit details',
+                                                    'add item',
                                                   );
                                             },
                                           ),
@@ -321,7 +333,19 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                           ? CColors.white
                                           : CColors.rBrown,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (contact.contactPhone != '') {
+                                        contactsController.sendSimpleSms(
+                                          [contact.contactPhone],
+                                        );
+                                      } else {
+                                        null;
+                                        CPopupSnackBar.customToast(
+                                          forInternetConnectivityStatus: false,
+                                          message: 'invalid phone no.!',
+                                        );
+                                      }
+                                    },
                                   ),
                                   IconButton.outlined(
                                     //color: Colors.lightGreen,
