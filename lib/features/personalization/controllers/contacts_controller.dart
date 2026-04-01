@@ -581,8 +581,8 @@ class CContactsController extends GetxController {
     }
   }
 
-  Future<void> sendSimpleSms( List<String> recipients) async {
-    String message = "Hello from Flutter!";
+  Future<void> sendSimpleSms(List<String> recipients) async {
+    String message = "hi,";
     try {
       String result = await sendSMS(
         message: message,

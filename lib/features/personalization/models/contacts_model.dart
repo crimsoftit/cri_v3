@@ -7,6 +7,7 @@ class CContactsModel {
   String _addedBy = '';
   String _contactName = '';
   String _contactCountryCode = '';
+  String _contactIsoCode = '';
   String _contactPhone = '';
   String _contactEmail = '';
   String _contactCategory = '';
@@ -20,6 +21,7 @@ class CContactsModel {
     this._productId,
     this._contactName,
     this._contactCountryCode,
+    this._contactIsoCode,
     this._contactPhone,
     this._contactEmail,
     this._contactCategory,
@@ -35,6 +37,7 @@ class CContactsModel {
     this._contactId,
     this._contactName,
     this._contactCountryCode,
+    this._contactIsoCode,
     this._contactPhone,
     this._contactEmail,
     this._contactCategory,
