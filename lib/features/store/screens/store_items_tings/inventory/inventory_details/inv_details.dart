@@ -142,7 +142,7 @@ class CInvDetails extends StatelessWidget {
                       CMenuTile(
                         icon: Iconsax.calendar,
                         title: invItem.dateAdded,
-                        subTitle: 'date added',
+                        subTitle: 'Date added',
                         onTap: () {},
                       ),
 
@@ -152,7 +152,7 @@ class CInvDetails extends StatelessWidget {
                         title: invItem.expiryDate != ''
                             ? '${CFormatter.formatTimeRangeFromNow(invItem.expiryDate.replaceAll('@ ', ''))} (${invItem.expiryDate})'
                             : 'N/A',
-                        subTitle: 'expiry date/shelflife',
+                        subTitle: 'Expiry date/Shelflife',
                         onTap: () {},
                       ),
 

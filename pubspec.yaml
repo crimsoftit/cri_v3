@@ -143,6 +143,10 @@ dependencies:
   syncfusion_flutter_datepicker: ^31.2.18
   timezone: any
   url_launcher: any
+
+  # messages manenozzz
+  send_message: ^1.0.2
+  flutter_email_sender: ^8.0.0
   
   
   #googleapis: ^13.2.0

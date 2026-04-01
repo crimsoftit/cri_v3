@@ -22,24 +22,26 @@ class CPositionedCartCounterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CCartController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
-    return Positioned(
-      right: rightPosition ?? 0,
-      top: topPosition ?? 5.0,
-      child: Container(
-        width: containerWidth ?? 18.0,
-        height: containerHeight ?? 18.0,
-        decoration: BoxDecoration(
-          color: counterBgColor,
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Center(
-          child: Obx(
-            () {
-              final cartController = Get.put(CCartController());
-             
-              return Text(
+    return Obx(
+      () {
+        if (cartController.cartItems.isEmpty) {
+          return SizedBox.shrink();
+        }
+        return Positioned(
+          right: rightPosition ?? 0,
+          top: topPosition ?? 5.0,
+          child: Container(
+            width: containerWidth ?? 18.0,
+            height: containerHeight ?? 18.0,
+            decoration: BoxDecoration(
+              color: counterBgColor,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Center(
+              child: Text(
                 cartController.cartItems.length.toString(),
                 style: Theme.of(context).textTheme.labelSmall!.apply(
                   color:
@@ -47,11 +49,11 @@ class CPositionedCartCounterWidget extends StatelessWidget {
                       (isDarkTheme ? CColors.rBrown : CColors.white),
                   fontSizeFactor: 1.0,
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

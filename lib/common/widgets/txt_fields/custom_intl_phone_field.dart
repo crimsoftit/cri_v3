@@ -46,13 +46,17 @@ class CCustomIntlPhoneFormField extends StatelessWidget {
                 ).textTheme.labelMedium!.apply(fontWeightDelta: 2),
               ),
             ),
-            const SizedBox(height: 15.0),
+            const SizedBox(
+              height: 15.0,
+            ),
             IntlPhoneField(
               controller: intlPhoneFieldController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(borderSide: BorderSide()),
                 labelText: 'customer phone no.',
-                counterStyle: TextStyle(fontSize: 8.0),
+                counterStyle: TextStyle(
+                  fontSize: 8.0,
+                ),
                 //fillColor: isDarkTheme ? CColors.darkBg :
               ),
               enabled: true,

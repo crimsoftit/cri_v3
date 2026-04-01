@@ -862,6 +862,7 @@ class CTxnsController extends GetxController {
                 isLoading.value = false;
                 txnsSyncIsLoading.value = false;
               } else {
+                isLoading.value = false;
                 txnsSyncIsLoading.value = false;
                 CPopupSnackBar.errorSnackBar(
                   title: 'ERROR SYNCING TXNS TO CLOUD...',
@@ -870,8 +871,6 @@ class CTxnsController extends GetxController {
               }
             });
           } else {
-            txnsSyncIsLoading.value = false;
-            isLoading.value = false;
             if (kDebugMode) {
               print('***** ALL TXNS RADA SAFI *****');
               CPopupSnackBar.customToast(
@@ -879,6 +878,8 @@ class CTxnsController extends GetxController {
                 forInternetConnectivityStatus: false,
               );
             }
+            txnsSyncIsLoading.value = false;
+            isLoading.value = false;
           }
         } else {
           txnsSyncIsLoading.value = false;

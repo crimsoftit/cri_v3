@@ -109,7 +109,7 @@ class CTopSellers extends StatelessWidget {
                         //   maxLines: 1,
                         // ),
                         Text(
-                          '${txnsController.bestSellers[index].itemMetrics == 'units' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatItemMetrics(txnsController.bestSellers[index].itemMetrics, txnsController.bestSellers[index].totalSales)} sold ($userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)})',
+                          '${txnsController.bestSellers[index].itemMetrics == 'units' ? txnsController.bestSellers[index].totalSales.toStringAsFixed(0) : txnsController.bestSellers[index].totalSales} ${CFormatter.formatItemMetrics(txnsController.bestSellers[index].itemMetrics, txnsController.bestSellers[index].totalSales)}- $userCurrency.${CFormatter.kSuffixFormatter(txnsController.bestSellers[index].unitSellingPrice * txnsController.bestSellers[index].totalSales)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.labelMedium!.apply(

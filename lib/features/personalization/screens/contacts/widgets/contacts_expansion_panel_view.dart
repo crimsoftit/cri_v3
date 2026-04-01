@@ -210,22 +210,72 @@ class CContactsExpansionPanelView extends StatelessWidget {
                             children: [
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    contact.contactPhone != ''
-                                        ? Text(
-                                            'mobile ${contact.contactPhone}',
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelMedium!.apply(
-                                                  fontWeightDelta: 2,
+                                child:
+                                    contact.contactPhone == '' ||
+                                        contact.contactEmail == ''
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          contact.contactPhone != ''
+                                              ? Text(
+                                                  'Mobile ${contact.contactPhone}',
+                                                  style:
+                                                      Theme.of(
+                                                            context,
+                                                          )
+                                                          .textTheme
+                                                          .labelMedium!
+                                                          .apply(
+                                                            fontWeightDelta: 2,
+                                                          ),
+                                                )
+                                              : Text(
+                                                  'Email: ${contact.contactEmail}',
+                                                  style:
+                                                      Theme.of(
+                                                            context,
+                                                          )
+                                                          .textTheme
+                                                          .labelMedium!
+                                                          .apply(
+                                                            fontWeightDelta: 2,
+                                                          ),
                                                 ),
-                                          )
-                                        : Text(
-                                            'email: ${contact.contactEmail}',
+                                          TextButton.icon(
+                                            icon: Icon(
+                                              Iconsax.edit,
+                                              color: isDarkTheme
+                                                  ? CColors.white
+                                                  : CColors.rBrown,
+                                              size: CSizes.iconSm,
+                                            ),
+                                            label: Text(
+                                              contact.contactPhone == ''
+                                                  ? 'add phone no.'
+                                                  : 'add email',
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.labelMedium!.apply(),
+                                            ),
+                                            onPressed: () {
+                                              contactsController
+                                                  .updateContactActionModal(
+                                                    context,
+                                                    contact,
+                                                    'edit details',
+                                                  );
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Mobile ${contact.contactPhone}',
+                                            overflow: TextOverflow.ellipsis,
                                             style:
                                                 Theme.of(
                                                   context,
@@ -233,33 +283,20 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                                   fontWeightDelta: 2,
                                                 ),
                                           ),
-                                    TextButton.icon(
-                                      icon: Icon(
-                                        Iconsax.add,
-                                        color: isDarkTheme
-                                            ? CColors.white
-                                            : CColors.rBrown,
-                                        size: CSizes.iconSm,
+                                          Text(
+                                            'Email: ${contact.contactEmail}',
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelMedium!.apply(
+                                                  fontWeightDelta: 2,
+                                                ),
+                                          ),
+                                        ],
                                       ),
-                                      label: Text(
-                                        contact.contactPhone != ''
-                                            ? 'add e-mail'
-                                            : 'add phone no.',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.labelMedium!.apply(),
-                                      ),
-                                      onPressed: () {
-                                        contactsController
-                                            .updateContactActionModal(
-                                              context,
-                                              contact,
-                                              'add item',
-                                            );
-                                      },
-                                    ),
-                                  ],
-                                ),
+                              ),
+                              const SizedBox(
+                                height: CSizes.spaceBtnItems,
                               ),
                               Row(
                                 mainAxisAlignment:

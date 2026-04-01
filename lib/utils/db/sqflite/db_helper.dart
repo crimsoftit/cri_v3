@@ -755,6 +755,11 @@ class DbHelper extends GetxController {
           title: 'error fetching notifications!',
           message: e.toString(),
         );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching notifications!',
+          message: 'error fetching notifications!',
+        );
       }
 
       rethrow;
@@ -763,16 +768,32 @@ class DbHelper extends GetxController {
 
   /// -- delete operation: delete notification from the local database --
   Future<int> deleteNotification(CNotificationsModel deleteItem) async {
-    // get a reference to the database.
-    final db = _db;
+    try {
+      // get a reference to the database.
+      final db = _db;
 
-    int result = await db!.delete(
-      'notifications',
-      where: 'notificationId = ?',
-      whereArgs: [deleteItem.notificationId],
-    );
+      int result = await db!.delete(
+        'notifications',
+        where: 'notificationId = ?',
+        whereArgs: [deleteItem.notificationId],
+      );
 
-    return result;
+      return result;
+    } catch (e) {
+      if (kDebugMode) {
+        print('error deleting notification: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'delete error',
+          message: 'error deleting notification: $e',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'delete error',
+          message: 'error deleting notification!',
+        );
+      }
+      rethrow;
+    }
   }
 
   /// -- update notification details --
@@ -793,10 +814,17 @@ class DbHelper extends GetxController {
           title: 'error updating notification item',
           message: e.toString(),
         );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'update error',
+          message: 'error updating notification item',
+        );
       }
       rethrow;
     }
   }
+
+  /// --- ### CRUD OPERATIONS ON CONTACTS TABLE ### ---
 
   /// -- add a contact to sqflite db --
   Future<void> addContact(CContactsModel contact) async {
@@ -813,6 +841,11 @@ class DbHelper extends GetxController {
         print('error adding contact: $e');
         CPopupSnackBar.errorSnackBar(
           message: 'an error occurred while adding contact: $e',
+          title: 'error adding contact!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'an error occurred while adding contact. please try again later!',
           title: 'error adding contact!',
         );
       }
@@ -837,6 +870,11 @@ class DbHelper extends GetxController {
         print('error fetching contacts: $e');
         CPopupSnackBar.errorSnackBar(
           message: 'error fetching contacts: $e',
+          title: 'error fetching contacts!',
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          message: 'error fetching contacts!',
           title: 'error fetching contacts!',
         );
       }

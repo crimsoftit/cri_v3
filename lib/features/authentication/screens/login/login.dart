@@ -44,10 +44,13 @@ class LoginScreen extends StatelessWidget {
                   includeAfterSpace: false,
                   subTitle: CTexts.loginSubTitle,
 
-                  title: 'sign in...',
-                  txtColor: isDarkTheme
-                      ? CColors.darkGrey
-                      : CNetworkManager.instance.hasConnection.value
+                  title: 'Sign in...',
+                  // txtColor: isDarkTheme
+                  //     ? CColors.darkGrey
+                  //     : CNetworkManager.instance.hasConnection.value
+                  //     ? CColors.rBrown
+                  //     : CColors.darkGrey,
+                  txtColor: CNetworkManager.instance.hasConnection.value
                       ? CColors.rBrown
                       : CColors.darkGrey,
                 ),

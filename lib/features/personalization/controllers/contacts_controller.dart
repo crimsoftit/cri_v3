@@ -1,6 +1,5 @@
 import 'package:clock/clock.dart';
 import 'package:cri_v3/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:cri_v3/common/widgets/txt_fields/custom_intl_phone_input_field.dart';
 import 'package:cri_v3/common/widgets/txt_fields/custom_typeahed_field.dart';
 import 'package:cri_v3/features/personalization/controllers/user_controller.dart';
 import 'package:cri_v3/features/personalization/models/contacts_model.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class CContactsController extends GetxController {
   /// -- constructor --
@@ -34,6 +34,7 @@ class CContactsController extends GetxController {
 
   final RxList<CContactsModel> myContacts = <CContactsModel>[].obs;
   final RxList<CContactsModel> foundMatches = <CContactsModel>[].obs;
+  final RxString contactCountryCode = ''.obs;
 
   // TODO: FETCH CLOUD CONTACTS FROM INVENTORY AND SALES
   @override
@@ -263,13 +264,22 @@ class CContactsController extends GetxController {
   }
 
   /// -- update contact details --
-  Future updateContact(CContactsModel contact) async {
+  Future<bool> updateContact(CContactsModel contact) async {
     try {
       // --  start loader --
       isLoading.value = true;
 
+      dbHelper.updateContact(contact);
+
       // -- stop loader --
       isLoading.value = false;
+
+      CPopupSnackBar.customToast(
+        forInternetConnectivityStatus: false,
+        message: 'contact updated successfully',
+      );
+
+      return true;
     } catch (e) {
       // -- stop loader --
       isLoading.value = false;
@@ -321,16 +331,45 @@ class CContactsController extends GetxController {
             padding: MediaQuery.of(context).viewInsets,
             child: CRoundedContainer(
               bgColor: CColors.transparent,
-              height: CHelperFunctions.screenHeight() * 0.37,
+              height: CHelperFunctions.screenHeight() * 0.39,
               padding: const EdgeInsets.all(
                 CSizes.lg / 3,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    contactItem.contactName.toUpperCase(),
-                    style: Theme.of(context).textTheme.headlineMedium!.apply(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: CHelperFunctions.randomAstheticColor(),
+                        radius: 20.0,
+                        child:
+                            CValidator.isFirstCharacterALetter(
+                              contactItem.contactName,
+                            )
+                            ? Text(
+                                contactItem.contactName[0].toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .apply(
+                                      color: CColors.white,
+                                    ),
+                              )
+                            : Icon(
+                                Iconsax.user,
+                                color: CHelperFunctions.randomAstheticColor(),
+                              ),
+                      ),
+                      const SizedBox(
+                        width: CSizes.spaceBtnItems / 2.0,
+                      ),
+                      Text(
+                        contactItem.contactName.toUpperCase(),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.headlineMedium!.apply(),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -344,7 +383,12 @@ class CContactsController extends GetxController {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CCustomTypeahedField(
-                            //fieldKey: ,
+                            fillColor: isDarkTheme
+                                ? CColors.transparent
+                                : CColors.lightGrey,
+                            focusedBorderColor: isDarkTheme
+                                ? CColors.white
+                                : CColors.rBrown,
                             includePrefixIcon: true,
                             labelTxt: 'E-mail address',
                             onFieldValueChanged: (value) {
@@ -375,10 +419,41 @@ class CContactsController extends GetxController {
                             height: CSizes.spaceBtnInputFields,
                           ),
 
-                          CInternationalPhoneNumberInput(
-                            controller: txtPhoneController,
-                          ),
+                          // CInternationalPhoneNumberInput(
+                          //   controller: txtPhoneController,
+                          // ),
 
+                          // const SizedBox(
+                          //   height: CSizes.spaceBtnInputFields,
+                          // ),
+                          IntlPhoneField(
+                            controller: txtPhoneController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: isDarkTheme
+                                  ? CColors.transparent
+                                  : CColors.lightGrey,
+                              labelText: 'Phone number',
+                            ),
+                            // Default country code (e.g., India)
+                            initialCountryCode: 'KE',
+                            invalidNumberMessage: 'Invalid phone number!',
+                            onChanged: (phone) {
+                              if (kDebugMode) {
+                                print('=========\n');
+                                print('country code: ${phone.countryCode}\n');
+                                print('---------\n');
+                                print(
+                                  'country iso code: ${phone.countryISOCode}\n',
+                                );
+                                print('---------\n');
+                                print(
+                                  'complete number: ${phone.completeNumber}\n',
+                                );
+                                print('=========\n');
+                              }
+                            },
+                          ),
                           const SizedBox(
                             height: CSizes.spaceBtnInputFields,
                           ),
@@ -420,6 +495,27 @@ class CContactsController extends GetxController {
                                         .validate()) {
                                       return;
                                     }
+
+                                    if (kDebugMode) {
+                                      print('<<< safi >>>\n');
+                                      print('radaree kaka...');
+                                      print('<<< safi >>>\n');
+                                    }
+                                    contactItem.contactPhone =
+                                        txtPhoneController.text.trim();
+                                    contactItem.contactEmail =
+                                        txtEmailController.text.trim();
+                                    contactItem.lastModified = DateFormat(
+                                      'yyyy-MM-dd kk:mm',
+                                    ).format(clock.now());
+
+                                    if (await updateContact(contactItem)) {
+                                      Navigator.pop(
+                                        Get.overlayContext!,
+                                        true,
+                                      );
+                                      resetFields();
+                                    }
                                   },
                                 ),
                               ),
@@ -453,7 +549,10 @@ class CContactsController extends GetxController {
                                     //Navigator.pop(context, true);
 
                                     resetFields();
-                                    Navigator.pop(Get.overlayContext!, true);
+                                    Navigator.pop(
+                                      Get.overlayContext!,
+                                      true,
+                                    );
                                   },
                                 ),
                               ),
@@ -482,6 +581,7 @@ class CContactsController extends GetxController {
   }
 
   resetFields() {
+    contactCountryCode.value = '';
     txtEmailController.text = '';
     txtPhoneController.text = '';
   }

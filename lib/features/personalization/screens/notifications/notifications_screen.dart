@@ -53,36 +53,38 @@ class _CNotificationsScreenState extends State<CNotificationsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        userController.user.value.email,
-                        style: Theme.of(context).textTheme.labelSmall!.apply(
-                          color: CNetworkManager.instance.hasConnection.value
-                              ? CColors.rBrown
-                              : CColors.darkGrey,
+                Obx(
+                  () {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userController.user.value.email,
+                          style: Theme.of(context).textTheme.labelSmall!.apply(
+                            color: CNetworkManager.instance.hasConnection.value
+                                ? CColors.rBrown
+                                : CColors.darkGrey,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Alerts',
-                        style: Theme.of(context).textTheme.labelLarge!.apply(
-                          color: CNetworkManager.instance.hasConnection.value
-                              ? CColors.rBrown
-                              : CColors.darkGrey,
-                          fontSizeFactor: 2.5,
-                          fontWeightDelta: -7,
+                        Text(
+                          'Alerts',
+                          style: Theme.of(context).textTheme.labelLarge!.apply(
+                            color: CNetworkManager.instance.hasConnection.value
+                                ? CColors.rBrown
+                                : CColors.darkGrey,
+                            fontSizeFactor: 2.5,
+                            fontWeightDelta: -7,
+                          ),
                         ),
-                      ),
 
-                      /// -- custom divider --
-                      CCustomDivider(
-                        leftPadding: 5.0,
-                      ),
-                    ],
-                  );
-                }),
+                        /// -- custom divider --
+                        CCustomDivider(
+                          leftPadding: 5.0,
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: CSizes.spaceBtnSections,
                 ),

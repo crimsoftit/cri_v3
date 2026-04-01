@@ -12,6 +12,7 @@ import 'package:iconsax/iconsax.dart';
 class CCustomTypeahedField extends StatelessWidget {
   const CCustomTypeahedField({
     super.key,
+    this.contentPadding,
     this.fieldHeight,
     this.fieldLabelStyle,
     this.fieldValidator,
@@ -29,6 +30,7 @@ class CCustomTypeahedField extends StatelessWidget {
   final bool includePrefixIcon;
   final Color? fillColor, focusedBorderColor;
   final double? fieldHeight, minHeight;
+  final EdgeInsetsGeometry? contentPadding;
 
   final String labelTxt;
   final TextEditingController typeAheadFieldController;
@@ -119,44 +121,58 @@ class CCustomTypeahedField extends StatelessWidget {
           if (contactsController.foundMatches.isEmpty) {
             return SizedBox.shrink();
           } else {
-            return ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  10.0,
-                ),
+            return CRoundedContainer(
+              margin: const EdgeInsets.all(
+                4.0,
               ),
-              tileColor: CColors.white,
-
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Text(
-                  //   suggestion.lastModified,
-                  //   style: Theme.of(
-                  //     context,
-                  //   ).textTheme.labelSmall!.apply(color: CColors.darkGrey),
-                  // ),
-                  Text(
-                    '${suggestion.contactName} ',
-                    style: Theme.of(context).textTheme.labelMedium!.apply(
-                      color: CColors.rBrown,
-                      fontSizeFactor: 1.2,
-                      fontWeightDelta: 2,
+              child: ListTile(
+                contentPadding:
+                    contentPadding ??
+                    const EdgeInsets.all(
+                      5.0,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    5.0,
                   ),
-                  Text(
-                    '#${suggestion.productId}; phone: ${suggestion.contactPhone}; email: (${suggestion.contactEmail})',
-                    style:
-                        Theme.of(
-                          context,
-                        ).textTheme.labelSmall!.apply(
-                          color: CColors.rBrown,
-                        ),
-                  ),
-                ],
+                ),
+                tileColor: isDarkTheme
+                    ? CColors.rBrown.withValues(
+                        alpha: .6,
+                      )
+                    : CColors.grey,
+
+                title: Column(
+                  //mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text(
+                    //   suggestion.lastModified,
+                    //   style: Theme.of(
+                    //     context,
+                    //   ).textTheme.labelSmall!.apply(color: CColors.darkGrey),
+                    // ),
+                    Text(
+                      '${suggestion.contactName} ',
+                      style: Theme.of(context).textTheme.labelMedium!.apply(
+                        color: CColors.rBrown,
+                        fontSizeFactor: 1.2,
+                        fontWeightDelta: 2,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    Text(
+                      '#${suggestion.productId}; phone: ${suggestion.contactPhone}; email: (${suggestion.contactEmail})',
+                      style:
+                          Theme.of(
+                            context,
+                          ).textTheme.labelSmall!.apply(
+                            color: CColors.rBrown,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
