@@ -859,6 +859,11 @@ class CInventoryController extends GetxController {
           title: 'error updating inventory cloud data',
           message: e.toString(),
         );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'Error updating inventory cloud data',
+          message: 'An unknown error occurred while updating inventory cloud data. Please try again later!',
+        );
       }
 
       rethrow;

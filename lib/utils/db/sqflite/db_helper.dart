@@ -157,6 +157,7 @@ class DbHelper extends GetxController {
             addedBy TEXT NOT NULL,
             contactName TEXT NOT NULL,
             contactCountryCode TEXT NOT NULL,
+            contactIsoCode TEXT NOT NULL,
             contactPhone TEXT NOT NULL,
             contactEmail TEXT NOT NULL,
             contactCategory TEXT NOT NULL,
@@ -845,7 +846,8 @@ class DbHelper extends GetxController {
         );
       } else {
         CPopupSnackBar.errorSnackBar(
-          message: 'an error occurred while adding contact. please try again later!',
+          message:
+              'an error occurred while adding contact. please try again later!',
           title: 'error adding contact!',
         );
       }

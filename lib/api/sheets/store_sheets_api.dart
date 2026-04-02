@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
 
-
 class StoreSheetsApi extends GetxController {
   /// -- variables --
   static const gsheetCredentials = GsheetsCreds.credentials;
@@ -117,7 +116,7 @@ class StoreSheetsApi extends GetxController {
         );
       }
 
-      throw e.toString();
+      rethrow;
     }
   }
 

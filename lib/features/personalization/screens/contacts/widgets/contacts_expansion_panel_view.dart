@@ -194,19 +194,19 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            // trailing: SizedBox.shrink(),
-                            trailing: IconButton(
-                              onPressed: () {
-                                contactsController.updateContactActionModal(
-                                  context,
-                                  contact,
-                                  'edit details',
-                                );
-                              },
-                              icon: Icon(
-                                Iconsax.edit,
-                              ),
-                            ),
+                            trailing: SizedBox.shrink(),
+                            // trailing: IconButton(
+                            //   onPressed: () {
+                            //     contactsController.updateContactActionModal(
+                            //       context,
+                            //       contact,
+                            //       'edit details',
+                            //     );
+                            //   },
+                            //   icon: Icon(
+                            //     Iconsax.edit,
+                            //   ),
+                            // ),
                           );
                         },
                         value: contact.contactId,
@@ -230,54 +230,68 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           contact.contactPhone != ''
-                                              ? Text(
-                                                  'Mobile ${contact.contactPhone}',
-                                                  style:
-                                                      Theme.of(
-                                                            context,
-                                                          )
-                                                          .textTheme
-                                                          .labelMedium!
-                                                          .apply(
-                                                            fontWeightDelta: 2,
-                                                          ),
+                                              ? Expanded(
+                                                  child: Text(
+                                                    'Mobile ${contact.contactPhone}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style:
+                                                        Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .labelMedium!
+                                                            .apply(
+                                                              fontWeightDelta:
+                                                                  2,
+                                                            ),
+                                                  ),
                                                 )
-                                              : Text(
-                                                  'Email: ${contact.contactEmail}',
-                                                  style:
-                                                      Theme.of(
-                                                            context,
-                                                          )
-                                                          .textTheme
-                                                          .labelMedium!
-                                                          .apply(
-                                                            fontWeightDelta: 2,
-                                                          ),
+                                              : Expanded(
+                                                  child: Text(
+                                                    'Email: ${contact.contactEmail}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style:
+                                                        Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .labelMedium!
+                                                            .apply(
+                                                              fontWeightDelta:
+                                                                  2,
+                                                            ),
+                                                  ),
                                                 ),
-                                          TextButton.icon(
-                                            icon: Icon(
-                                              Iconsax.edit,
-                                              color: isDarkTheme
-                                                  ? CColors.white
-                                                  : CColors.rBrown,
-                                              size: CSizes.iconSm,
+                                          Expanded(
+                                            child: TextButton.icon(
+                                              icon: Icon(
+                                                Iconsax.edit,
+                                                color: isDarkTheme
+                                                    ? CColors.white
+                                                    : CColors.rBrown,
+                                                size: CSizes.iconSm,
+                                              ),
+                                              label: Text(
+                                                contact.contactPhone == ''
+                                                    ? 'add phone no.'
+                                                    : 'add email',
+                                                style:
+                                                    Theme.of(
+                                                          context,
+                                                        ).textTheme.labelMedium!
+                                                        .apply(),
+                                              ),
+                                              onPressed: () {
+                                                contactsController
+                                                    .updateContactActionModal(
+                                                      context,
+                                                      contact,
+                                                      'add item',
+                                                    );
+                                              },
                                             ),
-                                            label: Text(
-                                              contact.contactPhone == ''
-                                                  ? 'add phone no.'
-                                                  : 'add email',
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.labelMedium!.apply(),
-                                            ),
-                                            onPressed: () {
-                                              contactsController
-                                                  .updateContactActionModal(
-                                                    context,
-                                                    contact,
-                                                    'add item',
-                                                  );
-                                            },
                                           ),
                                         ],
                                       )
@@ -285,24 +299,32 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            'Mobile ${contact.contactPhone}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelMedium!.apply(
-                                                  fontWeightDelta: 2,
-                                                ),
+                                          Expanded(
+                                            child: Text(
+                                              'Mobile ${contact.contactPhone}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  Theme.of(
+                                                        context,
+                                                      ).textTheme.labelMedium!
+                                                      .apply(
+                                                        fontWeightDelta: 2,
+                                                      ),
+                                            ),
                                           ),
-                                          Text(
-                                            'Email: ${contact.contactEmail}',
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelMedium!.apply(
-                                                  fontWeightDelta: 2,
-                                                ),
+                                          Expanded(
+                                            child: Text(
+                                              'Email: ${contact.contactEmail}',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  Theme.of(
+                                                        context,
+                                                      ).textTheme.labelMedium!
+                                                      .apply(
+                                                        fontWeightDelta: 2,
+                                                      ),
+                                            ),
                                           ),
                                         ],
                                       ),

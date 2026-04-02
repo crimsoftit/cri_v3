@@ -829,6 +829,7 @@ class CCheckoutController extends GetxController {
             0,
             customerNameFieldController.text.trim(),
             '',
+            '',
             CValidator.isValidPhoneNumber(
                   customerContactsFieldController.text.trim(),
                 )
@@ -843,7 +844,7 @@ class CCheckoutController extends GetxController {
             ).format(clock.now()),
             DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
             0,
-            'add',
+            'append',
           );
 
           contactsController

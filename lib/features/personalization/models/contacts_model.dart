@@ -59,6 +59,7 @@ class CContactsModel {
       '',
       '',
       '',
+      '',
       0,
       '',
     );
@@ -69,6 +70,7 @@ class CContactsModel {
   String get addedBy => _addedBy;
   String get contactName => _contactName;
   String get contactCountryCode => _contactCountryCode;
+  String get contactIsoCode => _contactIsoCode;
   String get contactPhone => _contactPhone;
   String get contactEmail => _contactEmail;
   String get contactCategory => _contactCategory;
@@ -95,6 +97,10 @@ class CContactsModel {
 
   set contactCountryCode(String newCountryCode) {
     _contactCountryCode = newCountryCode;
+  }
+
+  set contactIsoCode(String newIsoCode) {
+    _contactIsoCode = newIsoCode;
   }
 
   set contactPhone(String newContactPhone) {
@@ -131,6 +137,7 @@ class CContactsModel {
       'addedBy': _addedBy,
       'contactName': _contactName,
       'contactCountryCode': _contactCountryCode,
+      'contactIsoCode': _contactIsoCode,
       'contactPhone': _contactPhone,
       'contactEmail': _contactEmail,
       'contactCategory': _contactCategory,
@@ -155,6 +162,7 @@ class CContactsModel {
     _addedBy = map['addedBy'];
     _contactName = map['contactName'];
     _contactCountryCode = map['contactCountryCode'];
+    _contactIsoCode = map['contactIsoCode'];
     _contactPhone = map['contactPhone'];
     _contactEmail = map['contactEmail'];
     _contactCategory = map['contactCategory'];

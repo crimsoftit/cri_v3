@@ -35,7 +35,9 @@ class CContactsController extends GetxController {
 
   final RxList<CContactsModel> myContacts = <CContactsModel>[].obs;
   final RxList<CContactsModel> foundMatches = <CContactsModel>[].obs;
+
   final RxString contactCountryCode = ''.obs;
+  final RxString contactIsoCode = ''.obs;
 
   // TODO: FETCH CLOUD CONTACTS FROM INVENTORY AND SALES
   @override
@@ -73,8 +75,16 @@ class CContactsController extends GetxController {
                   .toList();
               if (contactMatches.isNotEmpty) {
                 addContact = false;
+                CPopupSnackBar.customToast(
+                  forInternetConnectivityStatus: false,
+                  message: 'contact exists!',
+                );
               } else {
                 addContact = true;
+                CPopupSnackBar.customToast(
+                  forInternetConnectivityStatus: false,
+                  message: 'add contact!',
+                );
               }
               break;
 
@@ -113,6 +123,7 @@ class CContactsController extends GetxController {
             ? invController.txtSupplierName.text.trim()
             : contact!.contactName,
         fromInventoryDetails ? '' : contact!.contactCountryCode,
+        '',
         fromInventoryDetails &&
                 CValidator.isValidPhoneNumber(
                   invController.txtSupplierContacts.text.trim(),
@@ -178,6 +189,8 @@ class CContactsController extends GetxController {
     try {
       // start loader while contacts are fetched
       isLoading.value = true;
+
+      myContacts.clear();
 
       final fetchedContacts = await dbHelper.fetchUserContacts(
         userController.user.value.email,

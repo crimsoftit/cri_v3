@@ -700,50 +700,45 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                           .toLowerCase(),
                                 )
                                 .toList();
-                            
+
                             if (relatedSoldItems.isEmpty &&
-                                  invController.itemExists.value) {
-                                // -- update product name in sales db --
-                                txnsController.updateRelatedSoldItemsName(
-                                  inventoryItem,
-                                  invController.txtNameController.text.trim(),
+                                invController.itemExists.value) {
+                              // -- update product name in sales db --
+                              txnsController.updateRelatedSoldItemsName(
+                                inventoryItem,
+                                invController.txtNameController.text.trim(),
+                              );
+                            }
+
+                            if (relatedSoldItems.isNotEmpty &&
+                                invController.itemExists.value) {
+                              if (kDebugMode) {
+                                print(
+                                  'product name remains intact!',
+                                );
+                                CPopupSnackBar.customToast(
+                                  message: 'product name remains intact',
+                                  forInternetConnectivityStatus: false,
                                 );
                               }
+                            }
 
-                              if (relatedSoldItems.isNotEmpty &&
-                                  invController.itemExists.value) {
-                                if (kDebugMode) {
-                                  print(
-                                    'product name remains intact!',
-                                  );
-                                  CPopupSnackBar.customToast(
-                                    message: 'product name remains intact',
-                                    forInternetConnectivityStatus: false,
-                                  );
-                                }
-                              }
+                            if (await contactsController.contactActionIsAdd(
+                                  invController.txtSupplierName.text.trim(),
+                                  invController.txtSupplierContacts.text.trim(),
+                                ) &&
+                                (invController.includeSupplierDetails.value)) {
+                              contactsController.addContact(
+                                true,
+                                null,
+                                inventoryItem.productId!,
+                              );
+                            }
 
                             if (await invController.addOrUpdateInventoryItem(
                               inventoryItem,
                             )) {
                               // -- check if contact already exists and add if it does not --
-
-                              if (await contactsController.contactActionIsAdd(
-                                    invController.txtSupplierName.text.trim(),
-                                    invController.txtSupplierContacts.text
-                                        .trim(),
-                                  ) &&
-                                  (invController
-                                      .includeSupplierDetails
-                                      .value)) {
-                                contactsController.addContact(
-                                  true,
-                                  null,
-                                  inventoryItem.productId!,
-                                );
-                              }
-
-                              
 
                               switch (fromHomeScreen) {
                                 case true:
