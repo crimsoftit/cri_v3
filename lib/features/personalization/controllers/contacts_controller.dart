@@ -285,13 +285,15 @@ class CContactsController extends GetxController {
 
       dbHelper.updateContact(contact);
 
-      // -- stop loader --
-      isLoading.value = false;
+      fetchMyContacts();
 
       CPopupSnackBar.customToast(
         forInternetConnectivityStatus: false,
         message: 'contact updated successfully',
       );
+
+      // -- stop loader --
+      isLoading.value = false;
 
       return true;
     } catch (e) {
@@ -333,7 +335,8 @@ class CContactsController extends GetxController {
         useRootNavigator: true,
         builder: (context) {
           // -- set field values --
-
+          contactCountryCode.value = contactItem.contactCountryCode;
+          contactIsoCode.value = contactItem.contactIsoCode;
           txtEmailController.text = txtEmailController.text == ''
               ? contactItem.contactEmail
               : txtEmailController.text.trim();
@@ -450,9 +453,20 @@ class CContactsController extends GetxController {
                               labelText: 'Phone number',
                             ),
                             // Default country code (e.g., India)
-                            initialCountryCode: 'KE',
+                            // initialCountryCode: contactItem.contactIsoCode != ''
+                            //     ? contactItem.contactIsoCode
+                            //     : 'UG',
+                            initialCountryCode:
+                                contactItem.contactCountryCode != ''
+                                ? contactItem.contactCountryCode
+                                : 'US',
                             invalidNumberMessage: 'Invalid phone number!',
                             onChanged: (phone) {
+                              contactItem.contactCountryCode =
+                                  phone.countryCode;
+
+                              contactItem.contactIsoCode = phone.countryISOCode;
+
                               if (kDebugMode) {
                                 print('=========\n');
                                 print('country code: ${phone.countryCode}\n');
@@ -463,6 +477,25 @@ class CContactsController extends GetxController {
                                 print('---------\n');
                                 print(
                                   'complete number: ${phone.completeNumber}\n',
+                                );
+                                print('=========\n');
+                              }
+                            },
+                            onCountryChanged: (country) {
+                              contactItem.contactCountryCode = country.code;
+
+                              contactItem.contactIsoCode = country.dialCode;
+
+                              if (kDebugMode) {
+                                print('=========\n');
+                                print('country code: ${country.code}\n');
+                                print('---------\n');
+                                print(
+                                  'dial code: ${country.dialCode}',
+                                );
+                                print('---------\n');
+                                print(
+                                  'full country code: ${country.fullCountryCode}\n',
                                 );
                                 print('=========\n');
                               }
@@ -515,6 +548,10 @@ class CContactsController extends GetxController {
                                       print('radaree kaka...');
                                       print('<<< safi >>>\n');
                                     }
+                                    contactItem.contactCountryCode =
+                                        contactCountryCode.value;
+                                    contactItem.contactIsoCode =
+                                        contactIsoCode.value;
                                     contactItem.contactPhone =
                                         txtPhoneController.text.trim();
                                     contactItem.contactEmail =
@@ -528,7 +565,7 @@ class CContactsController extends GetxController {
                                         Get.overlayContext!,
                                         true,
                                       );
-                                      resetFields();
+                                      //resetFields();
                                     }
                                   },
                                 ),
@@ -648,6 +685,7 @@ class CContactsController extends GetxController {
 
   resetFields() {
     contactCountryCode.value = '';
+    contactIsoCode.value = '';
     txtEmailController.text = '';
     txtPhoneController.text = '';
   }

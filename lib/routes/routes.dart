@@ -1,12 +1,22 @@
 class CRoutes {
   static const checkoutScreen = '/checkout';
+
+  // -- contacts
   static const contactsScreen = '/my_contacts';
+  static const contactDetailsScreen = '/my_contacts/contact_details';
+
   static const forgotPassword = '/forgot_password';
+
+  // -- dashboard --
   static const home = '/';
   static const homeRaw = '/home_raw/';
+  static const landingScreen = '/landing_screen';
+
+  // -- inventory --
   static const inventory = '/inventory';
   static const inventoryDetails = '/inventory/item_details/';
-  static const landingScreen = '/landing_screen';
+
+  
   static const login = '/login';
 
   static const notifications = '/notifications';

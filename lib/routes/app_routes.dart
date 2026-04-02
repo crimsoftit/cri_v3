@@ -4,6 +4,7 @@ import 'package:cri_v3/features/authentication/screens/pswd_config/forgot_passwo
 import 'package:cri_v3/features/authentication/screens/signup/signup.dart';
 import 'package:cri_v3/features/authentication/screens/signup/verify_email.dart';
 import 'package:cri_v3/features/personalization/screens/contacts/contacts_screen.dart';
+import 'package:cri_v3/features/personalization/screens/contacts/widgets/contact_details/contact_details_screen.dart';
 import 'package:cri_v3/features/personalization/screens/profile/profile.dart';
 import 'package:cri_v3/features/personalization/screens/settings/user_settings_screen.dart';
 import 'package:cri_v3/features/store/screens/home/home.dart';
@@ -56,7 +57,10 @@ class CAppRoutes {
       page: () => const CTxnsScreen(),
     ),
 
-    GetPage(name: CRoutes.sellItemScreen, page: () => const CSellItemScreen()),
+    GetPage(
+      name: CRoutes.sellItemScreen,
+      page: () => const CSellItemScreen(),
+    ),
 
     GetPage(
       name: CRoutes.soldItemDetailsScreen,
@@ -68,7 +72,10 @@ class CAppRoutes {
       page: () => const CCheckoutScreen(),
     ),
 
-    GetPage(name: CRoutes.settings, page: () => const CUserSettingsScreen()),
+    GetPage(
+      name: CRoutes.settings,
+      page: () => const CUserSettingsScreen(),
+    ),
 
     // GetPage(
     //   name: CRoutes.settingsScreenRaw,
@@ -112,6 +119,12 @@ class CAppRoutes {
       name: CRoutes.contactsScreen,
       page: () {
         return const CContactsScreen();
+      },
+    ),
+    GetPage(
+      name: CRoutes.contactDetailsScreen,
+      page: () {
+        return const CContactDetailsScreen();
       },
     ),
   ];

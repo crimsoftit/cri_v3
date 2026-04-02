@@ -377,7 +377,12 @@ class CContactsExpansionPanelView extends StatelessWidget {
                                           ? CColors.white
                                           : CColors.rBrown,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.toNamed(
+                                        '/my_contacts/contact_details',
+                                        arguments: contact.contactId,
+                                      );
+                                    },
                                   ),
                                 ],
                               ),
